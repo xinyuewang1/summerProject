@@ -1,4 +1,5 @@
 function myMap() {
+    // Function to display the google map on startup
     var mapProp= {
         center:new google.maps.LatLng(53.347515, -6.265377),
         zoom:12,
@@ -7,9 +8,13 @@ function myMap() {
 }
 
 
-var check = 0;
+// Function used for displaying/hiding the traffic information using a check variable 
+var trafficCheck = 0;
 function toggleTraffic(btn){
-    if (check === 0){
+    // Function activated by show/hide button for traffic
+    // The variable 'trafficCheck' acts as a semaphore
+    //The appearrance of the button also changes depending on the value
+    if (trafficCheck === 0){
         var mapProp= {
             center:new google.maps.LatLng(53.347515, -6.265377),
             zoom:12,
@@ -19,7 +24,7 @@ function toggleTraffic(btn){
         trafficLayer.setMap(map);
         document.getElementById("trafficButton").innerHTML = "Hide Traffic";
         btn.style.backgroundColor = "lightgrey";
-        check++;
+        trafficCheck++;
         
     } else{
         var mapProp= {
@@ -29,16 +34,15 @@ function toggleTraffic(btn){
         var map=new google.maps.Map(document.getElementById("map"),mapProp);
         document.getElementById("trafficButton").innerHTML = "Show Traffic";
         btn.style.backgroundColor = "rgb(250,219,50)";
-        check--;
+        trafficCheck--;
     }
 }
-//function disableBtn() {
-//    document.getElementById("dis").disabled = true;
-//    document.getElementById("dis2").disabled = true;
-//}
+
 
 var swap = 0;
 function swapAdd() {
+    // Function to swap source address to destination and vica versa
+    // Currently only set to swap names
     if (swap === 0){
         document.getElementsByName('search')[0].placeholder = 'Destination..';
         document.getElementsByName('search2')[0].placeholder = 'Source..';
@@ -51,11 +55,14 @@ function swapAdd() {
 }
 
 function timeEstimate() {
+   //Function for the actions taken by the 'Go!' button on the stops page
     document.getElementById("timeEst").innerHTML = "<p>Next Bus leaves at: </p>";
 }
 
 
 // ---------------- Jquery ----------------
+
+//Functions to enable or disable the time and date select for return trips
 $(document).ready(function(){
     $("input:radio[id=return]").click(ena)
 });
@@ -81,10 +88,6 @@ var disa = function() {
     $("#dis").css("opacity", "0.5");
     $("#dis2").css("opacity", "0.5");
 }
-
-//$("input:radio[name=sam1]").click(disp)
-
-
 
 // References:
 // https://github.com/jonthornton/jquery-timepicker 

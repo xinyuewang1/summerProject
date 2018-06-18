@@ -8,8 +8,13 @@
     </head>
     
     <body>
+        <!-- Link to main javaScript file -->
         <script src = "{% static 'script/dbus.js' %}"></script>
+        <!-- Google Map js link -->
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0&callback=myMap" async defer></script>
         
+
+        <!-- Header with main page title, main navigation bar and team name & Logo -->
         <div id = "Title">
             <a href = "index.html"><h1>Dublin Bus Travel Times</h1></a>
                 <ul>
@@ -20,42 +25,41 @@
                 </ul>
             <h2>Innovation Station </h2>
             <a href = "index.html"><img src = "{% static 'images/Logo.png' %}" alt = "Innovation Station Logo" width = 40px height = 40px style = "position: absolute; right:20px; top:10px;"></a>
-            
-            
         </div>
+
+
+        <!-- Top section including map and second navigation bar -->
         <div id = "main">
             <ul>
-              <li><a class="active" href="#home">News</a></li>
-              <li><a href="stops.html">Stops</a></li>
-              <li><a href="#routes">Routes</a></li>
+                <li><a href= "index.html">News</a></li>
+                <li><a href="stops.html">Stops</a></li>
+                <li><a href="#routes">Routes</a></li>
                 <button id = "trafficButton" onclick="toggleTraffic(this)">Show Traffic</button>
             </ul>
-        <div id = "map"></div>
-            
+            <div id = "map"></div>
         </div>
+
+
+        <!-- Bottom section including news information and tweets -->
         <div class = "row">
             <div class = "column" style="flex-grow: 9">
-                <p> <u>NEWS</u>
-                    &#128169</p>
+                <p> <u>NEWS</u>&#128169</p>
             </div>
-            
             <div class = "column" style="flex-grow: 0">
-                <div id = "dbtwitter">
+                <!-- Twitter links -->
+                <div id = "twitterFeed">
                     <a class="twitter-timeline" data-height="200" data-theme="light" data-link-color="#2B7BB9" href="https://twitter.com/dublinbusnews?ref_src=twsrc%5Etfw">Tweets by dublinbusnews</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
                 </div>
-                <div id = "dbtwitter">
+                <div id = "twitterFeed">
                     <a class="twitter-timeline" data-height="200" data-theme="light" data-link-color="#2B7BB9" href="https://twitter.com/aaroadwatch?ref_src=twsrc%5Etfw">Tweets by aaroadwatch</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                </div>
             </div>
-        </div>
         </div>
 <!--
         <div class="footer">
             <p>Footer</p>
         </div>
--->
-        <div id = "mapchange">
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0&callback=myMap" async defer></script>
-        </div>
+-->     
     </body>
     
 </html>

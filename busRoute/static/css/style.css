@@ -4,6 +4,13 @@ body{
     padding:0pc;
 }
 
+#Title{
+    margin: auto;
+    min-width: 600px;
+    background-color: white;
+    padding: 10px;
+}
+
 h1{
     color: rgb(104,144,123);
     font-family: avenir;
@@ -37,35 +44,22 @@ h2{
     margin-top: 20px;
 }
 
-#info{
-    background-color: white;
-    margin: auto;
-    width: 70%;
-    height:300px;
-    margin-top: 30px;
-}
-
-#Title{
-    margin: auto;
-    min-width: 600px;
-    background-color: white;
-    padding: 10px;
-}
-
 img{
     padding-left: 10px;
 }
+
 #map {
     height: 100%;
 }
-#dbtwitter{
+
+#twitterFeed{
     width: 300px;
     padding:5px;
-    
     float:left;
     border-color: blue;
     border-width: thick;
 }
+
 .footer {
     position: fixed;
     left: 0;
@@ -86,7 +80,6 @@ img{
     padding: 0;
     overflow: hidden;
     float:left;
-    
 }
 
 #Title li {
@@ -133,6 +126,7 @@ img{
     background-color: #111;
 }
 
+/* Div controls for main information section */
 .row {
     display: flex;
     flex-wrap: wrap;
@@ -155,11 +149,6 @@ img{
     margin: 10px;
 }
 
-#thing{
-    width:200px;
-    height:100px;
-}
-
 #trafficButton{
     float:right;
     height:46px;
@@ -168,23 +157,17 @@ img{
     font-size: 15px;
     
 }
-#planner input[type=text] {
+
+#routePlanner input[type=text] {
     border: 1px solid #ccc;  
   }
-#planner a.active {
+
+#routePlanner a.active {
   background-color: #2196F3;
   color: white;
 }
-.address{
-    float:left;
-}
-.j {
-    background-color: lightblue;
-    padding:3px;
-    min-width:42px;
-    float: left;
-}
-#planner button{
+
+#routePlanner button{
     background-color: green;
     color:white;
     min-width: 40px;
@@ -192,10 +175,22 @@ img{
     font-size: 20px;
 }
 
+.address{
+    float:left;
+}
+
+.j {
+    background-color: lightblue;
+    padding:3px;
+    min-width:42px;
+    float: left;
+}
+
 .disable{
     background-color: lightgrey;
     opacity: 0.5;
 }
+
 p{
     font-size: 100px;
     text-align: center;
