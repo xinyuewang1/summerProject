@@ -60,11 +60,12 @@
                     <input id = "departDate" type="text" placeholder="mm/dd/yyyy">
                     <!-- Jquery to display timepicker plugin for source address -->
                     <script>
-                        $('#departTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now' });
+                        $('#departTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now', timeFormat: "H:i" });
                         $( function() {
                         $( "#departDate" ).datepicker();
-                        } );
+                        });
                     </script>
+                    
                 </div>
 
                 <br><br>

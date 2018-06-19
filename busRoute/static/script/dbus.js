@@ -7,7 +7,6 @@ function myMap() {
         var map=new google.maps.Map(document.getElementById("map"),mapProp);
 }
 
-
 // Function used for displaying/hiding the traffic information using a check variable 
 var trafficCheck = 0;
 function toggleTraffic(btn){
@@ -38,7 +37,6 @@ function toggleTraffic(btn){
     }
 }
 
-
 var swap = 0;
 function swapDirection() {
     // Function to swap source address to destination and vica versa
@@ -55,9 +53,14 @@ function swapDirection() {
 }
 
 function timeEstimate() {
-   //Function for the actions taken by the 'Go!' button on the stops page
-    document.getElementById("timeEst").innerHTML = "<p>Next Bus leaves at: </p>";
-}
+
+    //Function for the actions taken by the 'Go!' button on the stops page
+
+    var jqxhr =  $.getJSON( '/'+document.getElementById("departTime").value+'/', function( daily ){
+
+        document.getElementById("timeEst").innerHTML = daily;
+    }  
+    )};
 
 
 // ---------------- Jquery ----------------

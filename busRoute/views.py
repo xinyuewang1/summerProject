@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import JsonResponse
 
 def index(request):
     return render(request, 'busRoute/index.html', {})
@@ -14,4 +15,4 @@ def timeGenerator(request, chosen_time):
 
     ''''this is a very basic function to display a time chosen'''
 
-    return HttpResponse("You chose %s" % chosen_time)
+    return JsonResponse("You chose %s" % chosen_time, safe=False)
