@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 
 def index(request):
     return render(request, 'busRoute/index.html', {})
@@ -8,3 +9,9 @@ def stops(request):
 
 def tourism(request):
     return render(request, 'busRoute/tourism.html',{})
+
+def timeGenerator(request, chosen_time):
+
+    ''''this is a very basic function to display a time chosen'''
+
+    return HttpResponse("You chose %s" % chosen_time)
