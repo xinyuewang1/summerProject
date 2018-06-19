@@ -55,12 +55,42 @@ function swapDirection() {
 function timeEstimate() {
 
     //Function for the actions taken by the 'Go!' button on the stops page
+    //it causes the url generation to get the information the user has chosen
+    //for the moment these simply display what the user has chosenbut later, they will cause queries to take place.
 
-    var jqxhr =  $.getJSON( '/'+document.getElementById("departTime").value+'/', function( daily ){
+    var jqxhr =  $.getJSON( '/'+document.getElementById("departTime").value+'/', function( deptTime ){
 
-        document.getElementById("timeEst").innerHTML = daily;
+        //this function displays the departure time chosen
+
+        document.getElementById("timeEst").innerHTML = deptTime;
     }  
-    )};
+    );
+
+    var jqxhr2 =  $.getJSON( 'return/'+document.getElementById("returnDepartTime").value+'/', function( returntime ){
+
+         //this function displays the departure return time chosen
+
+        document.getElementById("returnTimeEst").innerHTML = returntime;
+    }
+    )
+
+    var jqxhr3 =  $.getJSON( 'month/'+document.getElementById("departDate").value+'/', function( deptdate ){
+
+         //this function displays the departure departure date chosen
+
+        document.getElementById("monthChosen").innerHTML = deptdate;
+    }
+    )
+
+
+    var jqxhr4 =  $.getJSON( 'return/month/'+document.getElementById("returnDepartDate").value+'/', function( returndate ){
+
+         //this function displays the departure departure time chosen
+
+        document.getElementById("retmonthChosen").innerHTML = returndate;
+    }
+    )
+};
 
 
 // ---------------- Jquery ----------------

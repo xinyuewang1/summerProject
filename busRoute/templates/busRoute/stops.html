@@ -78,7 +78,7 @@
                     <input id = "returnDepartDate" class = "disable" type="text" placeholder="mm/dd/yyyy" disabled = true>
                     <!-- Jquery to display timepicker plugin for destination address -->
                     <script>
-                        $('#returnDepartTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now' });
+                        $('#returnDepartTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now', timeFormat: "H:i" });
                         $( function() {
                         $( "#returnDepartDate" ).datepicker();
                         });
@@ -88,6 +88,9 @@
                 <!-- Testing options for "Go!" button and basic response display -->
                 <button style = "float:right;" type = "button" name = "go" onclick="timeEstimate()">Go!</button>
                 <div id = "timeEst"></div>
+                <div id = "returnTimeEst"></div>
+                <div id = "monthChosen"></div>
+                <div id = "retmonthChosen"></div>
 
             </form>
         </div>
