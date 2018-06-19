@@ -2,18 +2,19 @@
 <!DOCTYPE html>
 <html lang = "en">
     <head>
-        <!-- Links to main css, time selection and datepicker -->
+        <!-- Links to main css, time selection and datepicker css -->
         <link href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet">
         <link href="{% static 'css/jquery.timepicker.css' %}" type="text/css" rel="stylesheet">
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <meta charset="UTF-8">
         <title>Dublin Bus</title>
     </head>
     
     <body>
+        <!-- Link to time selection and datepicker plugins -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <!-- Link to main javaScript file and time selection plugin-->
         <script src = "{% static 'script/dbus.js' %}"></script>
         <script src = "{% static 'script/jquery.timepicker.min.js' %}"> </script>
@@ -52,16 +53,16 @@
             <form id = "routePlanner">
                 <!-- Single source options -->
                 <div class = "address">
-                    <div class = "j">From:</div> <input type="text" name="search" placeholder="Source..">
-                    <a onclick = "swapAdd()">&#8645</a> <!--Swaps directions of route -->
+                    <div class = "j">From:</div> <input type="text" name="searchSource" placeholder="Source..">
+                    <a onclick = "swapDirection()">&#8645</a> <!--Swaps directions of route -->
                     <input id = "single" type= "radio" name="trip" value="single" checked>Single
-                    <input id = "ti" type="text" placeholder="--:--" name="search">
-                    <input id = "dat" type="text" placeholder="xx/xx/xx" name="search">
+                    <input id = "departTime" type="text" placeholder="--:--">
+                    <input id = "departDate" type="text" placeholder="mm/dd/yyyy">
                     <!-- Jquery to display timepicker plugin for source address -->
                     <script>
-                        $('#ti').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now' });
+                        $('#departTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now' });
                         $( function() {
-                        $( "#dat" ).datepicker();
+                        $( "#departDate" ).datepicker();
                         } );
                     </script>
                 </div>
@@ -70,15 +71,15 @@
                 
                 <!-- Return options -->
                 <div class = "address">
-                    <div class = "j">To:</div> <input id = "destination" type="text" placeholder="Destination.." name="search2">
+                    <div class = "j">To:</div> <input type="text" placeholder="Destination.." name="searchDest">
                     <input id = "return" type= "radio" name="trip" value="return">Return
-                    <input id = "dis2" class = "disable" type="text" placeholder="--:--" name="search" disabled = true>
-                    <input id = "dis" class = "disable" type="text" placeholder="xx/xx/xx" name="search" disabled = true>
+                    <input id = "returnDepartTime" class = "disable" type="text" placeholder="--:--" disabled = true>
+                    <input id = "returnDepartDate" class = "disable" type="text" placeholder="mm/dd/yyyy" disabled = true>
                     <!-- Jquery to display timepicker plugin for destination address -->
                     <script>
-                        $('#dis2').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now' });
+                        $('#returnDepartTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now' });
                         $( function() {
-                        $( "#dis" ).datepicker();
+                        $( "#returnDepartDate" ).datepicker();
                         });
                     </script>
                 </div>

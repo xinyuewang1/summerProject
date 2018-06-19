@@ -40,16 +40,16 @@ function toggleTraffic(btn){
 
 
 var swap = 0;
-function swapAdd() {
+function swapDirection() {
     // Function to swap source address to destination and vica versa
     // Currently only set to swap names
     if (swap === 0){
-        document.getElementsByName('search')[0].placeholder = 'Destination..';
-        document.getElementsByName('search2')[0].placeholder = 'Source..';
+        document.getElementsByName('searchSource')[0].placeholder = 'Destination..';
+        document.getElementsByName('searchDest')[0].placeholder = 'Source..';
         swap++;
-    } else{
-        document.getElementsByName('search2')[0].placeholder = 'Destination..';
-        document.getElementsByName('search')[0].placeholder = 'Source..';
+    } else {
+        document.getElementsByName('searchDest')[0].placeholder = 'Destination..';
+        document.getElementsByName('searchSource')[0].placeholder = 'Source..';
         swap--;
     }
 }
@@ -72,21 +72,21 @@ $(document).ready(function(){
 });
 
 var ena = function() {
-    $("#dis").prop( "disabled", false );
-    $("#dis2").prop( "disabled", false );
-    $("#dis").css("background-color", "white");
-    $("#dis2").css("background-color", "white");
-    $("#dis").css("opacity", "1");
-    $("#dis2").css("opacity", "1");
+    $("#returnDepartDate").prop( "disabled", false );
+    $("#returnDepartTime").prop( "disabled", false );
+    $("#returnDepartDate").css("background-color", "white");
+    $("#returnDepartTime").css("background-color", "white");
+    $("#returnDepartDate").css("opacity", "1");
+    $("#returnDepartTime").css("opacity", "1");
     
 }
 var disa = function() {
-    $("#dis").prop( "disabled", true);
-    $("#dis2").prop( "disabled", true);
-    $("#dis").css("background-color", "lightgrey");
-    $("#dis2").css("background-color", "lightgrey");
-    $("#dis").css("opacity", "0.5");
-    $("#dis2").css("opacity", "0.5");
+    $("#returnDepartDate").prop( "disabled", true);
+    $("#returnDepartTime").prop( "disabled", true);
+    $("#returnDepartDate").css("background-color", "lightgrey");
+    $("#returnDepartTime").css("background-color", "lightgrey");
+    $("#returnDepartDate").css("opacity", "0.5");
+    $("#returnDepartTime").css("opacity", "0.5");
 }
 
 // References:
