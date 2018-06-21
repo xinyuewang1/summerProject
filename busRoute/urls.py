@@ -1,10 +1,9 @@
 from django.conf.urls import url
+from django.urls import path
 from . import views
+from .models import Testtrip
 
 urlpatterns = [
-    #url(r'^(?P<chosen_time>[0-9]+)/$', views.timeGenerator, name='detail'),
-    #Note: this regex needs to be made more effecient.It will stop at certain time intervals; 
-    url(r'^(?P<chosen_time>[0-2][0-3]:[0-5][0-9]+)/$', views.timeGenerator, name='detail'),
 
     url(r'^index', views.index, name='index'),
 
@@ -12,5 +11,7 @@ urlpatterns = [
 
     url(r'^tour', views.tourism, name='tourism'),
     
+    url(r'^(?P<busroutenum>[0-9]+)/$', views.detail, name='detail'),
+
 ]
 
