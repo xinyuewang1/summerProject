@@ -62,6 +62,27 @@ function timeEstimate() {
     }  
     )};
 
+// function currentWeather() {
+//     var jqxhr =  $.getJSON( '/'+document.getElementById("departTime").value+'/', function( today ){
+
+//         document.getElementById("timeEst").innerHTML = today;
+//     }  
+// }
+
+// function currentWeather() {
+//     var jqweather = $.getJSON($SCRIPT_ROOT + "/weather", function(data) {
+//         var weatherInfo = data.weatherInfo;
+//         var actualTemp = weatherInfo.temp - 273.15; //turning kelvin temp to actual temp in degrees celsius
+//         var actualTemp_min = weatherInfo.temp_min - 273.15;
+//         var actualTemp_max = weatherInfo.temp_max - 273.15;
+//         actualTemp = (actualTemp).toFixed(1) //rounding to 1 decimal place
+//         var iconCode = weatherInfo.icon;
+//         var icon = "http://openweathermap.org/img/w/" + iconCode + ".png";
+       
+//         document.getElementById("weatherDiv").innerHTML = "<h2>" + weatherInfo.date + "</h2><div id = \"icon\"><img src=" + icon +" style = \"float: left;margin-left: 15px;\">" + weatherInfo.main +"</div><div id = \"temp\"><em>" + actualTemp + "°C</em><br/><b>Min: </b>" + actualTemp_min + "°C<br/><b>Max: </b>" + actualTemp_max + "°C</div><br/><br/><br/><div id = \"line\"></div>";
+            
+//     })
+// }
 
 // ---------------- Jquery ----------------
 
