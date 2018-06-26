@@ -7,10 +7,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
         <!-- Bootstrap CSS -->
-        <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous"> -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
         <link href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet">
-            
-        
+           
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+        <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    -->
         <title>Dublin Bus</title>
     </head>
     
@@ -22,21 +29,39 @@
         
 
         <!-- Header with main page title, main navigation bar and team name & Logo -->
-        <div id = "Title">
-            <a href = "index.html"><h1>Dublin Bus Travel Times</h1></a>
-                <ul>
-                    <li><a href="#About">About</a></li>
-                    <li><a href="#Fares">Fares</a></li>
-                    <li><a href="tourism.html">Tourism</a></li>
-                    <li><a href="#Contact">Contact</a></li>
+        <nav class = "navbar navbar-expand-md bg-light navbar-light">
+
+            <a class = "navbar-brand" href = "index.html"><h1>Dublin Bus Travel Times</h1></a>
+            <button class = "navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="#collapsibleNavbar">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Fares</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Tourism</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
                 </ul>
-            <h2>Innovation Station </h2>
-            <a href = "index.html"><img src = "{% static 'images/Logo.png' %}" alt = "Innovation Station Logo" width = 40px height = 40px style = "position: absolute; right:20px; top:10px;"></a>
-        </div>
+                
+            </div>
+            <h2 style = "float:right;">Innovation Station </h2>
+            <a class="navbar-brand" href="#">
+                    <img src= "{% static 'images/Logo.png' %}" alt = "Innovation Station Logo" style="width:40px;">
+            </a>
+        </nav>
 
 
         <!-- Top section including map and second navigation bar -->
-        <div id = "main">
+        <!-- <div id = "main">
             <ul>
                 <li><a href= "index.html">News</a></li>
                 <li><a href="stops.html">Stops</a></li>
@@ -44,47 +69,84 @@
                 <button id = "trafficButton" onclick="toggleTraffic(this)">Show Traffic</button>
             </ul>
             <div id = "map"></div>
+        </div> -->
+
+        <div id = "homeCenter" class="container" style="margin-top:30px;background-color: blue;">
+            <div class="row">
+                <div class="col-sm-12">
+                    
+                    <div class = "container-fluid">
+                        <div class="row">
+                            <div class="col nav2 "><a class = "nav-link" href = "#">News</a></div>
+                            <div class="col nav2"><a class = "nav-link" href = "#">Stops</a></div>
+                            <div class="col nav2"><a class = "nav-link" href = "#">Routes</a></div>
+                        </div>
+                    </div>
+                    <div id = "map"></div>
+                    <div class = "container-fluid">
+                            <div class="row bg-info text-white">
+                                <div class="col" style = "background-color:rgb(105,143,123);">
+                                    <b>Weather: </b>{{weather.main}} &#128169
+                                    <b>Temp: </b>{{weather.temp}}
+                                    <b>Min: </b>{{weather.temp_min}}
+                                    <b>Max: </b>{{weather.temp_max}}
+                                    <!-- <div id = "icon" class="navbar-brand"><img src = {{weather.icon}}> </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    
+                    <!-- <ul>
+                        <li><a href= "index.html">News</a></li>
+                        <li><a href="stops.html">Stops</a></li>
+                        <li><a href="#routes">Routes</a></li>
+                        <button id = "trafficButton" onclick="toggleTraffic(this)">Show Traffic</button>
+                    </ul> -->
+                </div>
+                
+            </div>
+            <div class="row">
+                <div class="col-sm-8">
+                        <div id ="weatherDiv">
+                                <div id = "icon" style="float:right;"><img src = {{weather.icon}} alt = "Weather Image"></div>
+                                <h2><b>Weather: </b>{{weather.main}} &#128169</h2>
+                                <h3><b>Temp: </b>{{weather.temp}}</h3>
+                                <h3><b>Min: </b>{{weather.temp_min}}</h3>
+                                <h3><b>Max: </b>{{weather.temp_max}}</h3>
+
+                                
+                            </div>
+                </div>
+                <div class="col-sm-4">
+                    <div id = "twitterFeed">
+                        <a class="twitter-timeline" data-height="200" data-theme="light" data-link-color="#2B7BB9" href="https://twitter.com/dublinbusnews?ref_src=twsrc%5Etfw">Tweets by dublinbusnews</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                    </div>
+                    <div id = "twitterFeed">
+                        <a class="twitter-timeline" data-height="200" data-theme="light" data-link-color="#2B7BB9" href="https://twitter.com/aaroadwatch?ref_src=twsrc%5Etfw">Tweets by aaroadwatch</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                    </div>
+                </div>
+            </div>
         </div>
 
-
         <!-- Bottom section including news information and tweets -->
-        <div class = "row">
+        <!-- <div class = "row">
             <div class = "column" style="flex-grow: 9">
                 <div id =weatherDiv>
-                    <h2><b>Weather: </b>{{weather.main}}</h2>
+                    <h2><b>Weather: </b>{{weather.main}} &#128169</h2>
                     <h3><b>Temp: </b>{{weather.temp}}</h3>
                     <h3><b>Min: </b>{{weather.temp_min}}</h3>
                     <h3><b>Max: </b>{{weather.temp_max}}</h3>
                     <div id = "icon"><img src = {{weather.icon}}> </div>
                     
-                <!-- <h2>{{weather.main}}</h2>
-                <h3>{{weather.temp}}</h3>
-                <div id="weatherDiv"></div> -->
-                <!-- <h2><u>NEWS</u>
-                    &#128169</p></h2> -->
                 </div>
-            </div>
+            </div> -->
     
-            <div class = "column" style="flex-grow: 0">
-                <!-- Twitter links -->
-                <div id = "twitterFeed">
-                    <a class="twitter-timeline" data-height="200" data-theme="light" data-link-color="#2B7BB9" href="https://twitter.com/dublinbusnews?ref_src=twsrc%5Etfw">Tweets by dublinbusnews</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-                </div>
-                <div id = "twitterFeed">
-                    <a class="twitter-timeline" data-height="200" data-theme="light" data-link-color="#2B7BB9" href="https://twitter.com/aaroadwatch?ref_src=twsrc%5Etfw">Tweets by aaroadwatch</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-                </div>
-            </div>
-        </div>
+        
 <!--
         <div class="footer">
             <p>Footer</p>
         </div>
 -->     
 
-        <!-- Bootstrap Script -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
-    </body>
+        </body>
     
 </html>
