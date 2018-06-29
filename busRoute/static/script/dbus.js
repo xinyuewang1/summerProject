@@ -22,7 +22,6 @@ function toggleTraffic(btn){
         var trafficLayer = new google.maps.TrafficLayer();
         trafficLayer.setMap(map);
         document.getElementById("trafficButton").innerHTML = "Hide Traffic";
-        btn.style.backgroundColor = "lightgrey";
         trafficCheck++;
         
     } else{
@@ -31,8 +30,7 @@ function toggleTraffic(btn){
             zoom:12,
         };
         var map=new google.maps.Map(document.getElementById("map"),mapProp);
-        document.getElementById("trafficButton").innerHTML = "Show Traffic";
-        btn.style.backgroundColor = "rgb(250,219,50)";
+        document.getElementById("trafficButton").innerHTML = "Traffic";
         trafficCheck--;
     }
 }
@@ -69,20 +67,6 @@ function timeEstimate() {
 //     }  
 // }
 
-// function currentWeather() {
-//     var jqweather = $.getJSON($SCRIPT_ROOT + "/weather", function(data) {
-//         var weatherInfo = data.weatherInfo;
-//         var actualTemp = weatherInfo.temp - 273.15; //turning kelvin temp to actual temp in degrees celsius
-//         var actualTemp_min = weatherInfo.temp_min - 273.15;
-//         var actualTemp_max = weatherInfo.temp_max - 273.15;
-//         actualTemp = (actualTemp).toFixed(1) //rounding to 1 decimal place
-//         var iconCode = weatherInfo.icon;
-//         var icon = "http://openweathermap.org/img/w/" + iconCode + ".png";
-       
-//         document.getElementById("weatherDiv").innerHTML = "<h2>" + weatherInfo.date + "</h2><div id = \"icon\"><img src=" + icon +" style = \"float: left;margin-left: 15px;\">" + weatherInfo.main +"</div><div id = \"temp\"><em>" + actualTemp + "°C</em><br/><b>Min: </b>" + actualTemp_min + "°C<br/><b>Max: </b>" + actualTemp_max + "°C</div><br/><br/><br/><div id = \"line\"></div>";
-            
-//     })
-// }
 
 // ---------------- Jquery ----------------
 

@@ -42,10 +42,6 @@ h2{
     margin-top: 20px;
 }
 
-img{
-    padding-left: 10px;
-}
-
 #map {
     height: 300px;
 }
@@ -147,14 +143,14 @@ img{
     margin: 10px;
 } */
 
-#trafficButton{
+/* #trafficButton{
     float:right;
-    height:46px;
+    height:100%;
     background-color: rgb(250,219,50);
     color: black;
     font-size: 15px;
     
-}
+} */
 
 #routePlanner input[type=text] {
     border: 1px solid #ccc;  
@@ -194,12 +190,12 @@ p{
     text-align: center;
 }
 
-#icon > img{
+/* #icon > img{
     width: 40px;
     height:40px;
     padding: 0px;
     margin:0px;
-}
+} */
 .nav2{
     text-align:center;
     color:white;
