@@ -4,7 +4,9 @@ from django.http import JsonResponse
 from .models import Testtrip
 import requests
 import json
-
+import datetime
+from datetime import date
+import calendar
 
 def index(request):
     weather = query_weather()
@@ -38,14 +40,19 @@ def query_weather():
     of relevant weather information as well current date and time"""
     r = requests.get('http://api.openweathermap.org/data/2.5/weather?q=Dublin&APPID=094f61b4b2da3c4541e43364bab71b0b')
     r = r.json()
-    # now = datetime.datetime.now()
+    now = datetime.datetime.now()
+    my_date = date.today()
+    print(r)
     weatherInfo= {'main': r['weather'][0]['main'], 
                      'detail': r['weather'][0]['description'], 
                      'temp': float("{0:.2f}".format(r['main']['temp'] -273.15)),
                      'temp_min': float("{0:.2f}".format(r['main']['temp_min'] - 273.15)),
-                     'temp_max': r['main']['temp_max'] - 273.15,
-                     'wind': r['wind']['speed'],
-                     'icon': "http://openweathermap.org/img/w/" + str(r['weather'][0]['icon']) + ".png"}
+                     'temp_max': float("{0:.2f}".format(r['main']['temp_max'] - 273.15)),
+                     'wind': 3.6*(r['wind']['speed']),
+                     'icon': "http://openweathermap.org/img/w/" + str(r['weather'][0]['icon']) + ".png",
+                     'day': calendar.day_name[my_date.weekday()],
+                     'date': now.strftime("%d"),
+                     'month': now.strftime("%B")}
     weatherInfo = json.dumps(weatherInfo)
     loaded_weather = json.loads(weatherInfo)
 

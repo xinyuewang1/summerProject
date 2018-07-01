@@ -14,10 +14,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 
-        <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
-    -->
         <title>Dublin Bus</title>
     </head>
     
@@ -59,10 +55,10 @@
             </a>
         </nav>
 
-        <div id = "homeCenter" class="container" style="margin-top:30px;">
+        <div id = "homeCenter" class="container">
             <div class="row">
                 <div class="col-sm-8">
-                    <div class="col-sm-12 shadow rounded" style="background-color:rgb(105,143,123);padding:3px;">
+                    <div class="col-sm-12 shadow rounded mt-4" style="background-color:rgb(105,143,123);padding:3px;">
                         <div class = "container-fluid">
                             <div class="row">
                                 <div class="col nav2 border border-white border-top-0 border-left-0 border-bottom-0"><a class = "nav-link" id = "trafficButton" onclick="toggleTraffic(this)" href = "#">Traffic</a></div>
@@ -74,39 +70,58 @@
                     </div>
                 </div>
                 
-                <div class="col-sm-4 shadow rounded" style="background-color:rgb(105,143,123);padding:2px;">
-                    <div class = "container-fluid ">
-                        <div class = "row">
-                            <div id = "icon" class="navbar-brand"><img src = {{weather.icon}} style = "width:140px;padding:0px;margin:0px;"> </div>
-                            <b>Weather: </b>{{weather.main}} &#128169
-                            <b>Temp: </b>{{weather.temp}}
-                            <b>Min: </b>{{weather.temp_min}}
-                            <b>Max: </b>{{weather.temp_max}}
+
+
+                <div class="col-sm-4">
+                    <div class="col-sm-12 shadow rounded mt-4" style="background-color:rgb(105,143,123);padding:2px;">
+                        <div class = "container-fluid mt-2 mb-1">
+                            <h1 style = "text-align:center;font-size:23px;" class = "text-white">Dublin, {{weather.day}} {{weather.date}} {{weather.month}}</h1>
                         </div>
-                        <div class="row rounded" style = "background-color:white;margin:5px;">
-                            <div class = "d-flex flex-column mb-3">
-                                <!-- <div class="p-2 bg-info">News</div>
-                                <div class="p-2 bg-warning">Stops</div>
-                                <div class="p-2 bg-warning">Routes</div> -->
-                            <ul class="nav flex-column">
-                                <li class="nav-item border border-black border-top-0 border-left-0 border-right-0">
-                                    <a class="nav-link" href="#">News</a>
-                                </li>
-                                <li class="nav-item border border-black border-top-0 border-left-0 border-right-0">
-                                    <a class="nav-link" href="#">Stops</a>
-                                </li>
-                                <li class="nav-item">
-                                        <a class="nav-link" href="#">Routes</a>
-                                </li>
-                            </ul>
+                        <div class = "container-fluid ">
+                            <div class = "row" style = "color:white;font-size: 14px;">
+                                <div class = "col-sm-5">
+                                    <div id = "icon"><img src = {{weather.icon}}></div>
+                                </div>
+                                <div class = "col-sm-7" style = "padding:0px;">
+                                    <b>Weather: </b>{{weather.main}} <br>
+                                    <b>Temp: </b>{{weather.temp}} °C<br>
+                                    <b>Wind: </b>{{weather.wind}} km/h<br>
+                                    <b>Max: </b>{{weather.temp_max}} °C<br>
+                                </div>
+                            </div>
+
+                            <div class="container-fluid rounded pt-1 pb-1" style = "background-color:white;margin:5px;">
+                                <div class = "flex-column">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item border border-black border-top-0 border-left-0 border-right-0">
+                                            <a class="nav-link rounded" href="#">News <span style = "float:right;color:black">&#8674</span></a>
+                                        </li>
+                                        <li class="nav-item border border-black border-top-0 border-left-0 border-right-0">
+                                            <a class="nav-link rounded" href="stops.html">Stops <span style = "float: right;color:black">&#8674</span></a>
+                                        </li>
+                                        <li class="nav-item border border-black border-top-0 border-left-0 border-right-0">
+                                            <a class="nav-link rounded" href="#">Routes<span style = "float: right;color:black">&#8674</span></a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link rounded" href="#">Weekly Weather<span style = "float: right;color:black">&#8674</span></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
-                        </div>
-                        
                     </div>
+                </div>
             </div>
+
+
+
             <div class="row shadow rounded" style = "margin-top:20px;background-color:rgb(105,143,123);">
                 <div class="col-sm-8">
+                    
                     <img src= "{% static 'images/bus.jpg' %}" alt = "Bus Picture" style = "width:100%;">
+                    <div class = "img-centered"><h3>New to Dublin Bus?<br>Check out Fares Info</h3>
+                        <button class = "img-button">Fares</button>
+                    </div>
                 </div>
                 <div class="col-sm-4">
                     <div id = "twitterFeed">
@@ -118,19 +133,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Bottom section including news information and tweets -->
-        <!-- <div class = "row">
-            <div class = "column" style="flex-grow: 9">
-                <div id =weatherDiv>
-                    <h2><b>Weather: </b>{{weather.main}} &#128169</h2>
-                    <h3><b>Temp: </b>{{weather.temp}}</h3>
-                    <h3><b>Min: </b>{{weather.temp_min}}</h3>
-                    <h3><b>Max: </b>{{weather.temp_max}}</h3>
-                    <div id = "icon"><img src = {{weather.icon}}> </div>
-                    
-                </div>
-            </div> -->
     
         
 <!--

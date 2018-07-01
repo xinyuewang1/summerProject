@@ -33,6 +33,13 @@ h2{
     font-size: 20px;
 }
 
+h3{
+    color:white;
+    font-family:Arial, Helvetica, sans-serif;
+    text-align: center;
+    text-shadow: 0 1px 10px #000000;
+}
+
 #main{
     background-color: white;
     margin: auto;
@@ -190,12 +197,12 @@ p{
     text-align: center;
 }
 
-/* #icon > img{
-    width: 40px;
-    height:40px;
+#icon > img{
+    width: 100px;
+    height:100px;
     padding: 0px;
     margin:0px;
-} */
+}
 .nav2{
     text-align:center;
     color:white;
@@ -214,4 +221,30 @@ p{
 
 #homeCenter{
     max-width:1000px;
+}
+
+.active {
+    color: black;
+}
+
+.nav.flex-column a:hover {
+    background-color: rgba(105,143,123,0.6);
+    color:white;
+    
+}
+
+.img-centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.img-button{
+    position: absolute;
+    color:white;
+    background-color:blue;
+    border-radius:10px;
+    display: flex;
+    justify-content: center;
+    left: 40%;
 }
