@@ -108,12 +108,8 @@ def bikes_query():
                      'lng': data[i]['position']['lng'], 
                      'name': data[i]['name']
                      }
-
-
-        print(Info)
-          
-        dbInfo = json.dumps(Info)
-    
+     
+        dbInfo = json.dumps(Info)    
         loadedBikes = json.loads(dbInfo)
 
     return loadedBikes      
