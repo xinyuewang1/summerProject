@@ -46,7 +46,6 @@ def getDestination(request):
         mimetype = 'application/json'
         return HttpResponse(data, mimetype)
 
-
 def index(request):
     weather = query_weather()
     bikes = bikes_query()
