@@ -8,7 +8,7 @@ import datetime
 from datetime import date
 import calendar
 
-def get_source(request):
+def getSource(request):
 
         '''This function performs the query to find the matches to the users input in the source search bar'''
 
@@ -27,7 +27,7 @@ def get_source(request):
         return HttpResponse(data, mimetype)
 
 
-def get_destination(request):
+def getDestination(request):
 
         '''This function performs the query to find the matches to the users input in the destination search bar'''
 
@@ -45,6 +45,10 @@ def get_destination(request):
             data = 'fail'
         mimetype = 'application/json'
         return HttpResponse(data, mimetype)
+
+
+
+
 
 
 def index(request):

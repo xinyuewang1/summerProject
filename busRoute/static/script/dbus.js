@@ -35,6 +35,36 @@ function toggleTraffic(btn){
     }
 }
 
+$(function() {
+    $("#autocomplete").autocomplete({
+      source: "api/getSource/",
+      select: function (event, ui) { //item selected
+        AutoCompleteSelectHandler(event, ui)
+      },
+      minLength: 2,
+    });
+  });
+
+  function AutoCompleteSelectHandler(event, ui)
+  {
+    var selectedObj = ui.item;
+  } 
+
+  $(function() {
+      $("#desto").autocomplete({
+      source: "api/getDesintation/",
+      select: function (event, ui) { //item selected
+          AutoCompleteSelectHandler(event, ui)
+      },
+      minLength: 2,
+      });
+  });
+  
+  function AutoCompleteSelectHandler(event, ui)
+  {
+      var selectedObj = ui.item;
+  }
+
 var swap = 0;
 function swapDirection() {
     // Function to swap source address to destination and vica versa

@@ -127,47 +127,11 @@
                                 <div class = "col-sm-5 mt-2" style = "background-color: blue;">
                                     <div class = "j btn-block address">From: <input type="text" class = "form-control form-control-sm" name="searchSource" placeholder="Source.." id="autocomplete">
 
-            <script>
-                    $(function() {
-                        $("#autocomplete").autocomplete({
-                          source: "api/get_source/",
-                          select: function (event, ui) { //item selected
-                            AutoCompleteSelectHandler(event, ui)
-                          },
-                          minLength: 2,
-                        });
-                      });
-                    
-                      function AutoCompleteSelectHandler(event, ui)
-                      {
-                        var selectedObj = ui.item;
-                      }                
-                    </script>
+          
                                     <a onclick = "swapDirection()">&#8645</a></div>
                                     <div class = "j btn-block address">To: &nbsp &nbsp &nbsp<input type="text" class = "form-control form-control-sm" placeholder="Destination.." name="searchDest" id="desto"></div>
 
 
-
-
-                        <script>
-
-                            $(function() {
-                                $("#desto").autocomplete({
-                                source: "api/get_desintation/",
-                                select: function (event, ui) { //item selected
-                                    AutoCompleteSelectHandler(event, ui)
-                                },
-                                minLength: 2,
-                                });
-                            });
-                            
-                            function AutoCompleteSelectHandler(event, ui)
-                            {
-                                var selectedObj = ui.item;
-                            }
-
-    
-                            </script>
                                 </div>  
 
                                 <div class = "col-sm-3 mt-2" style = "background-color: green;">  

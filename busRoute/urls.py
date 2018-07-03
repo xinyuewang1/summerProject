@@ -15,9 +15,9 @@ urlpatterns = [
 
     # url(r'^(?P<busroutenum>[0-9]+)/$', views.query_weather, name='detail'),
 
-    url(r'^api/get_source/', views.get_source, name='get_places'),
+    url(r'^api/getSource/', views.getSource, name='getSource'),
 
-    url(r'^api/get_desintation/', views.get_destination, name='get_places'),
+    url(r'^api/getDesintation/', views.getDestination, name='getDestination'),
 
 ]
 
