@@ -169,22 +169,19 @@ h3{
 }
 
 #routePlanner button{
-    background-color: green;
     color:white;
     min-width: 40px;
     min-height: 40px;
     font-size: 20px;
 }
 
-.address{
-    float:left;
-}
 
 .j {
     background-color: lightblue;
     padding:3px;
     min-width:42px;
     float: left;
+    border-radius: 8px;
 }
 
 .disable{
@@ -247,4 +244,13 @@ p{
     display: flex;
     justify-content: center;
     left: 40%;
+}
+
+input[type=text], select {
+    width: 50%;
+    display: inline-block;
+}
+
+.address input[type=text], select {
+    width: 73%;
 }

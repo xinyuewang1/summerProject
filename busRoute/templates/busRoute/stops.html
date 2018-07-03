@@ -2,94 +2,165 @@
 <!DOCTYPE html>
 <html lang = "en">
     <head>
-        <!-- Links to main css, time selection and datepicker css -->
+        <!-- Meta tags -->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
         <link href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet">
         <link href="{% static 'css/jquery.timepicker.css' %}" type="text/css" rel="stylesheet">
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <meta charset="UTF-8">
+           
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
         <title>Dublin Bus</title>
     </head>
     
     <body>
-        <!-- Link to time selection and datepicker plugins -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        <!-- Link to main javaScript file and time selection plugin-->
+        <!-- Link to main javaScript file -->
         <script src = "{% static 'script/dbus.js' %}"></script>
-        <script src = "{% static 'script/jquery.timepicker.min.js' %}"> </script>
         <!-- Google Map js link -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0&callback=myMap" async defer></script>
-        
-        
+        <script src = "{% static 'script/jquery.timepicker.min.js' %}"> </script>
+
         <!-- Header with main page title, main navigation bar and team name & Logo -->
-        <div id = "Title">
-            <a href = "index.html"><h1>Dublin Bus Travel Times</h1></a>
-                <ul>
-                    <li><a href="#About">About</a></li>
-                    <li><a href="#Fares">Fares</a></li>
-                    <li><a href="tourism.html">Tourism</a></li>
-                    <li><a href="#Contact">Contact</a></li>
+        <nav class = "navbar navbar-expand-md bg-light navbar-light ">
+
+            <a class = "navbar-brand" href = "index.html"><h1>Dublin Bus Travel Times</h1></a>
+            <button class = "navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="#collapsibleNavbar">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Fares</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Tourism</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
                 </ul>
-            <h2>Innovation Station </h2>
-            <a href = "index.html"><img src = "{% static 'images/Logo.png' %}" alt = "Innovation Station Logo" width = 40px height = 40px style = "position: absolute; right:20px; top:10px;"></a>
-        </div>
-
-
-        <!-- Top section including map and second navigation bar -->
-        <div id = "main">
-            <ul>
-                <li><a href= "index.html">News</a></li>
-                <li><a href= "stops.html">Stops</a></li>
-                <li><a href="#routes">Routes</a></li>
-                <button id = "trafficButton" onclick="toggleTraffic(this)">Show Traffic</button>
-            </ul>
-            <div id = "map"></div>
-        </div>
-
-
-        <!-- Route Planner Options -->
-        <div class = "row">
-            <form id = "routePlanner">
-                <!-- Single source options -->
-                <div class = "address">
-                    <div class = "j">From:</div> <input type="text" name="searchSource" placeholder="Source..">
-                    <a onclick = "swapDirection()">&#8645</a> <!--Swaps directions of route -->
-                    <input id = "single" type= "radio" name="trip" value="single" checked>Single
-                    <input id = "departTime" type="text" placeholder="--:--">
-                    <input id = "departDate" type="text" placeholder="mm/dd/yyyy">
-                    <!-- Jquery to display timepicker plugin for source address -->
-                    <script>
-                        $('#departTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now', timeFormat: "H:i" });
-                        $( function() {
-                        $( "#departDate" ).datepicker();
-                        });
-                    </script>
-                    
-                </div>
-
-                <br><br>
                 
-                <!-- Return options -->
-                <div class = "address">
-                    <div class = "j">To:</div> <input type="text" placeholder="Destination.." name="searchDest">
-                    <input id = "return" type= "radio" name="trip" value="return">Return
-                    <input id = "returnDepartTime" class = "disable" type="text" placeholder="--:--" disabled = true>
-                    <input id = "returnDepartDate" class = "disable" type="text" placeholder="mm/dd/yyyy" disabled = true>
-                    <!-- Jquery to display timepicker plugin for destination address -->
-                    <script>
-                        $('#returnDepartTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now' });
-                        $( function() {
-                        $( "#returnDepartDate" ).datepicker();
-                        });
-                    </script>
+            </div>
+            <h2 style = "float:right;">Innovation Station </h2>
+            <a class="navbar-brand" href="#">
+                    <img src= "{% static 'images/Logo.png' %}" alt = "Innovation Station Logo" style="width:40px;padding-left:10px;">
+            </a>
+        </nav>
+
+        <div id = "homeCenter" class="container">
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="col-sm-12 shadow rounded mt-4" style="background-color:rgb(105,143,123);padding:3px;">
+                        <div class = "container-fluid">
+                            <div class="row">
+                                <div class="col nav2 border border-white border-top-0 border-left-0 border-bottom-0"><a class = "nav-link" id = "trafficButton" onclick="toggleTraffic(this)" href = "#">Traffic</a></div>
+                                <div class="col nav2 border border-white border-top-0 border-left-0 border-bottom-0"><a class = "nav-link" href = "#">Markers</a></div>
+                                <div class="col nav2"><a class = "nav-link" href = "#">Bikes</a></div>
+                            </div>
+                        </div>
+                        <div id = "map"></div>
+                    </div>
                 </div>
                 
-                <!-- Testing options for "Go!" button and basic response display -->
-                <button style = "float:right;" type = "button" name = "go" onclick="timeEstimate()">Go!</button>
-                <div id = "timeEst"></div>
 
-            </form>
+
+                <div class="col-sm-4">
+                    <div class="col-sm-12 shadow rounded mt-4" style="background-color:rgb(105,143,123);padding:2px;">
+                        <div class = "container-fluid mt-2 mb-1">
+                            <h1 style = "text-align:center;font-size:23px;" class = "text-white">Dublin, {{weather.day}} {{weather.date}} {{weather.month}}</h1>
+                        </div>
+                        <div class = "container-fluid ">
+                            <div class = "row" style = "color:white;font-size: 14px;">
+                                <div class = "col-sm-5">
+                                    <div id = "icon"><img src = {{weather.icon}}></div>
+                                </div>
+                                <div class = "col-sm-7" style = "padding:0px;">
+                                    <b>Weather: </b>{{weather.main}} <br>
+                                    <b>Temp: </b>{{weather.temp}} °C<br>
+                                    <b>Wind: </b>{{weather.wind}} km/h<br>
+                                    <b>Max: </b>{{weather.temp_max}} °C<br>
+                                </div>
+                            </div>
+
+                            <div class="container-fluid rounded pt-1 pb-1" style = "background-color:white;margin:5px;">
+                                <div class = "flex-column">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item border border-black border-top-0 border-left-0 border-right-0">
+                                            <a class="nav-link rounded" href="index.html">News <span style = "float:right;color:black">&#8674</span></a>
+                                        </li>
+                                        <li class="nav-item border border-black border-top-0 border-left-0 border-right-0">
+                                            <a class="nav-link rounded" href="stops.html">Stops <span style = "float: right;color:black">&#8674</span></a>
+                                        </li>
+                                        <li class="nav-item border border-black border-top-0 border-left-0 border-right-0">
+                                            <a class="nav-link rounded" href="#">Routes<span style = "float: right;color:black">&#8674</span></a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link rounded" href="#">Weekly Weather<span style = "float: right;color:black">&#8674</span></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row" style = "margin-top:20px;">
+                    <div class="col-sm-12 rounded shadow" style = "background-color:rgb(105,143,123);">
+                        <form id = "routePlanner" role = "form">
+                            <div class = "row">
+                                <!-- Single source options -->
+                                <div class = "col-sm-5 mt-2" style = "background-color: blue;">
+                                    <div class = "j btn-block address">From: <input type="text" class = "form-control form-control-sm" name="searchSource" placeholder="Source..">
+                                    <a onclick = "swapDirection()">&#8645</a></div>
+                                    <div class = "j btn-block address">To: &nbsp &nbsp &nbsp<input type="text" class = "form-control form-control-sm" placeholder="Destination.." name="searchDest"></div>
+                                </div>  
+
+                                <div class = "col-sm-3 mt-2" style = "background-color: green;">  
+                                    <div class = "j btn-block"><input id = "single" type= "radio" name="trip" value="single" checked> Single
+                                    <input id = "departTime" class = "form-control form-control-sm" type="text" placeholder="--:--"></div>
+                                    <div class = "j btn-block"><input id = "return" type= "radio" name="trip" value="return"> Return
+                                    <input id = "returnDepartTime" class = "disable form-control form-control-sm" type="text" placeholder="--:--" disabled = true></div>
+                                </div>
+                                <div class = "col-sm-4 mt-2" style = "background-color: red;min-width: 270px;"> 
+                                    <div id = "dDate" class = "j btn-block">Date: <input id = "departDate" class = "form-control form-control-sm" type="text" placeholder="mm/dd/yyyy" ></div>
+                                    <div class = "j btn-block">Date: <input id = "returnDepartDate" class = "disable form-control form-control-sm" type="text" placeholder="mm/dd/yyyy" disabled = true></div>
+                                    <!-- Jquery to display timepicker plugin for source address -->
+                                    <script>
+                                        var d = new Date();
+                                        var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
+                                        $('#departTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now', timeFormat: "H:i" });
+                                        $( function() {
+                                        $( "#departDate" ).datepicker();
+                                        });
+                                        $('#returnDepartTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now',timeFormat: "H:i" });
+                                        $( function() {
+                                        $( "#returnDepartDate" ).datepicker({});
+                                        });
+                                    </script>
+                                </div>
+                            </div>   
+                            <div class = "row">
+                                <button class = "btn btn-block btn-primary mt-2" type = "button" name = "go" onclick="timeEstimate()">GO!</button>
+                            </div>
+                        </form>
+                        <div id = "timeEst"></div> 
+                    </div>
+                </div>
         </div>
 <!--
         <div class="footer">

@@ -42,7 +42,6 @@ def query_weather():
     r = r.json()
     now = datetime.datetime.now()
     my_date = date.today()
-    print(r)
     weatherInfo= {'main': r['weather'][0]['main'], 
                      'detail': r['weather'][0]['description'], 
                      'temp': float("{0:.2f}".format(r['main']['temp'] -273.15)),
