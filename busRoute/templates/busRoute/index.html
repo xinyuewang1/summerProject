@@ -23,9 +23,10 @@
         <!-- Google Map js link -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0&callback=myMap" async defer></script>
         
-        {% if bikes %}
-
+      
         <script>function myMap() {
+
+            var markers = '{{ bikes }}';
 
             // Function to display the google map on startup
             var mapProp= {
@@ -36,15 +37,15 @@
                 var map=new google.maps.Map(document.getElementById("map"),mapProp);
         
                 marker = new google.maps.Marker({
-		            position: new google.maps.LatLng('{{ bikes.lat }}', '{{ bikes.lng }}'),
+		            position: new google.maps.LatLng('{{ bikes.103.lat }}', '{{ bikes.103.lng }}'),
 		            map: map,
-		            title:  '{{ bikes.name }}' 
+		            title:  '{{ bikes.103.name }}' 
 		        });
         }
 
         </script>
 
-        {% endif %}
+       
 
         <!-- Header with main page title, main navigation bar and team name & Logo -->
         <nav class = "navbar navbar-expand-md bg-light navbar-light ">

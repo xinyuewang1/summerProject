@@ -102,17 +102,20 @@ def bikes_query():
     print(web_data.status_code)
     if web_data.status_code == 200:
         data = json.loads(web_data.text)
+        results = []
         for i in range(104):
            
             Info= {'lat': data[i]['position']['lat'],
                      'lng': data[i]['position']['lng'], 
                      'name': data[i]['name']
-                     }
+                    
+                }
      
             dbInfo = json.dumps(Info)    
             loadedBikes = json.loads(dbInfo)
+            results.append(loadedBikes)
 
-            return loadedBikes
+    return results
         
     
 
