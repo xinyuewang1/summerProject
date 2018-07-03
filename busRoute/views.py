@@ -47,13 +47,10 @@ def getDestination(request):
         return HttpResponse(data, mimetype)
 
 
-
-
-
-
 def index(request):
     weather = query_weather()
-    context = {'weather': weather}
+    bikes = bikes_query()
+    context = {'weather': weather, 'bikes': bikes}
     return render(request, 'busRoute/index.html', context)
     
 
@@ -100,4 +97,25 @@ def query_weather():
 
     return loaded_weather
 
+     
+def bikes_query():
     
+    """ Connects to the JCDecaux API and returns the dublin bikes information """
+    
+    url = 'https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey=163a27dc14a77d825fb26c4212d74477642b4469' # the website containing the data
+  
+   
+    web_data = requests.get(url)
+    print(web_data.status_code)
+    if web_data.status_code == 200:
+        data = json.loads(web_data.text)
+        for i in range(104): # there are 100 stations with index 0-99)
+            data[i]['lat'] = data[i]['position']['lat']
+            data[i]['lng'] = data[i]['position']['lng']
+            data[i]['name']
+            #print(data[i])# invoke the write to database function
+
+    dbInfo = json.dumps(data[i])
+    loadedBikes = json.loads(weatherInfo)
+
+    return loadedBikes      
