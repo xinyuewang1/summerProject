@@ -22,7 +22,6 @@ function toggleTraffic(btn){
         var trafficLayer = new google.maps.TrafficLayer();
         trafficLayer.setMap(map);
         document.getElementById("trafficButton").innerHTML = "Hide Traffic";
-        btn.style.backgroundColor = "lightgrey";
         trafficCheck++;
         
     } else{
@@ -31,8 +30,7 @@ function toggleTraffic(btn){
             zoom:12,
         };
         var map=new google.maps.Map(document.getElementById("map"),mapProp);
-        document.getElementById("trafficButton").innerHTML = "Show Traffic";
-        btn.style.backgroundColor = "rgb(250,219,50)";
+        document.getElementById("trafficButton").innerHTML = "Traffic";
         trafficCheck--;
     }
 }
@@ -91,6 +89,13 @@ function timeEstimate() {
     }
     )
 };
+
+// function currentWeather() {
+//     var jqxhr =  $.getJSON( '/'+document.getElementById("departTime").value+'/', function( today ){
+
+//         document.getElementById("timeEst").innerHTML = today;
+//     }  
+// }
 
 
 // ---------------- Jquery ----------------

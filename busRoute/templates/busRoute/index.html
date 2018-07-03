@@ -2,9 +2,19 @@
 <!DOCTYPE html>
 <html lang = "en">
     <head>
-        <link href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet">
-            <title>Dublin Bus</title>
+        <!-- Meta tags -->
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+        <link href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet">
+           
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+        <title>Dublin Bus</title>
     </head>
     
     <body>
@@ -15,51 +25,122 @@
         
 
         <!-- Header with main page title, main navigation bar and team name & Logo -->
-        <div id = "Title">
-            <a href = "index.html"><h1>Dublin Bus Travel Times</h1></a>
-                <ul>
-                    <li><a href="#About">About</a></li>
-                    <li><a href="#Fares">Fares</a></li>
-                    <li><a href="tourism.html">Tourism</a></li>
-                    <li><a href="#Contact">Contact</a></li>
+        <nav class = "navbar navbar-expand-md bg-light navbar-light ">
+
+            <a class = "navbar-brand" href = "index.html"><h1>Dublin Bus Travel Times</h1></a>
+            <button class = "navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="#collapsibleNavbar">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Fares</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Tourism</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
                 </ul>
-            <h2>Innovation Station </h2>
-            <a href = "index.html"><img src = "{% static 'images/Logo.png' %}" alt = "Innovation Station Logo" width = 40px height = 40px style = "position: absolute; right:20px; top:10px;"></a>
-        </div>
-
-
-        <!-- Top section including map and second navigation bar -->
-        <div id = "main">
-            <ul>
-                <li><a href= "index.html">News</a></li>
-                <li><a href="stops.html">Stops</a></li>
-                <li><a href="#routes">Routes</a></li>
-                <button id = "trafficButton" onclick="toggleTraffic(this)">Show Traffic</button>
-            </ul>
-            <div id = "map"></div>
-        </div>
-
-
-        <!-- Bottom section including news information and tweets -->
-        <div class = "row">
-            <div class = "column" style="flex-grow: 9">
-                <p> <u>NEWS</u>&#128169</p>
             </div>
-            <div class = "column" style="flex-grow: 0">
-                <!-- Twitter links -->
-                <div id = "twitterFeed">
-                    <a class="twitter-timeline" data-height="200" data-theme="light" data-link-color="#2B7BB9" href="https://twitter.com/dublinbusnews?ref_src=twsrc%5Etfw">Tweets by dublinbusnews</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+            <h2 style = "float:right;">Innovation Station </h2>
+            <a class="navbar-brand" href="#">
+                    <img src= "{% static 'images/Logo.png' %}" alt = "Innovation Station Logo" style="width:40px;padding-left:10px;">
+            </a>
+        </nav>
+
+        <div id = "homeCenter" class="container">
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="col-sm-12 shadow rounded mt-4" style="background-color:rgb(105,143,123);padding:3px;">
+                        <div class = "container-fluid">
+                            <div class="row">
+                                <div class="col nav2 border border-white border-top-0 border-left-0 border-bottom-0"><a class = "nav-link" id = "trafficButton" onclick="toggleTraffic(this)" href = "#">Traffic</a></div>
+                                <div class="col nav2 border border-white border-top-0 border-left-0 border-bottom-0"><a class = "nav-link" href = "#">Markers</a></div>
+                                <div class="col nav2"><a class = "nav-link" href = "#">Bikes</a></div>
+                            </div>
+                        </div>
+                        <div id = "map"></div>
+                    </div>
                 </div>
-                <div id = "twitterFeed">
-                    <a class="twitter-timeline" data-height="200" data-theme="light" data-link-color="#2B7BB9" href="https://twitter.com/aaroadwatch?ref_src=twsrc%5Etfw">Tweets by aaroadwatch</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                
+
+
+                <div class="col-sm-4">
+                    <div class="col-sm-12 shadow rounded mt-4" style="background-color:rgb(105,143,123);padding:2px;">
+                        <div class = "container-fluid mt-2 mb-1">
+                            <h1 style = "text-align:center;font-size:23px;" class = "text-white">Dublin, {{weather.day}} {{weather.date}} {{weather.month}}</h1>
+                        </div>
+                        <div class = "container-fluid ">
+                            <div class = "row" style = "color:white;font-size: 14px;">
+                                <div class = "col-sm-5">
+                                    <div id = "icon"><img src = {{weather.icon}}></div>
+                                </div>
+                                <div class = "col-sm-7" style = "padding:0px;">
+                                    <b>Weather: </b>{{weather.main}} <br>
+                                    <b>Temp: </b>{{weather.temp}} °C<br>
+                                    <b>Wind: </b>{{weather.wind}} km/h<br>
+                                    <b>Max: </b>{{weather.temp_max}} °C<br>
+                                </div>
+                            </div>
+
+                            <div class="container-fluid rounded pt-1 pb-1" style = "background-color:white;margin:5px;">
+                                <div class = "flex-column">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item border border-black border-top-0 border-left-0 border-right-0">
+                                            <a class="nav-link rounded" href="#">News <span style = "float:right;color:black">&#8674</span></a>
+                                        </li>
+                                        <li class="nav-item border border-black border-top-0 border-left-0 border-right-0">
+                                            <a class="nav-link rounded" href="stops.html">Stops <span style = "float: right;color:black">&#8674</span></a>
+                                        </li>
+                                        <li class="nav-item border border-black border-top-0 border-left-0 border-right-0">
+                                            <a class="nav-link rounded" href="#">Routes<span style = "float: right;color:black">&#8674</span></a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link rounded" href="#">Weekly Weather<span style = "float: right;color:black">&#8674</span></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="row shadow rounded" style = "margin-top:20px;background-color:rgb(105,143,123);">
+                <div class="col-sm-8">
+                    
+                    <img src= "{% static 'images/bus.jpg' %}" alt = "Bus Picture" style = "width:100%;">
+                    <div class = "img-centered"><h3>New to Dublin Bus?<br>Check out Fares Info</h3>
+                        <button class = "img-button">Fares</button>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div id = "twitterFeed">
+                        <a class="twitter-timeline" data-height="200" data-theme="light" data-link-color="#2B7BB9" href="https://twitter.com/dublinbusnews?ref_src=twsrc%5Etfw">Tweets by dublinbusnews</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                    </div>
+                    <div id = "twitterFeed">
+                        <a class="twitter-timeline" data-height="200" data-theme="light" data-link-color="#2B7BB9" href="https://twitter.com/aaroadwatch?ref_src=twsrc%5Etfw">Tweets by aaroadwatch</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                    </div>
                 </div>
             </div>
         </div>
+    
+        
 <!--
         <div class="footer">
             <p>Footer</p>
         </div>
 -->     
-    </body>
+
+        </body>
     
 </html>
