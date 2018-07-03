@@ -104,14 +104,18 @@ def bikes_query():
         data = json.loads(web_data.text)
         for i in range(104):
            
-           Info= {'lat': data[i]['position']['lat'],
+            Info= {'lat': data[i]['position']['lat'],
                      'lng': data[i]['position']['lng'], 
                      'name': data[i]['name']
                      }
      
-        dbInfo = json.dumps(Info)    
-        loadedBikes = json.loads(dbInfo)
+            dbInfo = json.dumps(Info)    
+            loadedBikes = json.loads(dbInfo)
 
-    return loadedBikes      
+            return loadedBikes
+        
+    
+
+   
 
                 

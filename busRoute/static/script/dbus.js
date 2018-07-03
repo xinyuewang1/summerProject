@@ -5,6 +5,13 @@ function myMap() {
         zoom:12,
     };
         var map=new google.maps.Map(document.getElementById("map"),mapProp);
+
+var marker = new google.maps.Marker({
+    position: myLatLng,
+    map: map,
+    title: 'Hello World!'
+  });
+
 }
 
 // Function used for displaying/hiding the traffic information using a check variable 
