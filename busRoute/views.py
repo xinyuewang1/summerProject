@@ -46,13 +46,13 @@ def getDestination(request):
         mimetype = 'application/json'
         return HttpResponse(data, mimetype)
 
+
 def index(request):
     weather = query_weather()
     bikes = bikes_query()
     context = {'weather': weather, 'bikes': bikes}
     return render(request, 'busRoute/index.html', context)
     
-
 def stops(request):
     return render(request, 'busRoute/stops.html', {})
 
@@ -84,13 +84,7 @@ def query_weather():
     weatherInfo= {'main': r['weather'][0]['main'], 
                      'detail': r['weather'][0]['description'], 
                      'temp': float("{0:.2f}".format(r['main']['temp'] -273.15)),
-                     'temp_min': float("{0:.2f}".format(r['main']['temp_min'] - 273.15)),
-                     'temp_max': float("{0:.2f}".format(r['main']['temp_max'] - 273.15)),
-                     'wind': 3.6*(r['wind']['speed']),
-                     'icon': "http://openweathermap.org/img/w/" + str(r['weather'][0]['icon']) + ".png",
-                     'day': calendar.day_name[my_date.weekday()],
-                     'date': now.strftime("%d"),
-                     'month': now.strftime("%B")}
+                  }
     weatherInfo = json.dumps(weatherInfo)
     loaded_weather = json.loads(weatherInfo)
 
@@ -108,13 +102,20 @@ def bikes_query():
     print(web_data.status_code)
     if web_data.status_code == 200:
         data = json.loads(web_data.text)
-        for i in range(104): # there are 100 stations with index 0-99)
-            data[i]['lat'] = data[i]['position']['lat']
-            data[i]['lng'] = data[i]['position']['lng']
-            data[i]['name']
-            #print(data[i])# invoke the write to database function
+        for i in range(104):
+           
+           Info= {'lat': data[i]['position']['lat'],
+                     'lng': data[i]['position']['lng'], 
+                     'name': data[i]['name']
+                     }
 
-    dbInfo = json.dumps(data[i])
-    loadedBikes = json.loads(weatherInfo)
+
+        print(Info)
+          
+        dbInfo = json.dumps(Info)
+    
+        loadedBikes = json.loads(dbInfo)
 
     return loadedBikes      
+
+                
