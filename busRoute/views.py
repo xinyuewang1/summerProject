@@ -15,11 +15,11 @@ def getSource(request):
 
         if request.is_ajax():
             q = request.GET.get('term', '')
-            places = Testtrip.objects.filter(lineid__icontains=q)
+            places = Busstops.objects.filter(stop_id__icontains=q)
             results = []
             for pl in places:
                 place_json = {}
-                place_json = pl.lineid
+                place_json = pl.stop_id
                 if place_json in results:
                     pass
                 else: 
@@ -38,11 +38,11 @@ def getDestination(request):
 
         if request.is_ajax():
             q = request.GET.get('term', '')
-            places = Testtrip.objects.filter(lineid__icontains=q)
+            places = Busstops.objects.filter(stop_id__icontains=q)
             results = []
             for pl in places:
                 place_json = {}
-                place_json = pl.lineid
+                place_json = pl.stop_id
                 if place_json in results:
                     pass
                 else: 
@@ -63,6 +63,9 @@ def index(request):
     
 def stops(request):
     return render(request, 'busRoute/stops.html', {})
+
+def routes(request):
+    return render(request, 'busRoute/routes.html', {})
 
 def tourism(request):
     return render(request, 'busRoute/tourism.html',{})
@@ -147,3 +150,51 @@ def DublinBus():
         results.append(Info)
 
     return results
+
+
+def getAddressSource(request):
+
+
+    '''this function returns the addresses that match the users input into the source input on the routes page'''
+
+
+    if request.is_ajax():
+            q = request.GET.get('term', '')
+            places = Busstops.objects.filter(stop_name__icontains=q)
+            results = []
+            for pl in places:
+                place_json = {}
+                place_json = pl.stop_name
+                if place_json in results:
+                    pass
+                else: 
+                    results.append(place_json)
+                data = json.dumps(results)
+    else:
+            data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
+
+
+def getAddressDestination(request):
+
+
+    '''this function returns the addresses that match the users input into the destination input on the routes page'''
+
+    if request.is_ajax():
+            q = request.GET.get('term', '')
+            places = Busstops.objects.filter(stop_name__icontains=q)
+            results = []
+            for pl in places:
+                place_json = {}
+                place_json = pl.stop_name
+                if place_json in results:
+                    pass
+                else: 
+                    results.append(place_json)
+                data = json.dumps(results)
+    else:
+        data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)

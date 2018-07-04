@@ -10,6 +10,8 @@ urlpatterns = [
     url(r'^stop', views.stops, name='stops'),
 
     url(r'^tour', views.tourism, name='tourism'),
+
+     url(r'^routes', views.routes, name='tourism'),
     
     # url(r'^(?P<busroutenum>[0-9]+)/$', views.detail, name='detail'),
 
@@ -18,6 +20,10 @@ urlpatterns = [
     url(r'^api/getSource/', views.getSource, name='getSource'),
 
     url(r'^api/getDesintation/', views.getDestination, name='getDestination'),
+
+    url(r'^api/getAddressSource/', views.getAddressSource, name='getSourceAddress'),
+
+    url(r'^api/getAddressDestination/', views.getAddressDestination, name='getDestinationAddress'),
 
 ]
 

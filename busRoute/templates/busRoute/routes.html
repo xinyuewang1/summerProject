@@ -9,10 +9,15 @@
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
         <link href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet">
+        <link href="{% static 'css/jquery.timepicker.css' %}" type="text/css" rel="stylesheet">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
            
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
         <title>Dublin Bus</title>
     </head>
@@ -22,45 +27,7 @@
         <script src = "{% static 'script/dbus.js' %}"></script>
         <!-- Google Map js link -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0&callback=myMap" async defer></script>
-      
-        <script>function myMap() {
-
-            // Function to display the google map on startup
-            var mapProp= {
-                center:new google.maps.LatLng(53.347515, -6.265377),
-                zoom:12,
-            };
-           
-                map=new google.maps.Map(document.getElementById("map"),mapProp);
-                markers = [];
-            
-        };
-
-
-        function displayBikeMarkers() {      
-
-            "{% if bikes %}"
-            "{% for i in bikes %}"
-            
-            var data = "{{ i }}"
-            var lat = "{{ i.lat }}"
-            var long = "{{ i.lng }}"
-
-                for (var i = 0; i <= 103; i++){
-                    markers[i] = new google.maps.Marker({
-                        position: new google.maps.LatLng(lat, long),
-                        map: map,
-                        title:  "heya"
-                    });
-
-                };
-
-                "{% endfor %}" 
-               "{% endif %}"
-        };  
-        
-
-        </script>
+        <script src = "{% static 'script/jquery.timepicker.min.js' %}"> </script>
 
         <!-- Header with main page title, main navigation bar and team name & Logo -->
         <nav class = "navbar navbar-expand-md bg-light navbar-light ">
@@ -85,8 +52,8 @@
                         <a class="nav-link" href="#">Contact</a>
                     </li>
                 </ul>
+                
             </div>
-
             <h2 style = "float:right;">Innovation Station </h2>
             <a class="navbar-brand" href="#">
                     <img src= "{% static 'images/Logo.png' %}" alt = "Innovation Station Logo" style="width:40px;padding-left:10px;">
@@ -101,7 +68,7 @@
                             <div class="row">
                                 <div class="col nav2 border border-white border-top-0 border-left-0 border-bottom-0"><a class = "nav-link" id = "trafficButton" onclick="toggleTraffic(this)" href = "#">Traffic</a></div>
                                 <div class="col nav2 border border-white border-top-0 border-left-0 border-bottom-0"><a class = "nav-link" href = "#">Markers</a></div>
-                                <div class="col nav2"><a class = "nav-link" href = "#" onclick = "displayBikeMarkers()">Bikes</a></div>
+                                <div class="col nav2"><a class = "nav-link" href = "#">Bikes</a></div>
                             </div>
                         </div>
                         <div id = "map"></div>
@@ -132,13 +99,13 @@
                                 <div class = "flex-column">
                                     <ul class="nav flex-column">
                                         <li class="nav-item border border-black border-top-0 border-left-0 border-right-0">
-                                            <a class="nav-link rounded" href="#">News <span style = "float:right;color:black">&#8674</span></a>
+                                            <a class="nav-link rounded" href="index.html">News <span style = "float:right;color:black">&#8674</span></a>
                                         </li>
                                         <li class="nav-item border border-black border-top-0 border-left-0 border-right-0">
                                             <a class="nav-link rounded" href="stops.html">Stops <span style = "float: right;color:black">&#8674</span></a>
                                         </li>
                                         <li class="nav-item border border-black border-top-0 border-left-0 border-right-0">
-                                            <a class="nav-link rounded" href="routes.html">Address<span style = "float: right;color:black">&#8674</span></a>
+                                            <a class="nav-link rounded" href="#">Address<span style = "float: right;color:black">&#8674</span></a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link rounded" href="#">Weekly Weather<span style = "float: right;color:black">&#8674</span></a>
@@ -152,33 +119,91 @@
             </div>
 
 
+            <div class="row" style = "margin-top:20px;">
+                    <div class="col-sm-12 rounded shadow" style = "background-color:rgb(105,143,123);">
+                        <form id = "routePlanner" role = "form">
+                            <div class = "row">
+                                <!-- Single source options -->
+                                <div class = "col-sm-5 mt-2" style = "background-color: blue;">
+                                    <div class = "j btn-block address">From: <input type="text" class = "form-control form-control-sm" name="searchSource" placeholder="Source Address.." id="sAdd">
 
-            <div class="row shadow rounded" style = "margin-top:20px;background-color:rgb(105,143,123);">
-                <div class="col-sm-8">
-                    
-                    <img src= "{% static 'images/bus.jpg' %}" alt = "Bus Picture" style = "width:100%;">
-                    <div class = "img-centered"><h3>New to Dublin Bus?<br>Check out Fares Info</h3>
-                        <button class = "img-button">Fares</button>
+          
+                                    <a onclick = "swapDirection()">&#8645</a></div>
+                                    <div class = "j btn-block address">To: &nbsp &nbsp &nbsp<input type="text" class = "form-control form-control-sm" placeholder="Destination Address.." name="searchDest" id="dAdd"></div>
+                                    
+                                <script>
+
+                                    $(function() {
+                                        $("#dAdd").autocomplete({
+                                          source: "api/getAddressDestination/",
+                                          select: function (event, ui) { //item selected
+                                            AutoCompleteSelectHandler(event, ui)
+                                          },
+                                          minLength: 3,
+                                        });
+                                      });
+                                    
+                                      function AutoCompleteSelectHandler(event, ui)
+                                      {
+                                        var selectedObj = ui.item;
+                                      } 
+
+
+                                      $(function() {
+                                        $("#sAdd").autocomplete({
+                                          source: "api/getAddressDestination/",
+                                          select: function (event, ui) { //item selected
+                                            AutoCompleteSelectHandler(event, ui)
+                                          },
+                                          minLength: 3,
+                                        });
+                                      });
+                                    
+                                      function AutoCompleteSelectHandler(event, ui)
+                                      {
+                                        var selectedObj = ui.item;
+                                      } 
+                                    </script>
+
+                                </div>  
+
+                                <div class = "col-sm-3 mt-2" style = "background-color: green;">  
+                                    <div class = "j btn-block"><input id = "single" type= "radio" name="trip" value="single" checked> Single
+                                    <input id = "departTime" class = "form-control form-control-sm" type="text" placeholder="--:--"></div>
+                                    <div class = "j btn-block"><input id = "return" type= "radio" name="trip" value="return"> Return
+                                    <input id = "returnDepartTime" class = "disable form-control form-control-sm" type="text" placeholder="--:--" disabled = true></div>
+                                </div>
+                                <div class = "col-sm-4 mt-2" style = "background-color: red;min-width: 270px;"> 
+                                    <div id = "dDate" class = "j btn-block">Date: <input id = "departDate" class = "form-control form-control-sm" type="text" placeholder="mm/dd/yyyy" ></div>
+                                    <div class = "j btn-block">Date: <input id = "returnDepartDate" class = "disable form-control form-control-sm" type="text" placeholder="mm/dd/yyyy" disabled = true></div>
+                                    <!-- Jquery to display timepicker plugin for source address -->
+                                    <script>
+                                        var d = new Date();
+                                        var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
+                                        $('#departTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now', timeFormat: "H:i" });
+                                        $( function() {
+                                        $( "#departDate" ).datepicker();
+                                        });
+                                        $('#returnDepartTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now',timeFormat: "H:i" });
+                                        $( function() {
+                                        $( "#returnDepartDate" ).datepicker({});
+                                        });
+                                    </script>
+                                </div>
+                            </div>   
+                            <div class = "row">
+                                <button class = "btn btn-block btn-primary mt-2" type = "button" name = "go" onclick="timeEstimate()">GO!</button>
+                            </div>
+                        </form>
+                        <div id = "timeEst"></div> 
                     </div>
                 </div>
-                <div class="col-sm-4">
-                    <div id = "twitterFeed">
-                        <a class="twitter-timeline" data-height="200" data-theme="light" data-link-color="#2B7BB9" href="https://twitter.com/dublinbusnews?ref_src=twsrc%5Etfw">Tweets by dublinbusnews</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-                    </div>
-                    <div id = "twitterFeed">
-                        <a class="twitter-timeline" data-height="200" data-theme="light" data-link-color="#2B7BB9" href="https://twitter.com/aaroadwatch?ref_src=twsrc%5Etfw">Tweets by aaroadwatch</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-                    </div>
-                </div>
-            </div>
         </div>
-    
-        
 <!--
         <div class="footer">
             <p>Footer</p>
         </div>
--->     
-
-        </body>
+-->
+    </body>
     
 </html>
