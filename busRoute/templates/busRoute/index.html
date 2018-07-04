@@ -26,21 +26,35 @@
       
         <script>function myMap() {
 
-            var markers = '{{ bikes }}';
-
             // Function to display the google map on startup
             var mapProp= {
                 center:new google.maps.LatLng(53.347515, -6.265377),
                 zoom:12,
             };
-
+           
                 var map=new google.maps.Map(document.getElementById("map"),mapProp);
-        
-                marker = new google.maps.Marker({
-		            position: new google.maps.LatLng('{{ bikes.103.lat }}', '{{ bikes.103.lng }}'),
-		            map: map,
-		            title:  '{{ bikes.103.name }}' 
-		        });
+                markers = [];
+
+
+                 "{% if bikes %}"
+            "{% for i in bikes %}"
+            
+            var data = "{{ i }}"
+            var lat = "{{ i.lat }}"
+            var long = "{{ i.lng }}"
+
+                for (var i = 0; i <= 103; i++){
+                    markers[i] = new google.maps.Marker({
+                        position: new google.maps.LatLng(lat, long),
+                        map: map,
+                        title:  "heya"
+                    });
+                    console.log(lat, long);
+                };
+
+                "{% endfor %}" 
+               "{% endif %}"
+              
         }
 
         </script>
