@@ -74,6 +74,18 @@ class AuthUserUserPermissions(models.Model):
         unique_together = (('user', 'permission'),)
 
 
+class Bikestations(models.Model):
+    list_number = models.IntegerField(blank=True, null=True)
+    list_name = models.CharField(max_length=33, blank=True, null=True)
+    list_address = models.CharField(max_length=33, blank=True, null=True)
+    list_latitude = models.DecimalField(max_digits=8, decimal_places=6, blank=True, null=True)
+    list_longitude = models.DecimalField(max_digits=7, decimal_places=6, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'bikeStations'
+
+
 class Busstops(models.Model):
     stop_id = models.CharField(primary_key=True, max_length=20)
     stop_name = models.CharField(max_length=150)

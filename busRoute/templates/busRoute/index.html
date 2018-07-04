@@ -22,7 +22,6 @@
         <script src = "{% static 'script/dbus.js' %}"></script>
         <!-- Google Map js link -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0&callback=myMap" async defer></script>
-        
       
         <script>function myMap() {
 
@@ -49,7 +48,7 @@
                         map: map,
                         title:  "heya"
                     });
-                    console.log(lat, long);
+
                 };
 
                 "{% endfor %}" 
@@ -59,7 +58,6 @@
 
         </script>
 
-       
 
         <!-- Header with main page title, main navigation bar and team name & Logo -->
         <nav class = "navbar navbar-expand-md bg-light navbar-light ">
@@ -124,7 +122,6 @@
                                     <b>Temp: </b>{{weather.temp}} °C<br>
                                     <b>Wind: </b>{{weather.wind}} km/h<br>
                                     <b>Max: </b>{{weather.temp_max}} °C<br>
-                                    <b>Bikes</b>{{bikes.name}}<br>
                                 </div>
                             </div>
 

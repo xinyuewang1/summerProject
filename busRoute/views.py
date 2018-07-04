@@ -57,7 +57,8 @@ def getDestination(request):
 def index(request):
     weather = query_weather()
     bikes = bikes_query()
-    context = {'weather': weather, 'bikes': bikes}
+    bus = DublinBus()
+    context = {'weather': weather, 'bikes': bikes, 'bus': bus}
     return render(request, 'busRoute/index.html', context)
     
 def stops(request):
@@ -131,7 +132,18 @@ def bikes_query():
     return results
         
     
+def DublinBus():
 
-   
+    '''this function creates a dictionary from the dublin bus data to be accessed on the page'''
 
-                
+    data = Busstops.objects.all()
+    results = []
+    for i in data:
+
+        Info= {'lat': i.stop_lat,
+                     'lng':i.stop_lon, 
+                     'name': i.stop_name
+                    }
+        results.append(Info)
+
+    return results
