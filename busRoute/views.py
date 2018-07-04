@@ -15,7 +15,9 @@ def index(request):
     
 
 def stops(request):
-    return render(request, 'busRoute/stops.html', {})
+    weather = query_weather()
+    context = {'weather': weather}
+    return render(request, 'busRoute/stops.html', context)
 
 def tourism(request):
     return render(request, 'busRoute/tourism.html',{})

@@ -177,7 +177,7 @@ h3{
 
 
 .j {
-    background-color: lightblue;
+    background-color: rgb(241, 229, 57);
     padding:3px;
     min-width:42px;
     float: left;
@@ -186,7 +186,7 @@ h3{
 
 .disable{
     background-color: lightgrey;
-    opacity: 0.5;
+    opacity: 0.4;
 }
 
 p{
@@ -247,10 +247,14 @@ p{
 }
 
 input[type=text], select {
-    width: 50%;
+    width: 79%;
     display: inline-block;
 }
 
 .address input[type=text], select {
-    width: 73%;
+    width: 77%;
+}
+
+.time input[type=text], select {
+    width: 60%;
 }

@@ -60,13 +60,6 @@ function timeEstimate() {
     }  
     )};
 
-// function currentWeather() {
-//     var jqxhr =  $.getJSON( '/'+document.getElementById("departTime").value+'/', function( today ){
-
-//         document.getElementById("timeEst").innerHTML = today;
-//     }  
-// }
-
 
 // ---------------- Jquery ----------------
 
@@ -93,8 +86,8 @@ var disa = function() {
     $("#returnDepartTime").prop( "disabled", true);
     $("#returnDepartDate").css("background-color", "lightgrey");
     $("#returnDepartTime").css("background-color", "lightgrey");
-    $("#returnDepartDate").css("opacity", "0.5");
-    $("#returnDepartTime").css("opacity", "0.5");
+    $("#returnDepartDate").css("opacity", "0.4");
+    $("#returnDepartTime").css("opacity", "0.4");
 }
 
 // References:

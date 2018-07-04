@@ -11,7 +11,7 @@ urlpatterns = [
 
     url(r'^tour', views.tourism, name='tourism'),
     
-    # url(r'^(?P<busroutenum>[0-9]+)/$', views.detail, name='detail'),
+    # url(r'^(?P<busroutenum>[0-9]+)/$', views.timeGenerator, name='detail'),
 
     # url(r'^(?P<busroutenum>[0-9]+)/$', views.query_weather, name='detail'),
 
