@@ -1,8 +1,4 @@
 Django==2.0.6
 requests==2.18.4
-anaconda-client==1.6.5
-anaconda-navigator==1.6.12
-anaconda-project==0.8.0
-conda==4.4.8
-conda-build==3.0.27
-conda-verify==2.0.0
+mysqlclient==1.3.12
+brotlipy==0.7.0
