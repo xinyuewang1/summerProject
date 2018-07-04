@@ -74,6 +74,18 @@ class AuthUserUserPermissions(models.Model):
         unique_together = (('user', 'permission'),)
 
 
+class Busstops(models.Model):
+    stop_id = models.CharField(primary_key=True, max_length=20)
+    stop_name = models.CharField(max_length=150)
+    stop_lat = models.CharField(max_length=20, blank=True, null=True)
+    stop_lon = models.CharField(max_length=20, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'busStops'
+        unique_together = (('stop_id', 'stop_name'),)
+
+
 class DjangoAdminLog(models.Model):
     action_time = models.DateTimeField()
     object_id = models.TextField(blank=True, null=True)
@@ -117,7 +129,6 @@ class DjangoSession(models.Model):
         managed = False
         db_table = 'django_session'
 
-
 class Testtrip(models.Model):
     datasource = models.CharField(max_length=5, blank=True, null=True)
     tripid = models.CharField(max_length=10, blank=True, null=False, primary_key = True)
@@ -135,9 +146,7 @@ class Testtrip(models.Model):
     justificationid = models.CharField(db_column='justificationId', max_length=10, blank=True, null=True)  # Field name made lowercase.
     lastupdate = models.CharField(max_length=20, blank=True, null=True)
 
-    # def __str__(self):
-    #     return self.tripid + " - fuck you dublin bus - " + self.routeid + self.lineid 
-
     class Meta:
         managed = False
         db_table = 'testTrip'
+        unique_together = (('dayofservice', 'tripid'),)

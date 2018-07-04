@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
 from .models import Testtrip
+from .models import Busstops
 import requests
 import json
 import datetime
@@ -19,7 +20,10 @@ def getSource(request):
             for pl in places:
                 place_json = {}
                 place_json = pl.lineid
-                results.append(place_json)
+                if place_json in results:
+                    pass
+                else: 
+                    results.append(place_json)
                 data = json.dumps(results)
         else:
             data = 'fail'
@@ -39,7 +43,10 @@ def getDestination(request):
             for pl in places:
                 place_json = {}
                 place_json = pl.lineid
-                results.append(place_json)
+                if place_json in results:
+                    pass
+                else: 
+                    results.append(place_json)
                 data = json.dumps(results)
         else:
             data = 'fail'
@@ -84,7 +91,13 @@ def query_weather():
     weatherInfo= {'main': r['weather'][0]['main'], 
                      'detail': r['weather'][0]['description'], 
                      'temp': float("{0:.2f}".format(r['main']['temp'] -273.15)),
-                  }
+                     'temp_min': float("{0:.2f}".format(r['main']['temp_min'] - 273.15)),
+                     'temp_max': float("{0:.2f}".format(r['main']['temp_max'] - 273.15)),
+                     'wind': 3.6*(r['wind']['speed']),
+                     'icon': "http://openweathermap.org/img/w/" + str(r['weather'][0]['icon']) + ".png",
+                     'day': calendar.day_name[my_date.weekday()],
+                     'date': now.strftime("%d"),
+                     'month': now.strftime("%B")}
     weatherInfo = json.dumps(weatherInfo)
     loaded_weather = json.loads(weatherInfo)
 

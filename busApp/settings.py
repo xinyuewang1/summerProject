@@ -71,15 +71,15 @@ WSGI_APPLICATION = 'busApp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-# DATABASES = {
-#      'default': {
-#         'NAME': 'busDB',
-#         'ENGINE': 'django.db.backends.mysql',
-#         'HOST': '137.43.49.59',
-#         'USER': 'root',
-#         'PASSWORD': 'res5@innoStat',
-#     }
-# }
+DATABASES = {
+     'default': {
+        'NAME': 'busDB',
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': '137.43.49.59',
+        'USER': 'root',
+        'PASSWORD': 'res5@innoStat',
+    }
+}
 
 
 # Password validation
