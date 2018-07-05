@@ -23,44 +23,7 @@
         <!-- Google Map js link -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0&callback=myMap" async defer></script>
       
-        <script>function myMap() {
-
-            // Function to display the google map on startup
-            var mapProp= {
-                center:new google.maps.LatLng(53.347515, -6.265377),
-                zoom:12,
-            };
-           
-                map=new google.maps.Map(document.getElementById("map"),mapProp);
-                markers = [];
-            
-        };
-
-
-        function displayBikeMarkers() {      
-
-            "{% if bikes %}"
-            "{% for i in bikes %}"
-            
-            var data = "{{ i }}"
-            var lat = "{{ i.lat }}"
-            var long = "{{ i.lng }}"
-
-                for (var i = 0; i <= 103; i++){
-                    markers[i] = new google.maps.Marker({
-                        position: new google.maps.LatLng(lat, long),
-                        map: map,
-                        title:  "heya"
-                    });
-
-                };
-
-                "{% endfor %}" 
-               "{% endif %}"
-        };  
         
-
-        </script>
 
         <!-- Header with main page title, main navigation bar and team name & Logo -->
         <nav class = "navbar navbar-expand-md bg-light navbar-light ">
@@ -100,7 +63,7 @@
                         <div class = "container-fluid">
                             <div class="row">
                                 <div class="col nav2 border border-white border-top-0 border-left-0 border-bottom-0"><a class = "nav-link" id = "trafficButton" onclick="toggleTraffic(this)" href = "#">Traffic</a></div>
-                                <div class="col nav2 border border-white border-top-0 border-left-0 border-bottom-0"><a class = "nav-link" href = "#">Markers</a></div>
+                                <div class="col nav2 border border-white border-top-0 border-left-0 border-bottom-0"><a class = "nav-link" href = "#" onclick="displayBusMarkers()">Markers</a></div>
                                 <div class="col nav2"><a class = "nav-link" href = "#" onclick = "displayBikeMarkers()">Bikes</a></div>
                             </div>
                         </div>
@@ -171,6 +134,72 @@
                 </div>
             </div>
         </div>
+
+        <script>
+                
+            function displayBusMarkers(){    
+
+
+                //this function displays the dublin bus markers
+             
+                        markers = [];
+    
+                    "{% if bus %}"
+                    "{% for p in bus %}"
+    
+                    var data = "{{ p }}"
+                    var lat = "{{ p.lat }}"
+                    var long = "{{ p.lng }}"
+
+                    var lat = parseFloat(lat);
+                    var long = parseFloat(long);
+
+
+                
+                    for (var i = 0; i <= 10; i++){
+                        markers[i] = new google.maps.Marker({
+                            position: new google.maps.LatLng(lat, long),
+                            map: map,
+                            title:  "heya"
+                        });
+    
+                    };
+    
+                    "{% endfor %}" 
+                    "{% endif %}"
+                    };  
+
+
+       function displayBikeMarkers() {   
+
+
+        //this function displays the dublin bikes markers
+           
+        
+        markers = [];
+ 
+            "{% if bikes %}"
+            "{% for i in bikes %}"
+ 
+        var data = "{{ i }}"
+        var lat = "{{ i.lat }}"
+        var long = "{{ i.lng }}"
+
+         for (var i = 0; i <= 103; i++){
+          markers[i] = new google.maps.Marker({
+               position: new google.maps.LatLng(lat, long),
+               map: map,
+              title:  "heya"
+             });
+
+        };
+
+         "{% endfor %}" 
+        "{% endif %}"
+
+       }
+    
+            </script>
     
         
 <!--

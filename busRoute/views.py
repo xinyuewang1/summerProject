@@ -54,6 +54,55 @@ def getDestination(request):
         return HttpResponse(data, mimetype)
 
 
+
+def getAddressSource(request):
+
+
+    '''this function returns the addresses that match the users input into the source input on the routes page'''
+
+
+    if request.is_ajax():
+            q = request.GET.get('term', '')
+            places = Busstops.objects.filter(stop_name__icontains=q)
+            results = []
+            for pl in places:
+                place_json = {}
+                place_json = pl.stop_name
+                if place_json in results:
+                    pass
+                else: 
+                    results.append(place_json)
+                data = json.dumps(results)
+    else:
+            data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
+
+
+def getAddressDestination(request):
+
+
+    '''this function returns the addresses that match the users input into the destination input on the routes page'''
+
+    if request.is_ajax():
+            q = request.GET.get('term', '')
+            places = Busstops.objects.filter(stop_name__icontains=q)
+            results = []
+            for pl in places:
+                place_json = {}
+                place_json = pl.stop_name
+                if place_json in results:
+                    pass
+                else: 
+                    results.append(place_json)
+                data = json.dumps(results)
+    else:
+        data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
+
 def index(request):
     weather = query_weather()
     bikes = bikes_query()
@@ -86,8 +135,10 @@ def timeGenerator(request, chosen_time):
 #     return HttpResponse(html)
 
 def query_weather():
+
     """Queries Open Weather API for current weather information of Dublin City. Parses input and returns dictionary
     of relevant weather information as well current date and time"""
+    
     r = requests.get('http://api.openweathermap.org/data/2.5/weather?q=Dublin&APPID=094f61b4b2da3c4541e43364bab71b0b')
     r = r.json()
     now = datetime.datetime.now()
@@ -147,54 +198,10 @@ def DublinBus():
                      'lng':i.stop_lon, 
                      'name': i.stop_name
                     }
-        results.append(Info)
+        dbInfo = json.dumps(Info) 
+        loadedBikes = json.loads(dbInfo)
+        results.append(loadedBikes)
 
     return results
 
 
-def getAddressSource(request):
-
-
-    '''this function returns the addresses that match the users input into the source input on the routes page'''
-
-
-    if request.is_ajax():
-            q = request.GET.get('term', '')
-            places = Busstops.objects.filter(stop_name__icontains=q)
-            results = []
-            for pl in places:
-                place_json = {}
-                place_json = pl.stop_name
-                if place_json in results:
-                    pass
-                else: 
-                    results.append(place_json)
-                data = json.dumps(results)
-    else:
-            data = 'fail'
-    mimetype = 'application/json'
-    return HttpResponse(data, mimetype)
-
-
-
-def getAddressDestination(request):
-
-
-    '''this function returns the addresses that match the users input into the destination input on the routes page'''
-
-    if request.is_ajax():
-            q = request.GET.get('term', '')
-            places = Busstops.objects.filter(stop_name__icontains=q)
-            results = []
-            for pl in places:
-                place_json = {}
-                place_json = pl.stop_name
-                if place_json in results:
-                    pass
-                else: 
-                    results.append(place_json)
-                data = json.dumps(results)
-    else:
-        data = 'fail'
-    mimetype = 'application/json'
-    return HttpResponse(data, mimetype)

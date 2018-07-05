@@ -4,16 +4,9 @@ function myMap() {
         center:new google.maps.LatLng(53.347515, -6.265377),
         zoom:12,
     };
-        var map=new google.maps.Map(document.getElementById("map"),mapProp);
-
-var marker = new google.maps.Marker({
-    position: myLatLng,
-    map: map,
-    title: 'Hello World!'
-  });
+        map=new google.maps.Map(document.getElementById("map"),mapProp);
 
 }
-
 // Function used for displaying/hiding the traffic information using a check variable 
 var trafficCheck = 0;
 function toggleTraffic(btn){
@@ -71,6 +64,36 @@ $(function() {
   {
       var selectedObj = ui.item;
   }
+
+  $(function() {
+    $("#dAdd").autocomplete({
+      source: "api/getAddressDestination/",
+      select: function (event, ui) { //item selected
+        AutoCompleteSelectHandler(event, ui)
+      },
+      minLength: 3,
+    });
+  });
+
+  function AutoCompleteSelectHandler(event, ui)
+  {
+    var selectedObj = ui.item;
+  } 
+
+  $(function() {
+    $("#sAdd").autocomplete({
+      source: "api/getAddressDestination/",
+      select: function (event, ui) { //item selected
+        AutoCompleteSelectHandler(event, ui)
+      },
+      minLength: 3,
+    });
+  });
+
+  function AutoCompleteSelectHandler(event, ui)
+  {
+    var selectedObj = ui.item;
+  } 
 
 var swap = 0;
 function swapDirection() {
