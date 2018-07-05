@@ -1,1 +1,1 @@
-web: gunicorn InnovationStation.wsgi:application --log-file -
+web: gunicorn busApp.wsgi:application --log-file -
