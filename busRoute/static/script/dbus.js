@@ -2,7 +2,7 @@ function myMap() {
     // Function to display the google map on startup
     var mapProp= {
         center:new google.maps.LatLng(53.347515, -6.265377),
-        zoom:8,
+        zoom:10,
     };
         map=new google.maps.Map(document.getElementById("map"),mapProp);
 

@@ -142,9 +142,16 @@
                 
             function displayBusMarkers(){    
 
+
+                  map.data.setMap(null);
+
+
+                 var markers = []
+
+
                 //this function displays the dublin bus markers
              
-                      var  markers = [];
+        
     
                     "{% if bus %}"
                     "{% for p in bus %}"
@@ -158,22 +165,26 @@
                     var long = parseFloat(long);
 
 
-                
-                    for (var i = 0; i <= 5; i++){
-                        markers[i] = new google.maps.Marker({
-                            position: new google.maps.LatLng(lat, long),
-                            map: map,
-                            title:  name
-                        });
-                    };
+                      
+         var latlng = new google.maps.LatLng(lat, long);
+         var marker = new google.maps.Marker({
+               position: latlng,
+              title:  name
+             });
 
+             markers.push(marker);
 
-         var markerCluster = new MarkerClusterer(map, markers,
-            {imagePath: "{% static 'images/m' %}"});
-    
+        
                     "{% endfor %}" 
                     "{% endif %}"
+
+
+                    var markerCluster = new MarkerClusterer(map, markers,
+            {imagePath: "{% static 'images/m' %}"});
                     };  
+
+
+
 
 
        function displayBikeMarkers() {   
@@ -183,7 +194,7 @@
 
         //this function displays the dublin bikes markers
            
-       markers = [];
+       var markers = [];
        
  
             "{% if bikes %}"
@@ -194,7 +205,7 @@
         var long = "{{ i.lng }}"
         var name = " {{ i.name }}"
 
-         for (var i = 0; i <= 103; i++){
+         
 
          var latlng = new google.maps.LatLng(lat, long);
          var marker = new google.maps.Marker({
@@ -203,17 +214,12 @@
              });
 
                 markers.push(marker);
-        };
-
-       
-
-         var markerCluster = new MarkerClusterer(map, markers,
-            {imagePath: "{% static 'images/m' %}"});
-
-    
+        
          "{% endfor %}" 
         "{% endif %}"
 
+   var markerCluster = new MarkerClusterer(map, markers,
+            {imagePath: "{% static 'images/m' %}"});
 
        }
 
