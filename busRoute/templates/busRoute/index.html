@@ -13,6 +13,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+        <script src="{% static 'script/markerclusterer.js' %}" type="text/javascript"></script>
 
         <title>Dublin Bus</title>
     </head>
@@ -22,6 +23,8 @@
         <script src = "{% static 'script/dbus.js' %}"></script>
         <!-- Google Map js link -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0&callback=myMap" async defer></script>
+
+       
       
         
 
@@ -139,10 +142,9 @@
                 
             function displayBusMarkers(){    
 
-
                 //this function displays the dublin bus markers
              
-                        markers = [];
+                      var  markers = [];
     
                     "{% if bus %}"
                     "{% for p in bus %}"
@@ -150,20 +152,24 @@
                     var data = "{{ p }}"
                     var lat = "{{ p.lat }}"
                     var long = "{{ p.lng }}"
+                    var name = "{{ p.name }}"
 
                     var lat = parseFloat(lat);
                     var long = parseFloat(long);
 
 
                 
-                    for (var i = 0; i <= 10; i++){
+                    for (var i = 0; i <= 5; i++){
                         markers[i] = new google.maps.Marker({
                             position: new google.maps.LatLng(lat, long),
                             map: map,
-                            title:  "heya"
+                            title:  name
                         });
-    
                     };
+
+
+         var markerCluster = new MarkerClusterer(map, markers,
+            {imagePath: "{% static 'images/m' %}"});
     
                     "{% endfor %}" 
                     "{% endif %}"
@@ -172,11 +178,13 @@
 
        function displayBikeMarkers() {   
 
+              map.data.setMap(null);
+
 
         //this function displays the dublin bikes markers
            
-        
-        markers = [];
+       markers = [];
+       
  
             "{% if bikes %}"
             "{% for i in bikes %}"
@@ -184,29 +192,39 @@
         var data = "{{ i }}"
         var lat = "{{ i.lat }}"
         var long = "{{ i.lng }}"
+        var name = " {{ i.name }}"
 
          for (var i = 0; i <= 103; i++){
-          markers[i] = new google.maps.Marker({
-               position: new google.maps.LatLng(lat, long),
-               map: map,
-              title:  "heya"
+
+         var latlng = new google.maps.LatLng(lat, long);
+         var marker = new google.maps.Marker({
+               position: latlng,
+              title:  name
              });
 
+                markers.push(marker);
         };
 
+       
+
+         var markerCluster = new MarkerClusterer(map, markers,
+            {imagePath: "{% static 'images/m' %}"});
+
+    
          "{% endfor %}" 
         "{% endif %}"
 
+
        }
+
     
+
             </script>
     
-        
-<!--
-        <div class="footer">
-            <p>Footer</p>
+        <!-- <div class="footer">
+            <p>Footer</p> -->
         </div>
--->     
+    
 
         </body>
     
