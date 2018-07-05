@@ -119,12 +119,13 @@
             </div>
 
 
-            <div class="row" style = "margin-top:20px;">
+            <!-- <div class="row" style = "margin-top:20px;">
                 <div class = "col-sm-12">
                     <div class="col-sm-12 rounded shadow" style = "background-color:rgb(105,143,123);">
-                        <form id = "routePlanner" role = "form">
+                        <form id = "routePlanner" role = "form" method="POST">
+                            {% csrf_token %}
                             <div class = "row">
-                                <!-- Single source options -->
+                                
                                 <div class = "col-sm-5 mt-2 address">
                                     <div class = "j btn-block">From: <input type="text" class = "form-control form-control-sm" name="searchSource" placeholder="Source..">
                                     <a onclick = "swapDirection()">&#8645</a></div>
@@ -140,10 +141,11 @@
                                 <div class = "col-sm-4 mt-2"> 
                                     <div id = "dDate" class = "j btn-block">Date: <input id = "departDate" class = "form-control form-control-sm" type="text" placeholder="mm/dd/yyyy" ></div>
                                     <div class = "j btn-block">Date: <input id = "returnDepartDate" class = "disable form-control form-control-sm" type="text" placeholder="mm/dd/yyyy" disabled = true></div>
-                                    <!-- Jquery to display timepicker plugin for source address -->
+                                    
                                     <script>
                                         var d = new Date();
                                         var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
+                                        document.getElementById("departDate").value = fullDate;
                                         $('#departTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now', timeFormat: "H:i" });
                                         $( function() {
                                         $( "#departDate" ).datepicker();
@@ -162,7 +164,7 @@
                         <div id = "timeEst"></div> 
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
         <!-- <div class="container-fluid footer">
             <div class = "row">
@@ -183,6 +185,17 @@
                 Made by Mark-Kate Tyrell, Sean Behan, Xinyue Wang & Stephen Colfer
             </div>
         </div> -->
+
+
+
+        <div class = "container-fluid">
+            <form method="POST">
+                {% csrf_token %}
+                {{form.as_p}}
+                <button type="submit">Submit</button>
+                <h1>{{text}}</h1>
+            </form>
+        </div>
     </body>
     
 </html>
