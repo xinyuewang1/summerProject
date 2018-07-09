@@ -4,30 +4,32 @@ import sys
 import datetime
 
 def main():
-    return estimatedTime()
-
-def estimatedTime():
     with open('39A_40lr.pkl', 'rb') as f:
         model = pickle.load(f)
     routeDict = pickle.load(open('routeDict.pkl', 'rb'))
-    for key, route in routeDict.itteritems():
-        if route == sys.argv[1]:
+    for key, route in routeDict.items():
+        if route == int(sys.argv[1]):
             source = key
-        if route == sys.argv[2]:
+        if route == int(sys.argv[2]):
             destination = key
-    routeList = [0]*71
     weather = sys.argv[3]
-    inputList = [source, destination, weather]
-    inputs = inputList + timeValue() + routeList + monthWeek()
-    return model(inputs)
+    now = sys.argv[4]
+    inputList = [int(now), int(weather)]
+    inputs=[0]*(destination-source)
+    i = 0
+    while source < destination:
+        inputs[i] = inputList + timeValue() + routeFind(source) + monthWeek()
+        source += 1
+        i += 1
+    return model.predict(inputs).sum()
 
 
 def timeValue():
-    timeList = [0]*8
-    time = sys.argv[4]
-    if time//4 == 0:
-        timeList[7] = 1
-    elif time//4 == 8:
+    timeList = [0]*7
+    time = int(sys.argv[5])
+    if time//3 == 0:
+        pass
+    elif time//3 == 8 or time == 00:
         timeList[6] = 1
     else:
         timeList[(time//4)-1] = 1
@@ -36,8 +38,8 @@ def timeValue():
 def monthWeek():
     monthList = [0]*5
     dayList = [0]*6
-    month = sys.argv[5].month
-    day = sys.argv[5].day
+    month = sys.argv[6]
+    day = sys.argv[7]
     months = ['Feb', 'Mar', 'Apr', 'May', 'Jun']
     if month == 'Jan':
         pass
@@ -50,7 +52,9 @@ def monthWeek():
         dayList[days.index(day)]
     return monthList + dayList
 
+def routeFind(current):
+    routeList = [0]*71
+    routeList[current-1] = 1
+    return routeList
 
-
-
-
+print(main())
