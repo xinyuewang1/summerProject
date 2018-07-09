@@ -126,8 +126,23 @@
                                 <!-- Single source options -->
                                 <div class = "col-sm-5 mt-2" style = "background-color: blue;">
                                     <div class = "j btn-block address">From: <input type="text" class = "form-control form-control-sm" name="searchSource" placeholder="Source.." id="autocomplete">
+                                <script>
 
-          
+
+                                    function generateQuery(){
+
+                                        var jqxhr =  $.getJSON('https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?stopid='+document.getElementById("autocomplete").value+'&format=json', function( daily ) {
+
+
+                                            console.log(daily);
+
+                                            
+                                        })};
+
+
+
+
+                                        </script>
                                     <a onclick = "swapDirection()">&#8645</a></div>
                                     <div class = "j btn-block address">To: &nbsp &nbsp &nbsp<input type="text" class = "form-control form-control-sm" placeholder="Destination.." name="searchDest" id="desto"></div>
 
@@ -159,8 +174,10 @@
                                 </div>
                             </div>   
                             <div class = "row">
-                                <button class = "btn btn-block btn-primary mt-2" type = "button" name = "go" onclick="timeEstimate()">GO!</button>
+                                <button class = "btn btn-block btn-primary mt-2" type = "button" name = "go" onclick="timeEstimate(),generateQuery()">GO!</button>
                             </div>
+
+                            <div></div>
                         </form>
                         <div id = "timeEst"></div> 
                     </div>
