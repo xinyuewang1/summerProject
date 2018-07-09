@@ -73,21 +73,21 @@ $(document).ready(function(){
 });
 
 var ena = function() {
-    $("#returnDepartDate").prop( "disabled", false );
-    $("#returnDepartTime").prop( "disabled", false );
-    $("#returnDepartDate").css("background-color", "white");
-    $("#returnDepartTime").css("background-color", "white");
-    $("#returnDepartDate").css("opacity", "1");
-    $("#returnDepartTime").css("opacity", "1");
+    $("#id_returnDate").prop( "disabled", false );
+    $("#id_returnTime").prop( "disabled", false );
+    $("#id_returnDate").css("background-color", "white");
+    $("#id_returnTime").css("background-color", "white");
+    $("#id_returnDate").css("opacity", "1");
+    $("#id_returnTime").css("opacity", "1");
     
 }
 var disa = function() {
-    $("#returnDepartDate").prop( "disabled", true);
-    $("#returnDepartTime").prop( "disabled", true);
-    $("#returnDepartDate").css("background-color", "lightgrey");
-    $("#returnDepartTime").css("background-color", "lightgrey");
-    $("#returnDepartDate").css("opacity", "0.4");
-    $("#returnDepartTime").css("opacity", "0.4");
+    $("#id_returnDate").prop( "disabled", true);
+    $("#id_returnTime").prop( "disabled", true);
+    $("#id_returnDate").css("background-color", "lightgrey");
+    $("#id_returnTime").css("background-color", "lightgrey");
+    $("#id_returnDate").css("opacity", "0.4");
+    $("#id_returnTime").css("opacity", "0.4");
 }
 
 // References:

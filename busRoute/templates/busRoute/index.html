@@ -57,6 +57,66 @@
 
         <div id = "homeCenter" class="container">
             <div class="row">
+                <div class="planner-toggle col-sm-12 shadow text-center text-white mt-2" style = "background-color:blue">
+                    <a href = "#0" id = "planner-toggle">Expand Route Planner</a>
+                </div>
+
+                <div id = "planner" class="col-sm-12 text-center text-white" style = "display:none;background-color:green;">
+                    <form id = "routePlanner" role = "form" method="POST">
+                        {% csrf_token %}
+                        <div class = "row">
+                            
+                            <div class = "col-sm-5 mt-2 address">
+                                <div class = "j btn-block">From: {{ form.source }}
+                                <a onclick = "swapDirection()">&#8645</a></div>
+                                <div class = "j btn-block">To: &nbsp &nbsp &nbsp {{ form.destination }}</div>
+                            </div>  
+
+                            <div class = "col-sm-3 mt-2 time">  
+                                <div class = "j btn-block"><input id = "single" type= "radio" name="trip" value="single" checked> Single {{ form.departTime }}</div>
+                                <div class = "j btn-block"><input id = "return" type= "radio" name="trip" value="return"> Return {{ form.returnTime }}</div>
+                            </div>
+                            <div class = "col-sm-4 mt-2"> 
+                                <div id = "dDate" class = "j btn-block">Date: {{ form.departDate }}</div>
+                                <div class = "j btn-block">Date: {{ form.returnDate }}</div>
+                                
+                                <script>
+                                    var d = new Date();
+                                    var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
+                                    document.getElementById("id_departDate").value = fullDate;
+                                    $('#id_departTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now', timeFormat: "H:i" });
+                                    $( function() {
+                                    $( "#id_departDate" ).datepicker();
+                                    });
+                                    $('#id_returnTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now',timeFormat: "H:i" });
+                                    $( function() {
+                                    $( "#id_returnDate" ).datepicker({});
+                                    });
+                                </script>
+                            </div>
+                        </div>   
+                        <div class = "row">
+                            <button type ="submit" class = "btn btn-block btn-primary m-2" type = "button" name = "go" onclick="timeEstimate()">GO!</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <script>
+            $("#planner-toggle").click(function() {
+    
+                $("#planner").slideToggle( "slow");
+    
+	            if ($("#planner-toggle").text() == "Expand Route Planner"){			
+                    $("#planner-toggle").html("Hide Route Planner")
+                }
+	            else {		
+                    $("#planner-toggle").text("Expand Route Planner")
+                }
+                });
+            </script>
+
+
+            <div class="row">
                 <div class="col-sm-8">
                     <div class="col-sm-12 shadow rounded mt-4" style="background-color:rgb(105,143,123);padding:3px;">
                         <div class = "container-fluid">

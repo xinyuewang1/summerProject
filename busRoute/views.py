@@ -20,6 +20,26 @@ class homeView(generic.TemplateView):
         context['weather'] = query_weather()
         return context
 
+    def get(self,request):
+        form = routeForm()
+        weather = query_weather()
+        context = {'weather': weather, 'form': form}
+        return render(request, self.template_name, context)
+    
+    def post(self, request):
+        form = routeForm(request.POST)
+        if form.is_valid():
+            source_address = form.cleaned_data['source']
+            destination_address = form.cleaned_data['destination']
+            depart_time = form.cleaned_data['departTime']
+            return_time = form.cleaned_data['returnTime']
+            depart_date = form.cleaned_data['departDate']
+            return_date = form.cleaned_data['returnDate']
+
+        weather = query_weather()
+        args = {'form': form, 'source': source_address, 'destination': destination_address, 'depart_time': depart_time, 'return_time': return_time, 'depart_date': depart_date , 'return_date': return_date, 'weather': weather}
+        return render(request, self.template_name, args)
+
 
 class stopsView(generic.TemplateView):
     template_name = "busRoute/stops.html"
@@ -34,13 +54,18 @@ class stopsView(generic.TemplateView):
     def post(self, request):
         form = routeForm(request.POST)
         if form.is_valid():
-            text = form.cleaned_data['source']
-        
+            source_address = form.cleaned_data['source']
+            destination_address = form.cleaned_data['destination']
+            depart_time = form.cleaned_data['departTime']
+            return_time = form.cleaned_data['returnTime']
+            depart_date = form.cleaned_data['departDate']
+            return_date = form.cleaned_data['returnDate']
+
         weather = query_weather()
-        args = {'form': form, 'text': text, 'weather': weather,}
+        args = {'form': form, 'source': source_address, 'destination': destination_address, 'depart_time': depart_time, 'return_time': return_time, 'depart_date': depart_date , 'return_date': return_date, 'weather': weather}
         return render(request, self.template_name, args)
 
-
+#have to add in weather to this bit, have to set the return to be disabled and add the extra styling and options for the form
 def tourism(request):
     return render(request, 'busRoute/tourism.html',{})
 
