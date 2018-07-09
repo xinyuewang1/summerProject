@@ -6,6 +6,23 @@ function myMap() {
     };
         map=new google.maps.Map(document.getElementById("map"),mapProp);
 
+
+var placeSearch, autocomplete;
+
+function initialize() {
+
+    autocomplete = new google.maps.places.Autocomplete(document.getElementById('dogshit'), {
+        types: ['(regions)']
+    });
+
+    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+        var place = autocomplete.getPlace();
+        console.log(place);
+    });
+}
+
+initialize();
+
 }
 
 // Function used for displaying/hiding the traffic information using a check variable 

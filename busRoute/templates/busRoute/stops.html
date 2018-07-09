@@ -16,6 +16,9 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 
+
+
+
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
@@ -30,7 +33,7 @@
         <!-- Link to main javaScript file -->
         <script src = "{% static 'script/dbus.js' %}"></script>
         <!-- Google Map js link -->
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0&callback=myMap" async defer></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0&libraries=places&callback=myMap" async defer></script>
         <script src = "{% static 'script/jquery.timepicker.min.js' %}"> </script>
 
         <!-- Header with main page title, main navigation bar and team name & Logo -->
@@ -123,6 +126,29 @@
             </div>
 
 
+            <div class="container">
+                    
+                    <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">Dont Know Stop?</button>
+                    <div id="demo" class="collapse">
+                            <div class="pac-card" id="pac-card">
+                                  
+                                    <div id="pac-container">
+                                        <br>
+                                        <h6>You can use the below search option to zoom in on a specific area on the map</h6>
+                                        <br>
+                                    <h6>Once the map has zoomed to that area, you can choose to toggle the markers to show the stops</h6>
+                                        <br>
+
+                                            <div><input id="genSearch" placeholder="Search General Area" type="text"></input></div> 
+
+
+                                        
+                                
+                   </div>
+                   </div>
+                   </div>
+
+
             <div class="row" style = "margin-top:20px;">
                     <div class="col-sm-12 rounded shadow" style = "background-color:rgb(105,143,123);">
                         <form id = "routePlanner" role = "form">
@@ -189,7 +215,53 @@
         </div>
 
         <script>
-var busMarkers = 0;   
+
+             var placeSearch, autocomplete;
+        
+        function initialize() {
+
+
+            //https://www.w3docs.com/learn-javascript/places-autocomplete.html
+            //https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-multiple-countries
+
+            //the below function used a combination of the above two efforts. 
+
+
+            //This function is responsible for allowing the user to search for a general address
+            //the map will then zoom in on that place
+            //they can then chose to view the markers in that area.
+        
+            autocomplete = new google.maps.places.Autocomplete(document.getElementById('genSearch'));
+
+             autocomplete.setComponentRestrictions(
+            {'country': 'ie'});
+        
+            google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                var place = autocomplete.getPlace();
+                console.log(place);
+
+            if (!place.geometry) {
+            // User entered the name of a Place that was not suggested and
+            // pressed the Enter key, or the Place Details request failed.
+            window.alert("No details available for input: '" + place.name + "'");
+            return;
+          }
+
+          // If the place has a geometry, then present it on a map.
+          if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+          } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(17);  // Why 17? Because it looks good.
+          }
+          marker.setPosition(place.geometry.location);
+          marker.setVisible(true);
+            });
+        };
+        
+        initialize();
+            
+            var busMarkers = 0;   
                     
                     function displayBusMarkers(){    
 
