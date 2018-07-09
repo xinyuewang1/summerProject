@@ -202,7 +202,8 @@ def DublinBus():
 
         Info= {'lat': i.stop_lat,
                      'lng':i.stop_lon, 
-                     'name': i.stop_name
+                     'name': i.stop_name,
+                     'id': i.stop_id
                     }
         dbInfo = json.dumps(Info) 
         loadedBikes = json.loads(dbInfo)

@@ -2,6 +2,7 @@ body{
     background-color: rgb(219,238,233);
     margin:0px;
     padding:0pc;
+    
 }
 
 #Title{
@@ -52,6 +53,8 @@ h3{
 #map {
     height: 300px;
 }
+
+
 
 #twitterFeed{
     width: 300px;
@@ -254,3 +257,5 @@ input[type=text], select {
 .address input[type=text], select {
     width: 73%;
 }
+
+

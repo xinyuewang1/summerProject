@@ -1,6 +1,8 @@
 {% load staticfiles %}
 <!DOCTYPE html>
 <html lang = "en">
+
+    
     <head>
         <!-- Meta tags -->
         <meta charset="UTF-8">
@@ -28,9 +30,6 @@
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0&callback=myMap" async defer></script>
 
        
-      
-        
-
         <!-- Header with main page title, main navigation bar and team name & Logo -->
         <nav class = "navbar navbar-expand-md bg-light navbar-light ">
 
@@ -144,8 +143,7 @@
 
 
         <script>
-
-                        
+                      
                         var busMarkers = 0;   
                     
                     function displayBusMarkers(){    
@@ -165,6 +163,7 @@
                             var lat = "{{ p.lat }}"
                             var long = "{{ p.lng }}"
                             var name = "{{ p.name }}"
+                            var id = "{{ p.id }}"
 
                             var lat = parseFloat(lat);
                             var long = parseFloat(long);
@@ -183,7 +182,7 @@
                         google.maps.event.addListener(marker, 'click', (function(markers) {
                         return function() {
                             infoBikes.open(map, this);
-                            infoBikes.setContent('{{ p.name }}');
+                            infoBikes.setContent('{{ p.name }}'+'<br>'+'('+'{{ p.id }}'+')');
                         }
                     })(markers));
 

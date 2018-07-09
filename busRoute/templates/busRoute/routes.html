@@ -2,6 +2,20 @@
 <!DOCTYPE html>
 <html lang = "en">
     <head>
+            <style>
+
+                /*https://stackoverflow.com/questions/9590313/how-to-use-the-scroll-and-max-options-in-autocomplete 
+                This option essentially makes the options that are suggested for the autocomplete scrollable to prevent page resizing*/
+
+                    .ui-autocomplete {
+                         max-height: 200px;
+                         overflow-y: auto;
+                         /* prevent horizontal scrollbar */
+                         overflow-x: hidden;
+                         /* add padding to account for vertical scrollbar */
+                         padding-right: 20px;
+                     } 
+             </style>
         <!-- Meta tags -->
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -125,6 +139,9 @@
             </div>
 
             <div class="container">
+
+
+                <!--https://www.w3schools.com/bootstrap/bootstrap_collapse.asp-->
                     
                     <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">Dont Know Stop?</button>
                     <div id="demo" class="collapse">
@@ -140,8 +157,7 @@
                                             <div><input id="genSearch" placeholder="Search General Area" type="text"></input></div> 
 
 
-                                        
-                                
+                                     
                    </div>
                    </div>
                    </div>
@@ -152,7 +168,7 @@
                             <div class = "row">
                                 <!-- Single source options -->
                                 <div class = "col-sm-5 mt-2" style = "background-color: blue;">
-                                    <div class = "j btn-block address">From: <input type="text" class = "form-control form-control-sm" name="searchSource" placeholder="Source Address.." id="sAdd">
+                                    <div id="overFlow" class = "j btn-block address">From: <input type="text" class = "form-control form-control-sm" name="searchSource" placeholder="Source Address.." id="sAdd">
 
           
                                     <a onclick = "swapDirection()">&#8645</a></div>
@@ -249,6 +265,10 @@
                     
                     function displayBusMarkers(){    
 
+
+                           infoWindow = new google.maps.InfoWindow;
+                            infoBus = new google.maps.InfoWindow;
+
                         if (busMarkers == 0) {
 
 
@@ -264,16 +284,20 @@
                             var lat = "{{ p.lat }}"
                             var long = "{{ p.lng }}"
                             var name = "{{ p.name }}"
+                            var id = "{{ p.id }}";
 
                             var lat = parseFloat(lat);
                             var long = parseFloat(long);
 
+
+                    
 
                             
                 var latlng = new google.maps.LatLng(lat, long);
                 var marker = new google.maps.Marker({
                     position: latlng,
                     title:  name
+                    
                     });
 
                     markers.push(marker);
@@ -281,8 +305,8 @@
 
                         google.maps.event.addListener(marker, 'click', (function(markers) {
                         return function() {
-                            infoBikes.open(map, this);
-                            infoBikes.setContent('{{ p.name }}');
+                            infoBus.open(map, this);
+                            infoBus.setContent('{{ p.name }}'+'<br>'+'('+'{{ p.id }}'+')');
                         }
                     })(markers));
 
@@ -341,11 +365,18 @@
                 var long = "{{ i.lng }}"
                 var name = " {{ i.name }}"
 
+
+                          var busicon = {
+		            url: "{% static 'images/dublinBikes.png' %}", // url
+		            scaledSize: new google.maps.Size(40, 40), // scaled size            
+		        };
+
                 
 
                 var latlng = new google.maps.LatLng(lat, long);
                 var marker = new google.maps.Marker({
                     position: latlng,
+                    icon: busicon,
                     title:  name
                     });
 
@@ -389,13 +420,6 @@
 
                 };
 
-
-             
-                                  
-       
-
-    
-    
                 </script>
 
 

@@ -105,12 +105,14 @@ $(function() {
         AutoCompleteSelectHandler(event, ui)
       },
       minLength: 3,
+     
     });
   });
 
   function AutoCompleteSelectHandler(event, ui)
   {
     var selectedObj = ui.item;
+
   } 
 
 var swap = 0;

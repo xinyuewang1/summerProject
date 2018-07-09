@@ -2,6 +2,17 @@
 <!DOCTYPE html>
 <html lang = "en">
     <head>
+
+            <style>
+                    .ui-autocomplete {
+                         max-height: 200px;
+                         overflow-y: auto;
+                         /* prevent horizontal scrollbar */
+                         overflow-x: hidden;
+                         /* add padding to account for vertical scrollbar */
+                         padding-right: 20px;
+                     } 
+             </style>
         <!-- Meta tags -->
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -280,6 +291,7 @@
                             var lat = "{{ p.lat }}"
                             var long = "{{ p.lng }}"
                             var name = "{{ p.name }}"
+                            var id = "{{ p.id }}"
 
                             var lat = parseFloat(lat);
                             var long = parseFloat(long);
@@ -298,7 +310,7 @@
                         google.maps.event.addListener(marker, 'click', (function(markers) {
                         return function() {
                             infoBikes.open(map, this);
-                            infoBikes.setContent('{{ p.name }}');
+                            infoBikes.setContent('{{ p.name }}'+'<br>'+'('+'{{ p.id }}'+')');
                         }
                     })(markers));
 
