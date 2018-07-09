@@ -111,10 +111,16 @@ def index(request):
     return render(request, 'busRoute/index.html', context)
     
 def stops(request):
-    return render(request, 'busRoute/stops.html', {})
+
+    bikes = bikes_query()
+    bus = DublinBus()
+    return render(request, 'busRoute/stops.html', {'bikes': bikes, 'bus': bus})
 
 def routes(request):
-    return render(request, 'busRoute/routes.html', {})
+
+    bikes = bikes_query()
+    bus = DublinBus()
+    return render(request, 'busRoute/routes.html', {'bikes': bikes, 'bus': bus})
 
 def tourism(request):
     return render(request, 'busRoute/tourism.html',{})
