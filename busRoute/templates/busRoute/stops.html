@@ -152,7 +152,6 @@
 
                                             <div><input id="genSearch" placeholder="Search General Area" type="text"></input></div> 
 
-
                                         
                                 
                    </div>
@@ -307,12 +306,20 @@
                     markers.push(marker);
 
 
-                        google.maps.event.addListener(marker, 'click', (function(markers) {
+                        google.maps.event.addListener(marker, 'mouseover', (function(markers) {
                         return function() {
                             infoBikes.open(map, this);
                             infoBikes.setContent('{{ p.name }}'+'<br>'+'('+'{{ p.id }}'+')');
                         }
                     })(markers));
+
+                    google.maps.event.addListener(marker, 'click', (function(markers) {
+		            return function() {
+
+                            document.getElementById("autocomplete").value = '{{ p.id }}';
+		            }
+		        })(markers));
+                
 
 
                             "{% endfor %}" 

@@ -290,9 +290,7 @@
                             var long = parseFloat(long);
 
 
-                    
-
-                            
+                        
                 var latlng = new google.maps.LatLng(lat, long);
                 var marker = new google.maps.Marker({
                     position: latlng,
@@ -303,12 +301,19 @@
                     markers.push(marker);
 
 
-                        google.maps.event.addListener(marker, 'click', (function(markers) {
+                        google.maps.event.addListener(marker, 'mouseover', (function(markers) {
                         return function() {
                             infoBus.open(map, this);
                             infoBus.setContent('{{ p.name }}'+'<br>'+'('+'{{ p.id }}'+')');
                         }
                     })(markers));
+
+                    google.maps.event.addListener(marker, 'click', (function(markers) {
+		            return function() {
+
+                            document.getElementById("sAdd").value = '{{ p.name }}';
+		            }
+		        })(markers));
 
 
                             "{% endfor %}" 
