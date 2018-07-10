@@ -7,6 +7,7 @@ import json
 import datetime
 from datetime import date
 import calendar
+from .utils import Ett39A
 
 def index(request):
     weather = query_weather()
@@ -58,3 +59,9 @@ def query_weather():
     loaded_weather = json.loads(weatherInfo)
 
     return loaded_weather
+
+def Est39A(source, dest, weather, time, month, day):
+    ett = Ett39A(source, dest, weather, time, month, day)
+    result = ett.estimatedTime()
+    return result
+
