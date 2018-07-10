@@ -11,6 +11,8 @@
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
         <link href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet">
+        <link href="{% static 'css/jquery.timepicker.css' %}" type="text/css" rel="stylesheet">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
            
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
@@ -19,6 +21,8 @@
 
         <!--Marker clusterer script-->
         <script src="{% static 'script/markerclusterer.js' %}" type="text/javascript"></script>
+        <!--Datepicker JS-->
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
         <title>Dublin Bus</title>
     </head>
@@ -28,6 +32,8 @@
         <script src = "{% static 'script/dbus.js' %}"></script>
         <!-- Google Map js link -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0&callback=myMap" async defer></script>
+        <script src = "{% static 'script/jquery.timepicker.min.js' %}"> </script>
+        
 
        
         <!-- Header with main page title, main navigation bar and team name & Logo -->
@@ -57,11 +63,45 @@
 
             <h2 style = "float:right;">Innovation Station </h2>
             <a class="navbar-brand" href="#">
-                    <img src= "{% static 'images/Logo.png' %}" alt = "Innovation Station Logo" style="width:40px;padding-left:10px;">
+                <img src= "{% static 'images/Logo.png' %}" alt = "Innovation Station Logo" style="width:40px;padding-left:10px;">
             </a>
         </nav>
 
         <div id = "homeCenter" class="container">
+            <div class="row">
+                <div class="planner-toggle col-sm-12 shadow text-center text-white mt-2" style = "background-color:rgb(255, 113, 19);">
+                    <a href = "#0" id = "planner-toggle">Expand Route Planner <span class = "text-md-center text-sm-left">&#x2A01</span></a>
+                </div>
+
+                <div id = "planner" class="col-sm-12 text-center text-white" style = "display:none;background-color:green;">
+                    <form id = "routePlanner" role = "form" method="POST">
+                        {% csrf_token %}
+                        <div class = "row">
+                            
+                            <div class = "col-sm-5 mt-2 address">
+                                <div class = "j btn-block">From: {{ form.source }}
+                                <a onclick = "swapDirection()">&#8645</a></div>
+                                <div class = "j btn-block">To: &nbsp &nbsp &nbsp {{ form.destination }}</div>
+                            </div>  
+
+                            <div class = "col-sm-3 mt-2 time">  
+                                <div class = "j btn-block"><input id = "single" type= "radio" name="trip" value="single" checked> Single {{ form.departTime }}</div>
+                                <div class = "j btn-block"><input id = "return" type= "radio" name="trip" value="return"> Return {{ form.returnTime }}</div>
+                            </div>
+                            <div class = "col-sm-4 mt-2"> 
+                                <div id = "dDate" class = "j btn-block">Date: {{ form.departDate }}</div>
+                                <div class = "j btn-block">Date: {{ form.returnDate }}</div>
+                            </div>
+                        </div>   
+                        <div class = "row">
+                            <button type ="submit" class = "btn btn-block btn-primary m-2" type = "button" name = "go" onclick="timeEstimate()">GO!</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+
+
             <div class="row">
                 <div class="col-sm-8">
                     <div class="col-sm-12 shadow rounded mt-4" style="background-color:rgb(105,143,123);padding:3px;">
@@ -143,7 +183,6 @@
 
 
         <script>
-                      
                         var busMarkers = 0;   
                     
                     function displayBusMarkers(){    
@@ -178,15 +217,14 @@
 
                     markers.push(marker);
 
-
-                        google.maps.event.addListener(marker, 'click', (function(markers) {
+                      google.maps.event.addListener(marker, 'mouseover', (function(markers) {
                         return function() {
                             infoBikes.open(map, this);
                             infoBikes.setContent('{{ p.name }}'+'<br>'+'('+'{{ p.id }}'+')');
                         }
                     })(markers));
 
-
+                    
                             "{% endfor %}" 
                             "{% endif %}"
 
@@ -251,11 +289,10 @@
 
                         markers.push(marker);
 
-
-                        google.maps.event.addListener(marker, 'click', (function(markers) {
+                    google.maps.event.addListener(marker, 'mouseover', (function(markers) {
                         return function() {
                             infoBikes.open(map, this);
-                            infoBikes.setContent('{{ i.name }}');
+                            infoBikes.setContent('{{ p.name }}'+'<br>'+'('+'{{ p.id }}'+')');
                         }
                     })(markers));
 
@@ -292,8 +329,22 @@
 
             </script>
     
-        <!-- <div class="footer">
-            <p>Footer</p> -->
+        <script>
+            var d = new Date();
+            var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
+            document.getElementById("id_departDate").value = fullDate;
+            $('#id_departTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now', timeFormat: "H:i" });
+            $( function() {
+            $( "#id_departDate" ).datepicker();
+            });
+            $('#id_returnTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now',timeFormat: "H:i" });
+            $( function() {
+            $( "#id_returnDate" ).datepicker({});
+            });
+        </script>
+<!--
+        <div class="footer">
+            <p>Footer</p>
         </div>
     
 

@@ -5,26 +5,7 @@ function myMap() {
         zoom:10,
     };
         map=new google.maps.Map(document.getElementById("map"),mapProp);
-
-
-var placeSearch, autocomplete;
-
-function initialize() {
-
-    autocomplete = new google.maps.places.Autocomplete(document.getElementById('dogshit'), {
-        types: ['(regions)']
-    });
-
-    google.maps.event.addListener(autocomplete, 'place_changed', function () {
-        var place = autocomplete.getPlace();
-        console.log(place);
-    });
 }
-
-initialize();
-
-}
-
 // Function used for displaying/hiding the traffic information using a check variable 
 var trafficCheck = 0;
 function toggleTraffic(btn){
@@ -170,13 +151,6 @@ function timeEstimate() {
     )
 };
 
-// function currentWeather() {
-//     var jqxhr =  $.getJSON( '/'+document.getElementById("departTime").value+'/', function( today ){
-
-//         document.getElementById("timeEst").innerHTML = today;
-//     }  
-// }
-
 
 // ---------------- Jquery ----------------
 
@@ -190,22 +164,61 @@ $(document).ready(function(){
 });
 
 var ena = function() {
-    $("#returnDepartDate").prop( "disabled", false );
-    $("#returnDepartTime").prop( "disabled", false );
-    $("#returnDepartDate").css("background-color", "white");
-    $("#returnDepartTime").css("background-color", "white");
-    $("#returnDepartDate").css("opacity", "1");
-    $("#returnDepartTime").css("opacity", "1");
+    $("#id_returnDate").prop( "disabled", false );
+    $("#id_returnTime").prop( "disabled", false );
+    $("#id_returnDate").css("background-color", "white");
+    $("#id_returnTime").css("background-color", "white");
+    $("#id_returnDate").css("opacity", "1");
+    $("#id_returnTime").css("opacity", "1");
     
 }
 var disa = function() {
-    $("#returnDepartDate").prop( "disabled", true);
-    $("#returnDepartTime").prop( "disabled", true);
-    $("#returnDepartDate").css("background-color", "lightgrey");
-    $("#returnDepartTime").css("background-color", "lightgrey");
-    $("#returnDepartDate").css("opacity", "0.5");
-    $("#returnDepartTime").css("opacity", "0.5");
+    $("#id_returnDate").prop( "disabled", true);
+    $("#id_returnTime").prop( "disabled", true);
+    $("#id_returnDate").css("background-color", "lightgrey");
+    $("#id_returnTime").css("background-color", "lightgrey");
+    $("#id_returnDate").css("opacity", "0.4");
+    $("#id_returnTime").css("opacity", "0.4");
 }
+
+
+
+$(document).ready(function(){ 
+    $("#planner-toggle").click(function() {
+    
+        $("#planner").slideToggle( "slow");
+
+        if ($("#planner-toggle").text() == "Expand Route Planner"){			
+            $("#planner-toggle").html("Hide Route Planner")
+        }
+        else {		
+            $("#planner-toggle").text("Expand Route Planner")
+        }
+        });
+    });
+
+
+
+
+
+
+//Autocomplete
+$(function() {
+    $("#id_source").autocomplete({
+        source: "api/getSource/", 
+        select: function (event, ui) { //item selected
+        AutoCompleteSelectHandler(event, ui)
+      },
+      minLength: 1,
+    });
+  });
+ 
+  function AutoCompleteSelectHandler(event, ui)
+  {
+    var selectedObj = ui.item;
+  }
+
+
 
 // References:
 // https://github.com/jonthornton/jquery-timepicker 

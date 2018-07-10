@@ -72,7 +72,7 @@ WSGI_APPLICATION = 'busApp.wsgi.application'
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
 DATABASES = {
-     'default': {
+    'default': {
         'NAME': 'busDB',
         'ENGINE': 'django.db.backends.mysql',
         'HOST': '137.43.49.59',

@@ -1,8 +1,9 @@
+from django.views import generic
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
-from .models import Testtrip
-from .models import Busstops
+from .models import Testtrip, Busstops
+from busRoute.forms import routeForm
 import requests
 import json
 import datetime
@@ -82,7 +83,6 @@ def getAddressSource(request):
 
 def getAddressDestination(request):
 
-
     '''this function returns the addresses that match the users input into the destination input on the routes page'''
 
     if request.is_ajax():
@@ -102,26 +102,82 @@ def getAddressDestination(request):
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
 
-
-def index(request):
+    
+def routes(request):
     weather = query_weather()
     bikes = bikes_query()
     bus = DublinBus()
-    context = {'weather': weather, 'bikes': bikes, 'bus': bus}
-    return render(request, 'busRoute/index.html', context)
+    return render(request, 'busRoute/routes.html', {'bikes': bikes, 'bus': bus, 'weather': weather})
     
-def stops(request):
 
-    bikes = bikes_query()
-    bus = DublinBus()
-    return render(request, 'busRoute/stops.html', {'bikes': bikes, 'bus': bus})
+class homeView(generic.TemplateView):
 
-def routes(request):
+    '''Class for index.html page which renders the page, the form and the weather
+    *****Does not include autocomplete yet****
+    '''
 
-    bikes = bikes_query()
-    bus = DublinBus()
-    return render(request, 'busRoute/routes.html', {'bikes': bikes, 'bus': bus})
+    template_name = "busRoute/index.html"
+    context_object_name = 'weather'
 
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['weather'] = query_weather()
+        return context
+
+    def get(self,request):
+        form = routeForm()
+        weather = query_weather()
+        bikes = bikes_query()
+        bus = DublinBus()
+        context = {'weather': weather, 'bus': bus, 'bikes': bikes, 'form': form}
+        return render(request, self.template_name, context)
+    
+    def post(self, request):
+        form = routeForm(request.POST)
+        if form.is_valid():
+            source_address = form.cleaned_data['source']
+            destination_address = form.cleaned_data['destination']
+            depart_time = form.cleaned_data['departTime']
+            return_time = form.cleaned_data['returnTime']
+            depart_date = form.cleaned_data['departDate']
+            return_date = form.cleaned_data['returnDate']
+
+        weather = query_weather()
+        args = {'form': form, 'source': source_address, 'destination': destination_address, 'depart_time': depart_time, 'return_time': return_time, 'depart_date': depart_date , 'return_date': return_date, 'weather': weather}
+        return render(request, self.template_name, args)
+
+
+class stopsView(generic.TemplateView):
+    '''Class for stops.html page which renders the page, the form and the weather'''
+
+    template_name = "busRoute/stops.html"
+    context_object_name = 'weather'
+
+    def get(self,request):
+        form = routeForm()
+        weather = query_weather()
+        bikes = bikes_query()
+        bus = DublinBus()
+
+        context = {'weather': weather, 'bikes': bikes, 'bus': bus, 'form': form}
+        return render(request, self.template_name, context)
+    
+    def post(self, request):
+        form = routeForm(request.POST)
+        if form.is_valid():
+            source_address = form.cleaned_data['source']
+            destination_address = form.cleaned_data['destination']
+            depart_time = form.cleaned_data['departTime']
+            return_time = form.cleaned_data['returnTime']
+            depart_date = form.cleaned_data['departDate']
+            return_date = form.cleaned_data['returnDate']
+
+        weather = query_weather()
+        args = {'form': form, 'source': source_address, 'destination': destination_address, 'depart_time': depart_time, 'return_time': return_time, 'depart_date': depart_date , 'return_date': return_date, 'weather': weather}
+        return render(request, self.template_name, args)
+
+
+#have to add in weather to this bit, have to set the return to be disabled and add the extra styling and options for the form
 def tourism(request):
     return render(request, 'busRoute/tourism.html',{})
 
@@ -154,7 +210,7 @@ def query_weather():
                      'temp': float("{0:.2f}".format(r['main']['temp'] -273.15)),
                      'temp_min': float("{0:.2f}".format(r['main']['temp_min'] - 273.15)),
                      'temp_max': float("{0:.2f}".format(r['main']['temp_max'] - 273.15)),
-                     'wind': 3.6*(r['wind']['speed']),
+                     'wind': float("{0:.2f}".format(3.6*(r['wind']['speed']))),
                      'icon': "http://openweathermap.org/img/w/" + str(r['weather'][0]['icon']) + ".png",
                      'day': calendar.day_name[my_date.weekday()],
                      'date': now.strftime("%d"),
@@ -164,7 +220,7 @@ def query_weather():
 
     return loaded_weather
 
-     
+
 def bikes_query():
     
     """ Connects to the JCDecaux API and returns the dublin bikes information """
@@ -210,5 +266,3 @@ def DublinBus():
         results.append(loadedBikes)
 
     return results
-
-

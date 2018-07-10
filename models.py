@@ -7,6 +7,7 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
+
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=80)
 
@@ -140,9 +141,10 @@ class DjangoSession(models.Model):
         managed = False
         db_table = 'django_session'
 
+
 class Testtrip(models.Model):
     datasource = models.CharField(max_length=5, blank=True, null=True)
-    dayofservice = models.CharField(primary_key=True, max_length=20)
+    dayofservice = models.CharField(primary_key=True, max_length=20, primary_key = True)
     tripid = models.CharField(max_length=10, primary_key = True)
     lineid = models.CharField(max_length=10, blank=True, null=True)
     routeid = models.CharField(max_length=10, blank=True, null=True)
