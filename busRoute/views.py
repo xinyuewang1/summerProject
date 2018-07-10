@@ -2,7 +2,7 @@ from django.views import generic
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
-from .models import Testtrip
+from .models import Testtrip, Busstops
 from busRoute.forms import routeForm
 import requests
 import json
@@ -11,7 +11,12 @@ from datetime import date
 import calendar
 
     
+
 class homeView(generic.TemplateView):
+    '''Class for index.html page which renders the page, the form and the weather
+    *****Does not include autocomplete yet****
+    '''
+
     template_name = "busRoute/index.html"
     context_object_name = 'weather'
 
@@ -41,7 +46,11 @@ class homeView(generic.TemplateView):
         return render(request, self.template_name, args)
 
 
+
+
 class stopsView(generic.TemplateView):
+    '''Class for stops.html page which renders the page, the form and the weather'''
+
     template_name = "busRoute/stops.html"
     context_object_name = 'weather'
 
@@ -65,6 +74,35 @@ class stopsView(generic.TemplateView):
         args = {'form': form, 'source': source_address, 'destination': destination_address, 'depart_time': depart_time, 'return_time': return_time, 'depart_date': depart_date , 'return_date': return_date, 'weather': weather}
         return render(request, self.template_name, args)
 
+
+
+def getSource(request):
+    '''This function performs the query to find the matches to the users input in the source search bar'''
+
+    if request.is_ajax():
+        q = request.GET.get('term', '')
+        places = Busstops.objects.filter(stop_id__icontains=q)
+        results = []
+        for pl in places:
+            place_json = {}
+            place_json = pl.stop_id
+            if place_json in results:
+                pass
+            else:
+                results.append(place_json)
+        data = json.dumps(results)
+    else:
+        data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
+
+
+
+
+
+
+
 #have to add in weather to this bit, have to set the return to be disabled and add the extra styling and options for the form
 def tourism(request):
     return render(request, 'busRoute/tourism.html',{})
@@ -75,14 +113,14 @@ def timeGenerator(request, chosen_time):
 
     return JsonResponse("You chose %s" % chosen_time, safe=False)
 
-def detail(request, busroutenum):
-    print("Testing stuff")
-    all_trips = Testtrip.objects.all()
-    html = ''
-    for trip in all_trips:
-        print(trip)
-        html += '<h2>Route number is ' + str(trip.lineid) + '</h2><br>'
-    return HttpResponse(html)
+# def detail(request, busroutenum):
+#     print("Testing stuff")
+#     all_trips = Testtrip.objects.all()
+#     html = ''
+#     for trip in all_trips:
+#         print(trip)
+#         html += '<h2>Route number is ' + str(trip.lineid) + '</h2><br>'
+#     return HttpResponse(html)
 
 def query_weather():
     """Queries Open Weather API for current weather information of Dublin City. Parses input and returns dictionary

@@ -90,6 +90,45 @@ var disa = function() {
     $("#id_returnTime").css("opacity", "0.4");
 }
 
+
+
+$(document).ready(function(){ 
+    $("#planner-toggle").click(function() {
+    
+        $("#planner").slideToggle( "slow");
+
+        if ($("#planner-toggle").text() == "Expand Route Planner"){			
+            $("#planner-toggle").html("Hide Route Planner")
+        }
+        else {		
+            $("#planner-toggle").text("Expand Route Planner")
+        }
+        });
+    });
+
+
+
+
+
+
+//Autocomplete
+$(function() {
+    $("#id_source").autocomplete({
+        source: "api/getSource/", 
+        select: function (event, ui) { //item selected
+        AutoCompleteSelectHandler(event, ui)
+      },
+      minLength: 1,
+    });
+  });
+ 
+  function AutoCompleteSelectHandler(event, ui)
+  {
+    var selectedObj = ui.item;
+  }
+
+
+
 // References:
 // https://github.com/jonthornton/jquery-timepicker 
 //http://api.jqueryui.com/datepicker/

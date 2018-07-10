@@ -13,7 +13,8 @@ urlpatterns = [
     
     url(r'^(?P<busroutenum>[0-9]+)/$', views.timeGenerator, name='detail'),
 
-    # url(r'^(?P<busroutenum>[0-9]+)/$', views.query_weather, name='detail'),
+    #Autocomplete for Stop_id 
+    url(r'^api/getSource/', views.getSource, name='getSource'),
 
 ]
 
