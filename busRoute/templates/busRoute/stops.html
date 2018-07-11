@@ -168,14 +168,14 @@
             <div class="row" style = "margin-top:20px;">
                 <div class = "col-sm-12">
                     <div class="col-sm-12 rounded shadow" style = "background-color:rgb(105,143,123);">
-                        <div class = "display-4 mb-3 border-bottom border-black">Friday 06 July</div>
+                        <div class = "display-4 mb-3 border-bottom border-black">Tuesday 10 July</div>
                         
                         <div class = "row">
                             <div class = "col-sm-3">
                                 <div class = "col-sm-12 rounded shadow mb-3" style = "background-color:white;">
                                     <h1 class = "display-4">{{ depart_time }}</h1>
-                                    <h2 class = "ml-2 font-weight-bold text-uppercase">{{ source }}</h2>
-                                    <h2 class = "ml-2">Stop 1034</h2>
+                                    <h2 class = "ml-2 font-weight-bold text-uppercase">UCD</h2>
+                                    <h2 class = "ml-2">Stop {{source}}</h2>
                                     <!-- <h4 class = "ml-2 mt-2">Depart in 5 mins</h4> -->
                                     <br>
                                 </div>
@@ -184,13 +184,13 @@
                                 <strong>---------</strong>
                                 <img class="animated bounce infinite" src = "{% static 'images/dbuscartoon.png' %}">
                                 <strong>---------</strong>
-                                <h4 class = "ml-2 mt-2 text-white">Leaving in 5 mins</h4>
+                                <h4 class = "ml-2 mt-2 text-white">Travel Time {{ est }} mins</h4>
                             </div>
                             <div class = "col-sm-3">
                                 <div class = "col-sm-12 rounded shadow" style = "background-color:white;">
-                                    <h1 class = "display-4">{{ return_time }}</h1>
-                                    <h2 class = "ml-2 font-weight-bold text-uppercase">{{ destination }}</h2>
-                                    <h2 class = "ml-2">Stop 765</h2>
+                                    <h1 class = "display-4">{{ arrival_time }}</h1>
+                                    <h2 class = "ml-2 font-weight-bold text-uppercase">Delhurst</h2>
+                                    <h2 class = "ml-2">Stop {{ destination }}</h2>
                                     <!-- <h4 class = "ml-2 mt-2">Depart in 5 mins</h4> -->
                                     <br>
                                 </div>
@@ -205,7 +205,8 @@
             <h2>{{ depart_time }}</h2>
             <h2>{{ return_time }}</h2>
             <h2>{{ depart_date }}</h2>
-            <h2>{{ return_date }}</h2> -->
+            <h2>{{ return_date }}</h2>
+            <h2>{{ est }}</h2> -->
         </div>
         <!-- <div class="container-fluid footer">
             <div class = "row">

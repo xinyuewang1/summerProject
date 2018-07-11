@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from django.urls import path
 from . import views
+from .views import Est39A
 from .models import Testtrip
 
 urlpatterns = [
@@ -15,6 +16,9 @@ urlpatterns = [
 
     #Autocomplete for Stop_id 
     url(r'^api/getSource/', views.getSource, name='getSource'),
+
+    #Pickle
+    url(r'Ett39A', Est39A, name="Ett39A"),
 
 ]
 
