@@ -5,7 +5,54 @@ function myMap() {
         zoom:10,
     };
         map=new google.maps.Map(document.getElementById("map"),mapProp);
-}
+
+        infoWindow = new google.maps.InfoWindow;
+
+        markers = [];
+        //this code is reponsible for finding and displaing the users current location. 
+        //This came from https://developers.google.com/maps/documentation/javascript/examples/map-geolocation
+        // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+
+				current = new google.maps.Marker({
+                    position: new google.maps.LatLng(pos),
+                    map: map,
+                    animation: google.maps.Animation.BOUNCE,
+                    title: 'Me'
+                });
+
+                google.maps.event.addListener(current, 'mouseover', (function(current) {
+                    return function() {
+                        infoWindow.open(map, this);
+                        infoWindow.setContent('Current location');
+                    }
+                })(current));
+
+          }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+
+          });
+
+        } else {
+        
+          handleLocationError(false, infoWindow, map.getCenter());
+        }
+  
+      }
+
+      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+                              'Error: The Geolocation service failed.' :
+                              'Error: Your browser doesn\'t support geolocation.');
+        infoWindow.open(map);
+      }
+
 // Function used for displaying/hiding the traffic information using a check variable 
 var trafficCheck = 0;
 function toggleTraffic(btn){
@@ -34,6 +81,7 @@ function toggleTraffic(btn){
     }
 }
 
+//this function is responsible for the autocomplete function for the source input box in the form on the stops page
 $(function() {
     $("#autocomplete").autocomplete({
       source: "api/getSource/",
@@ -48,6 +96,9 @@ $(function() {
   {
     var selectedObj = ui.item;
   } 
+
+
+//this function is responsible for the autocomplete function for the destination input box in the form on the stops page
 
   $(function() {
       $("#desto").autocomplete({
@@ -64,6 +115,9 @@ $(function() {
       var selectedObj = ui.item;
   }
 
+
+//this function is responsible for the autocomplete function for the source input box in the form on the routes page
+
   $(function() {
     $("#dAdd").autocomplete({
       source: "api/getAddressDestination/",
@@ -78,6 +132,8 @@ $(function() {
   {
     var selectedObj = ui.item;
   } 
+
+  //this function is responsible for the autocomplete function for the destination input box in the form on the routes page
 
   $(function() {
     $("#sAdd").autocomplete({
@@ -182,7 +238,6 @@ var disa = function() {
 }
 
 
-
 $(document).ready(function(){ 
     $("#planner-toggle").click(function() {
     
@@ -196,10 +251,6 @@ $(document).ready(function(){
         }
         });
     });
-
-
-
-
 
 
 //Autocomplete
@@ -217,7 +268,6 @@ $(function() {
   {
     var selectedObj = ui.item;
   }
-
 
 
 // References:

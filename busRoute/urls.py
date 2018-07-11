@@ -9,9 +9,11 @@ urlpatterns = [
 
     url(r'^stop', views.stopsView.as_view(), name='stops'),
 
+    url(r'^routes', views.routesView.as_view(), name='routes'),
+
     url(r'^tour', views.tourism, name='tourism'),
 
-     url(r'^routes', views.routes, name='tourism'),
+    #  url(r'^routes', views.routes, name='tourism'),
 
     # url(r'^stop', views.stops, name='stops'),
 

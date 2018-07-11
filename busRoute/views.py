@@ -103,11 +103,11 @@ def getAddressDestination(request):
     return HttpResponse(data, mimetype)
 
     
-def routes(request):
-    weather = query_weather()
-    bikes = bikes_query()
-    bus = DublinBus()
-    return render(request, 'busRoute/routes.html', {'bikes': bikes, 'bus': bus, 'weather': weather})
+# def routes(request):
+#     weather = query_weather()
+#     bikes = bikes_query()
+#     bus = DublinBus()
+#     return render(request, 'busRoute/routes.html', {'bikes': bikes, 'bus': bus, 'weather': weather})
     
 
 class homeView(generic.TemplateView):
@@ -177,7 +177,37 @@ class stopsView(generic.TemplateView):
         return render(request, self.template_name, args)
 
 
+class routesView(generic.TemplateView):
+    '''Class for routes.html page which renders the page, the form and the weather'''
+
+    template_name = "busRoute/routes.html"
+    context_object_name = 'weather'
+
+    def get(self,request):
+        form = routeForm()
+        weather = query_weather()
+        bikes = bikes_query()
+        bus = DublinBus()
+
+        context = {'weather': weather, 'bikes': bikes, 'bus': bus, 'form': form}
+        return render(request, self.template_name, context)
+    
+    def post(self, request):
+        form = routeForm(request.POST)
+        if form.is_valid():
+            source_address = form.cleaned_data['source']
+            destination_address = form.cleaned_data['destination']
+            depart_time = form.cleaned_data['departTime']
+            return_time = form.cleaned_data['returnTime']
+            depart_date = form.cleaned_data['departDate']
+            return_date = form.cleaned_data['returnDate']
+
+        weather = query_weather()
+        args = {'form': form, 'source': source_address, 'destination': destination_address, 'depart_time': depart_time, 'return_time': return_time, 'depart_date': depart_date , 'return_date': return_date, 'weather': weather}
+        return render(request, self.template_name, args)
+
 #have to add in weather to this bit, have to set the return to be disabled and add the extra styling and options for the form
+
 def tourism(request):
     return render(request, 'busRoute/tourism.html',{})
 
@@ -195,6 +225,10 @@ def timeGenerator(request, chosen_time):
 #         print(trip)
 #         html += '<h2>Route number is ' + str(trip.lineid) + '</h2><br>'
 #     return HttpResponse(html)
+
+
+
+'''these are the more general queries called inside the above classes'''
 
 def query_weather():
 
@@ -246,8 +280,7 @@ def bikes_query():
             results.append(loadedBikes)
 
     return results
-        
-    
+          
 def DublinBus():
 
     '''this function creates a dictionary from the dublin bus data to be accessed on the page'''
