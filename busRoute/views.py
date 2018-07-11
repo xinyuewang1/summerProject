@@ -195,7 +195,10 @@ def arrivalTime(depart, travel):
     if arrival[1] == ':':
         final = '0' + arrival
     else:
-        return arrival
+        final = arrival
+
+    if len(final) == 4:
+        return final[0:3] + '0' + final[3]
 
     return final
 
