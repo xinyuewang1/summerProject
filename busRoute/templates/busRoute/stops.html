@@ -121,7 +121,7 @@
                         <div class="row" style="color:white;font-size: 14px;">
                             <div class="col-sm-5">
                                 <div id="icon">
-                                    <img src={ {weather.icon}}>
+                                    <img src={{weather.icon}}>
                                 </div>
                             </div>
                             <div class="col-sm-7" style="padding:0px;">
@@ -202,19 +202,21 @@
                                     <div class="j btn-block address">From:
                                         <input type="text" class="form-control form-control-sm" name="searchSource" placeholder="Source.." id="autocomplete">
                                         <script>
-                                            // function generateQuery() {
+                                            function generateQuery() {
 
-                                            //     var jqxhr = $.getJSON(
-                                            //         'https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?stopid=' +
-                                            //         document.getElementById("autocomplete").value + '&format=json',
-                                            //         function (daily) {
+                                                //this function gets real time information for the stop that is selected.
+
+                                                var jqxhr = $.getJSON(
+                                                    'https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?stopid=' +
+                                                    document.getElementById("autocomplete").value + '&format=json',
+                                                    function (daily) {
 
 
-                                            //             console.log(daily);
+                                                        console.log(daily);
 
 
-                                            //         })
-                                            // };
+                                                    })
+                                            };
                                         </script>
                                         <a onclick="swapDirection()">&#8645</a>
                                     </div>
@@ -260,7 +262,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <button class="btn btn-block btn-primary mt-2" type="button" name="go" onclick= "getValue()">GO!</button>
+                                <button class="btn btn-block btn-primary mt-2" type="button" name="go" onclick= "getValue(), generateQuery()">GO!</button>
                             </div>
 
                             <div></div>
@@ -317,6 +319,10 @@
         <script>
             function getValue() {
 
+                //this function is responsible for the directions service. 
+                //it takes the source destintion input value to find its long/lat through an if statament
+                //and the users current location 
+                //and it will display the results on the map and the actual written directions below!
 
                 var curLat = pos.lat;
                 var curLng = pos.lng;

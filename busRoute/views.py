@@ -236,7 +236,6 @@ def timeGenerator(request, chosen_time):
 #     return HttpResponse(html)
 
 
-
 '''these are the more general queries called inside the above classes'''
 
 def query_weather():

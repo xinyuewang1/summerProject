@@ -260,6 +260,13 @@
                         }
                     })(markers));
 
+                      google.maps.event.addListener(marker, 'click', (function (markers) {
+                        return function () {
+
+                            document.getElementById("id_source").value = '{{ p.name }}';
+                        }
+                    })(markers));
+
                     
                             "{% endfor %}" 
                             "{% endif %}"

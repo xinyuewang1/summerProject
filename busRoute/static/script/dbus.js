@@ -253,7 +253,7 @@ $(document).ready(function(){
     });
 
 
-//Autocomplete
+//Autocomplete for index 
 $(function() {
     $("#id_source").autocomplete({
         source: "api/getSource/", 
