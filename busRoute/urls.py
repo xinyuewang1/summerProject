@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.urls import path
 from . import views
 from .models import Testtrip
-from .views import Est39A
+from .views import Est39A, AnnEst39A
 
 urlpatterns = [
 
@@ -18,5 +18,6 @@ urlpatterns = [
 
     url(r'Ett39A', Est39A, name="Ett39A"),
 
-]
+    url(r'Ann39A', AnnEst39A, name='Ann39A'),
 
+]

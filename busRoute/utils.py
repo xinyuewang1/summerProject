@@ -88,3 +88,51 @@ class Ett39A():
                 model = pickle.load(f)
         return model.predict(modelIn).sum()
 
+class Ann39A:
+
+    def __init__(self, source, dest, actualArr, rain, day):
+        self.source = source
+        self.dest = dest
+        self.actualArr = actualArr
+        self.rain = rain
+        self.day = day
+        routeDict = pickle.load(open('pickles/routeDict.pkl', 'rb'))
+        for key, route in routeDict.items():
+            if route == int(self.source):
+                self.sourceK = key
+            if route == int(self.dest):
+                self.destK = key
+    
+    def checkDirection(self):
+        if self.sourceK <= self.destK:
+            return True
+        elif self.sourceK > self.destK:
+            return False
+
+    def forwardAlgo(self):
+        with open('ann.pkl', 'rb') as f:
+            model = pickle.load(f)
+        if self.sourceK == 1:
+            modelIn = [self.destK, int(self.actualArr), float(self.rain), int(self.day)]
+            return model.predict(modelIn)
+        else:
+            modelInS = [self.sourceK, int(self.actualArr), float(self.rain), int(self.day)]
+            modelInD = [self.destK, int(self.actualArr), float(self.rain), int(self.day)]
+            return model.predict(modelInS) - model.predict(modelInD)
+
+    def backwardAlgo(self):
+        with open('annback.pkl', 'rb') as f:
+            model = pickle.load(f)
+        if self.sourceK == 73:
+            modelIn = [self.destK, int(self.actualArr), float(self.rain), int(self.day)]
+            return model.predict(modelIn)
+        else:
+            modelInS = [self.sourceK, int(self.actualArr), float(self.rain), int(self.day)]
+            modelInD = [self.destK, int(self.actualArr), float(self.rain), int(self.day)]
+            return model.predict(modelInS) - model.predict(modelInD)
+
+    def estimatedTime(self):
+        if self.checkDirection() == True:
+            return self.forwardAlgo()
+        else:
+            return self.backwardAlgo()
