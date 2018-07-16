@@ -72,8 +72,10 @@ class stopsView(generic.TemplateView):
             # return_date = form.cleaned_data['returnDate']
 
         hour = readTimeIn(depart_time)
+        day = parseDate(depart_date)
+        
         if hour != -1:
-            est = Est39A(source_address, destination_address, 0, hour, 'Jan', 'Mon')
+            est = Est39A(source_address, destination_address, 0, hour, 'Jan', day)
         else:
             est = "unavailable"
 
@@ -201,4 +203,14 @@ def arrivalTime(depart, travel):
         return final[0:3] + '0' + final[3]
 
     return final
+
+def parseDate(d):
+    try:
+        month, day, year = (int(x) for x in d.split('/'))    
+        ans = datetime.date(year, month, day)
+    except:
+        return -1
+
+    return ans.strftime("%A")
+
 

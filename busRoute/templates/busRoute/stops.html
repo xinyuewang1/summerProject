@@ -81,7 +81,7 @@
                 <div class="col-sm-4">
                     <div class="col-sm-12 shadow rounded mt-4" style="background-color:rgb(105,143,123);padding:2px;">
                         <div class = "container-fluid mt-2 mb-1">
-                            <h1 style = "text-align:center;font-size:23px;" class = "text-white">Dublin, {{weather.day}} {{weather.date}} {{weather.month}}</h1>
+                            <h1 style = "text-align:center;font-size:23px;" class = "text-white">Dublin, {{ weather.day }} {{ weather.date }} {{ weather.month }}</h1>
                         </div>
                         <div class = "container-fluid ">
                             <div class = "row" style = "color:white;font-size: 14px;">
@@ -157,7 +157,8 @@
                                 </div>
                             </div>   
                             <div class = "row">
-                                <button type ="submit" class = "btn btn-block btn-primary m-2" type = "button" name = "go" onclick="timeEstimate()">GO!</button>
+                                <button type ="submit" class = "btn btn-block btn-primary m-2" name = "go" onclick="timeEstimate(); showRoute();">GO!</button>
+                                <button type ="button" class = "btn btn-block btn-primary m-2" name = "Test" onclick="document.getElementById('routeResult').style.display = 'block' ;;">Test</button>
                             </div>
                         </form>
                         <div id = "timeEst"></div> 
@@ -165,7 +166,7 @@
                 </div>
             </div>
 
-            <div class="row" style = "margin-top:20px;">
+            <div class="row" style = "margin-top:20px;display:none;" id = "routeResult">
                 <div class = "col-sm-12">
                     <div class="col-sm-12 rounded shadow" style = "background-color:rgb(105,143,123);">
                         <div class = "display-4 mb-3 border-bottom border-black">Tuesday 10 July</div>

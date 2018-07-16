@@ -50,6 +50,17 @@ function swapDirection() {
     }
 }
 
+function showRoute() {
+    var x = document.getElementById("routeResult");
+    x.style.display = 'block';
+}
+
+$(document).ready(function() {
+    $("#routePlanner").submit(function(e) {
+      $("#routeResult").show();
+    });
+  });
+
 function timeEstimate() {
 
     //Function for the actions taken by the 'Go!' button on the stops page
