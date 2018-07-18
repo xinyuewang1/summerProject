@@ -243,7 +243,9 @@ def tourism(request):
 
 
 def test(request):
-    return render(request, 'busRoute/test.html',{})
+    bus = DublinBus()
+    routes = get_route_data()
+    return render(request, 'busRoute/test.html',{'routes': routes, 'bus': bus})
 
 def timeGenerator(request, chosen_time):
 
@@ -347,6 +349,7 @@ def readTimeIn(time):
     return hour
 
 def arrivalTime(depart, travel):
+
     ''' Function with input parameters depart time and total travel time which returns a string of the arrival time'''
 
     #Test for correct input
@@ -380,5 +383,52 @@ def arrivalTime(depart, travel):
         return final[0:3] + '0' + final[3]
 
     return final
+
+
+
+def get_route_data():
+
+        '''accessing route information for the 39A from RTPI
+        will need to make it more dynamic in terms of the other bus stops'''
+
+        url = requests.get("http://data.dublinked.ie/cgi-bin/rtpi/routeinformation?routeid=39A&operator=bac&format=json")
+        url = url.json()
+       
+        results = []
+
+        x = url['results'][1]['stops']
+
+        for i in x: 
+
+            # print(i['latitude'])
+
+            Info= {'lat': i['latitude'],
+                     'lng':i['longitude'],
+                     'name': i['fullname'],
+                     'id': i['stopid']
+                    }
+
+            dbInfo = json.dumps(Info) 
+            loadedBikes = json.loads(dbInfo)
+            results.append(loadedBikes)
+      
+        print(results)
+        return results
+            
+
+
+    
+
+       
+
+      
+    
+
+
+
+
+          
+                   
+                  
 
 
