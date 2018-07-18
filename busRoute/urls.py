@@ -13,8 +13,13 @@ urlpatterns = [
     url(r'^routes', views.routesView.as_view(), name='routes'),
 
     url(r'^tour', views.tourism, name='tourism'),
+
+    url(r'^test', views.test, name='tourism'),
+    
  
     url(r'^(?P<busroutenum>[0-9]+)/$', views.timeGenerator, name='detail'),
+
+    url(r'^api/getRoutes/', views.getRoutes, name='getRoutes'),
 
     url(r'^api/getSource/', views.getSource, name='getSource'),
 

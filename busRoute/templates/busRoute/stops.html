@@ -4,6 +4,7 @@
 
 <head>
     <style>
+
         .ui-autocomplete {
             max-height: 200px;
             overflow-y: auto;
@@ -12,6 +13,7 @@
             /* add padding to account for vertical scrollbar */
             padding-right: 20px;
         }
+
     </style>
     <!-- Meta tags -->
     <meta charset="UTF-8">
@@ -198,9 +200,8 @@
                             {% csrf_token %}
                             <div class="row">
                                 <!-- Single source options -->
-                                <div class="col-sm-5 mt-2">
-                                    <div class="j btn-block address">From:
-                                        <input type="text" class="form-control form-control-sm" name="searchSource" placeholder="Source.." id="autocomplete">
+                                <div class="col-sm-5 mt-2 address">
+                                    <div class="j btn-block">From: {{ form.source }}
                                         <script>
                                             function generateQuery() {
 
@@ -208,7 +209,7 @@
 
                                                 var jqxhr = $.getJSON(
                                                     'https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?stopid=' +
-                                                    document.getElementById("autocomplete").value + '&format=json',
+                                                    document.getElementById("id_source").value + '&format=json',
                                                     function (daily) {
 
 
@@ -220,8 +221,7 @@
                                         </script>
                                         <a onclick="swapDirection()">&#8645</a>
                                     </div>
-                                    <div class="j btn-block address">To: &nbsp &nbsp &nbsp
-                                        <input type="text" class="form-control form-control-sm" placeholder="Destination.." name="searchDest" id="desto">
+                                    <div class="j btn-block address">To: &nbsp &nbsp &nbsp {{ form.destination }}
                                     </div>
 
 
@@ -328,7 +328,7 @@
                 var curLng = pos.lng;
 
 
-                var x = document.getElementById("autocomplete").value;
+                var x = document.getElementById("id_source").value;
 
                 console.log(x);
 
@@ -391,8 +391,6 @@
        
             }
            
-
-
 
             var placeSearch, autocomplete;
 
@@ -521,8 +519,6 @@
                 };
             }
 
-
-
             var bikeMarkers = 0;
 
 
@@ -599,6 +595,21 @@
                 }
 
             };
+
+            $(function() {
+    $("#id_destination").autocomplete({
+    source: "api/getDesintation/",
+    select: function (event, ui) { //item selected
+        AutoCompleteSelectHandler(event, ui)
+    },
+    minLength: 1,
+    });
+});
+
+function AutoCompleteSelectHandler(event, ui)
+{
+    var selectedObj = ui.item;
+}
         </script>
 
 

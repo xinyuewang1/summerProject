@@ -103,12 +103,33 @@ def getAddressDestination(request):
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
 
+
+def getRoutes(request):
+
+    '''this function returns the routes that match the users input when searching for routes information'''
+
+    if request.is_ajax():
+            q = request.GET.get('term', '')
+            places = Testtrip.objects.filter(lineid__icontains=q)
+            results = []
+            for pl in places:
+                place_json = {}
+                place_json = pl.lineid
+                if place_json in results:
+                    pass
+                else: 
+                    results.append(place_json)
+                data = json.dumps(results)
+    else:
+        data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
     
-# def routes(request):
-#     weather = query_weather()
-#     bikes = bikes_query()
-#     bus = DublinBus()
-#     return render(request, 'busRoute/routes.html', {'bikes': bikes, 'bus': bus, 'weather': weather})
+def routes(request):
+    weather = query_weather()
+    bikes = bikes_query()
+    bus = DublinBus()
+    return render(request, 'busRoute/routes.html', {'bikes': bikes, 'bus': bus, 'weather': weather})
     
 
 class homeView(generic.TemplateView):
@@ -219,6 +240,10 @@ class routesView(generic.TemplateView):
 
 def tourism(request):
     return render(request, 'busRoute/tourism.html',{})
+
+
+def test(request):
+    return render(request, 'busRoute/test.html',{})
 
 def timeGenerator(request, chosen_time):
 

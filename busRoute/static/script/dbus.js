@@ -8,7 +8,6 @@ function myMap() {
 
         infoWindow = new google.maps.InfoWindow;
 
-        markers = [];
         //this code is reponsible for finding and displaing the users current location. 
         //This came from https://developers.google.com/maps/documentation/javascript/examples/map-geolocation
         // Try HTML5 geolocation.
@@ -98,24 +97,6 @@ $(function() {
   } 
 
 
-//this function is responsible for the autocomplete function for the destination input box in the form on the stops page
-
-  $(function() {
-      $("#desto").autocomplete({
-      source: "api/getDesintation/",
-      select: function (event, ui) { //item selected
-          AutoCompleteSelectHandler(event, ui)
-      },
-      minLength: 1,
-      });
-  });
-  
-  function AutoCompleteSelectHandler(event, ui)
-  {
-      var selectedObj = ui.item;
-  }
-
-
 //this function is responsible for the autocomplete function for the source input box in the form on the routes page
 
   $(function() {
@@ -139,7 +120,7 @@ $(function() {
     $("#sAdd").autocomplete({
       source: "api/getAddressDestination/",
       select: function (event, ui) { //item selected
-        AutoCompleteSelectHandler(event, ui)
+        AutoCompleteSelectHandler(event,  ui)
       },
       minLength: 3,
      
@@ -268,6 +249,24 @@ $(function() {
   {
     var selectedObj = ui.item;
   }
+
+  //this function is responsible for the autocomplete function for the destination input box in the form on the stops page
+
+  $(function() {
+    $("#id_destination").autocomplete({
+    source: "api/getDesintation/",
+    select: function (event, ui) { //item selected
+        AutoCompleteSelectHandler(event, ui)
+    },
+    minLength: 1,
+    });
+});
+
+function AutoCompleteSelectHandler(event, ui)
+{
+    var selectedObj = ui.item;
+}
+
 
 
 // References:
