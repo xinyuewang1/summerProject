@@ -81,76 +81,6 @@ function toggleTraffic(btn){
     }
 }
 
-//this function is responsible for the autocomplete function for the source input box in the form on the stops page
-$(function() {
-    $("#autocomplete").autocomplete({
-      source: "api/getSource/",
-      select: function (event, ui) { //item selected
-        AutoCompleteSelectHandler(event, ui)
-      },
-      minLength: 1,
-    });
-  });
-
-  function AutoCompleteSelectHandler(event, ui)
-  {
-    var selectedObj = ui.item;
-  } 
-
-
-//this function is responsible for the autocomplete function for the destination input box in the form on the stops page
-
-  $(function() {
-      $("#desto").autocomplete({
-      source: "api/getDesintation/",
-      select: function (event, ui) { //item selected
-          AutoCompleteSelectHandler(event, ui)
-      },
-      minLength: 1,
-      });
-  });
-  
-  function AutoCompleteSelectHandler(event, ui)
-  {
-      var selectedObj = ui.item;
-  }
-
-
-//this function is responsible for the autocomplete function for the source input box in the form on the routes page
-
-  $(function() {
-    $("#dAdd").autocomplete({
-      source: "api/getAddressDestination/",
-      select: function (event, ui) { //item selected
-        AutoCompleteSelectHandler(event, ui)
-      },
-      minLength: 3,
-    });
-  });
-
-  function AutoCompleteSelectHandler(event, ui)
-  {
-    var selectedObj = ui.item;
-  } 
-
-  //this function is responsible for the autocomplete function for the destination input box in the form on the routes page
-
-  $(function() {
-    $("#sAdd").autocomplete({
-      source: "api/getAddressDestination/",
-      select: function (event, ui) { //item selected
-        AutoCompleteSelectHandler(event, ui)
-      },
-      minLength: 3,
-     
-    });
-  });
-
-  function AutoCompleteSelectHandler(event, ui)
-  {
-    var selectedObj = ui.item;
-
-  } 
 
 var swap = 0;
 function swapDirection() {
@@ -253,9 +183,9 @@ $(document).ready(function(){
     });
 
 
-//Autocomplete for index 
+//Autocomplete initialisation for the route planner form source
 $(function() {
-    $("#id_source").autocomplete({
+    $('input[name=source]').autocomplete({
         source: "api/getSource/", 
         select: function (event, ui) { //item selected
         AutoCompleteSelectHandler(event, ui)
@@ -264,10 +194,110 @@ $(function() {
     });
   });
  
-  function AutoCompleteSelectHandler(event, ui)
-  {
+  function AutoCompleteSelectHandler(event, ui){
     var selectedObj = ui.item;
   }
+
+//Autocomplete initialisation for the route planner form destination
+$(function() {
+    $("#id_destination").autocomplete({
+        source: "api/getDesintation/",
+        select: function (event, ui) { //item selected
+        AutoCompleteSelectHandler(event, ui)
+      },
+      minLength: 1,
+    });
+  });
+
+  function AutoCompleteSelectHandler(event, ui){
+    var selectedObj = ui.item;
+  }
+
+
+//Function to swap the autocomplete in the form between the stop numbers and the stop addresses.
+function swapSearch() {
+
+    //Checks which option is selected between searching by stops or addresses
+    var c =  document.getElementById("stopSearch").style.backgroundColor;
+
+    if (c != "black") {
+        //Changes the colour of the tab and placeholder of the search form
+        document.getElementById("stopSearch").style.backgroundColor = "black";
+        document.getElementById("addSearch").style.backgroundColor = "rgb(105,143,123)";
+        document.getElementById('id_source').placeholder = 'Source Address..';
+
+        //Changes the autocomplete in the source to address
+        $(function() {
+            $('input[name=source]').autocomplete({
+              source: "api/getAddressDestination/",
+              select: function (event, ui) { //item selected
+                AutoCompleteSelectHandler(event, ui)
+              },
+              minLength: 3,
+            });
+          });
+        
+            function AutoCompleteSelectHandler(event, ui){
+                var selectedObj = ui.item;
+            } 
+
+
+        //Changes the autocomplete in the destination to address
+        $(function() {
+            $("#id_destination").autocomplete({
+              source: "api/getAddressDestination/",
+              select: function (event, ui) { //item selected
+                AutoCompleteSelectHandler(event, ui)
+              },
+              minLength: 3,
+            });
+          });
+        
+            function AutoCompleteSelectHandler(event, ui){
+                var selectedObj = ui.item;
+            } 
+
+
+    } else {
+        //Changes the colour of the tab and placeholder of the search form
+        document.getElementById("addSearch").style.backgroundColor = "black";
+        document.getElementById("stopSearch").style.backgroundColor = "rgb(105,143,123)";
+        document.getElementById('id_source').placeholder = 'Source Stop..';
+
+        //Changes the autocomplete in the source to stops
+        $(function() {
+            $('input[name=source]').autocomplete({
+                source: "api/getSource/", 
+                select: function (event, ui) { //item selected
+                AutoCompleteSelectHandler(event, ui)
+              },
+              minLength: 1,
+            });
+          });
+         
+          function AutoCompleteSelectHandler(event, ui)
+          {
+            var selectedObj = ui.item;
+          }
+
+
+        //Changes the autocomplete in the destination to stops
+        $(function() {
+            $("#id_destination").autocomplete({
+            source: "api/getDesintation/",
+            select: function (event, ui) { //item selected
+                AutoCompleteSelectHandler(event, ui)
+            },
+            minLength: 1,
+            });
+        });
+        
+        function AutoCompleteSelectHandler(event, ui)
+        {
+            var selectedObj = ui.item;
+        }
+    }
+};
 
 
 // References:

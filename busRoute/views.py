@@ -142,9 +142,11 @@ class homeView(generic.TemplateView):
             return_time = form.cleaned_data['returnTime']
             depart_date = form.cleaned_data['departDate']
             return_date = form.cleaned_data['returnDate']
+        
+        
 
         weather = query_weather()
-        args = {'form': form, 'source': source_address, 'destination': destination_address, 'depart_time': depart_time, 'return_time': return_time, 'depart_date': depart_date , 'return_date': return_date, 'weather': weather}
+        args = {'form': form, 'source': source_address, 'time' : time, 'destination': destination_address, 'depart_time': depart_time, 'return_time': return_time, 'depart_date': depart_date , 'return_date': return_date, 'weather': weather}
         return render(request, self.template_name, args)
 
 
@@ -174,15 +176,20 @@ class stopsView(generic.TemplateView):
             # return_date = form.cleaned_data['returnDate']
 
         hour = readTimeIn(depart_time)
+        day = parseDate(depart_date)
+        time = datetime.datetime.now().time()
+        bus = DublinBus()
+        bikes = bikes_query()
+        
         if hour != -1:
-            est = Est39A(source_address, destination_address, 0, hour, 'Jan', 'Mon')
+            est = Est39A(source_address, destination_address, 0, hour, 'Jan', day)
         else:
             est = "unavailable"
 
         
         arrival = arrivalTime(depart_time, est)
         weather = query_weather()
-        args = {'form': form, 'source': source_address, 'destination': destination_address, 'depart_time': depart_time, 'depart_date': depart_date , 'arrival_time': arrival, 'est': est, 'weather': weather}
+        args = {'form': form, 'bus': bus, 'bikes':bikes, 'source': source_address, 'destination': destination_address, 'depart_time': depart_time, 'depart_date': depart_date , 'arrival_time': arrival, 'est': est, 'weather': weather}
         return render(request, self.template_name, args)
 
 
@@ -271,7 +278,7 @@ def bikes_query():
   
    
     web_data = requests.get(url)
-    print(web_data.status_code)
+    #print(web_data.status_code)
     if web_data.status_code == 200:
         data = json.loads(web_data.text)
         results = []
@@ -355,5 +362,13 @@ def arrivalTime(depart, travel):
         return final[0:3] + '0' + final[3]
 
     return final
+
+def parseDate(d):
+    try:
+        month, day, year = (int(x) for x in d.split('/'))
+        ans = datetime.date(year, month, day)
+    except:
+        return -1
+    return ans.strftime("%A")
 
 

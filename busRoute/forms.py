@@ -7,7 +7,7 @@ class routeForm(f.Form):
     source = f.CharField(widget=f.TextInput(
         attrs={
             'class': 'form-control form-control-sm',
-            'placeholder': 'Source..'
+            'placeholder': 'Source Stop..'
         }
     ))
 
@@ -25,13 +25,6 @@ class routeForm(f.Form):
         }
     ))
 
-    # returnTime = f.CharField(widget=f.TextInput(
-    #     attrs={
-    #         'class': 'disable form-control form-control-sm',
-    #         'placeholder': '--:--',
-    #         'disabled': True
-    #     }
-    # ))
 
     departDate= f.CharField(widget=f.TextInput(
         attrs={
@@ -39,6 +32,14 @@ class routeForm(f.Form):
             'placeholder': 'mm/dd/yyyy'
         }
     ))
+
+    # returnTime = f.CharField(widget=f.TextInput(
+    #     attrs={
+    #         'class': 'disable form-control form-control-sm',
+    #         'placeholder': '--:--',
+    #         'disabled': True
+    #     }
+    # ))
 
     # returnDate= f.CharField(widget=f.TextInput(
     #     attrs={

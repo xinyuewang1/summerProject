@@ -53,8 +53,8 @@ class Ett39A():
             pass
         else:
             monthList[months.index(self.month)]
-        days = ['Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun']
-        if self.day == 'Mon':
+        days = ['Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        if self.day == 'Monday':
             pass
         else:
             dayList[days.index(self.day)]
