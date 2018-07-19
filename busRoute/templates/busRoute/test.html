@@ -264,63 +264,63 @@
 
 
             <script>
-           
-function getStops() {
+
+                var poly;
+                function getStops() {
+
+                        poly = new google.maps.Polyline({
+                        position: lat, long,
+                        strokeColor: '#000000',
+                        strokeOpacity: 1.0,
+                        strokeWeight: 3
+                    });
+                    poly.setMap(map);
+
+                  
+                    infoWindow = new google.maps.InfoWindow;
+                    infoBus = new google.maps.InfoWindow;
 
 
-    infoWindow = new google.maps.InfoWindow;
-    infoBus = new google.maps.InfoWindow;
+                    var markers = []
 
 
-        var markers = []
+                    //this function displays the dublin bus markers
 
+                    "{% if routes %}"
+                    "{% for p in routes %}"
 
-        //this function displays the dublin bus markers
+                    var data = "{{ p }}"
+                    var lat = "{{ p.lat }}"
+                    var long = "{{ p.lng }}"
+                    var name = "{{ p.name }}"
+                    var id = "{{ p.id }}";
 
-        "{% if routes %}"
-        "{% for p in routes %}"
+                 
+                    myLatLng = new google.maps.LatLng(lat, long)
+                    marker = new google.maps.Marker({
+                        position: myLatLng,
+                        map: map,
+                        title: name
+                    });
 
-        var data = "{{ p }}"
-        var lat = "{{ p.lat }}"
-        var long = "{{ p.lng }}"
-        var name = "{{ p.name }}"
-        var id = "{{ p.id }}";
+                    markers.push(marker);
 
-   
-        var latlng = new google.maps.LatLng(lat, long);
-        var marker = new google.maps.Marker({
-            position: latlng,
-            title: name
+                    var path = poly.getPath();
+                    path.push(myLatLng);
 
-        });
+                     google.maps.event.addListener(marker, 'mouseover', (function (markers) {
+                            return function () {
+                                infoBus.open(map, this);
+                                infoBus.setContent('{{ p.name }}' + '<br>' + '(' + '{{ p.id }}' + ')');
+                            }
+                        })(markers));
 
-        markers.push(marker);
+                    "{% endfor %}"
+                    "{% endif %}"
 
+                    console.log(markers);
 
-        google.maps.event.addListener(marker, 'mouseover', (function (markers) {
-            return function () {
-                infoBus.open(map, this);
-                infoBus.setContent('{{ p.name }}' + '<br>' + '(' + '{{ p.id }}' + ')');
-            }
-        })(markers));
-
-        google.maps.event.addListener(marker, 'click', (function (markers) {
-            return function () {
-
-                document.getElementById("sAdd").value = '{{ p.name }}';
-            }
-        })(markers));
-
-
-        "{% endfor %}"
-        "{% endif %}"
-
-
-        var markerCluster = new MarkerClusterer(map, markers, {
-            imagePath: "{% static 'images/m' %}"
-        });
-
-}
+                };
 
                 var busMarkers = 0;
 
@@ -347,7 +347,7 @@ function getStops() {
                         var name = "{{ p.name }}"
                         var id = "{{ p.id }}";
 
-                   
+
                         var latlng = new google.maps.LatLng(lat, long);
                         var marker = new google.maps.Marker({
                             position: latlng,

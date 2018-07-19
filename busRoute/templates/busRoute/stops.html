@@ -4,7 +4,6 @@
 
 <head>
     <style>
-
         .ui-autocomplete {
             max-height: 200px;
             overflow-y: auto;
@@ -13,7 +12,6 @@
             /* add padding to account for vertical scrollbar */
             padding-right: 20px;
         }
-
     </style>
     <!-- Meta tags -->
     <meta charset="UTF-8">
@@ -205,17 +203,31 @@
                                         <script>
                                             function generateQuery() {
 
+                                                //the code to dynamically create the table came from: https://www.codeproject.com/Questions/541238/dynamicplustablepluscreationplusinplusjavascript
                                                 //this function gets real time information for the stop that is selected.
-
                                                 var jqxhr = $.getJSON(
                                                     'https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?stopid=' +
                                                     document.getElementById("id_source").value + '&format=json',
                                                     function (daily) {
 
+                                                        var table = "";
+                                                        table = "<table>";
+                                                        table += "<td>Route</td>";
+                                                        table += "<td>Destination</td>";
+                                                        table += "<td>Arrival Time</td>";
+                                                        x = daily.results;
+                                                        for (var i = 0; i < x.length; i++) {
 
-                                                        console.log(daily);
+                                                            table += "<tr>";
+                                                            table += "<td>" + x[i].route + "</td>";
+                                                            table += "<td>" + x[i].destination + "</td>";
+                                                            table += "<td>" + x[i].arrivaldatetime + "</td>";
+                                                            table += "</tr>";
 
-
+                                                            table += "</table>";
+                                                            document.getElementById("table").innerHTML =
+                                                                table;
+                                                        }
                                                     })
                                             };
                                         </script>
@@ -262,7 +274,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <button class="btn btn-block btn-primary mt-2" type="button" name="go" onclick= "getValue(), generateQuery()">GO!</button>
+                                <button class="btn btn-block btn-primary mt-2" type="button" name="go" onclick="getValue(), generateQuery()">GO!</button>
                             </div>
 
                             <div></div>
@@ -306,6 +318,8 @@
                     </div>
                 </div>
             </div>
+            <table class="table-responsive table-bordered table-striped overflow-y: hidden" id="table">
+            </table>
 
             <!-- <h2>{{ source }}</h2>
             <h2>{{ destination }}</h2>
@@ -339,7 +353,7 @@
 
                 var lat = "{{ p.lat }}"
                 var long = "{{ p.lng }}"
-                
+
 
                 lat = parseFloat(lat);
                 long = parseFloat(long);
@@ -380,17 +394,17 @@
 
                     }
 
-                     calcRoute();
+                    calcRoute();
                 }
 
-                
-                
+
+
                 "{% endfor %}"
                 "{% endif %}"
 
-       
+
             }
-           
+
 
             var placeSearch, autocomplete;
 
@@ -596,20 +610,19 @@
 
             };
 
-            $(function() {
-    $("#id_destination").autocomplete({
-    source: "api/getDesintation/",
-    select: function (event, ui) { //item selected
-        AutoCompleteSelectHandler(event, ui)
-    },
-    minLength: 1,
-    });
-});
+            $(function () {
+                $("#id_destination").autocomplete({
+                    source: "api/getDesintation/",
+                    select: function (event, ui) { //item selected
+                        AutoCompleteSelectHandler(event, ui)
+                    },
+                    minLength: 1,
+                });
+            });
 
-function AutoCompleteSelectHandler(event, ui)
-{
-    var selectedObj = ui.item;
-}
+            function AutoCompleteSelectHandler(event, ui) {
+                var selectedObj = ui.item;
+            }
         </script>
 
 
