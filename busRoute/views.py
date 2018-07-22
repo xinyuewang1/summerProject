@@ -103,12 +103,33 @@ def getAddressDestination(request):
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
 
+
+def getRoutes(request):
+
+    '''this function returns the routes that match the users input when searching for routes information'''
+
+    if request.is_ajax():
+            q = request.GET.get('term', '')
+            places = Testtrip.objects.filter(lineid__icontains=q)
+            results = []
+            for pl in places:
+                place_json = {}
+                place_json = pl.lineid
+                if place_json in results:
+                    pass
+                else: 
+                    results.append(place_json)
+                data = json.dumps(results)
+    else:
+        data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
     
-# def routes(request):
-#     weather = query_weather()
-#     bikes = bikes_query()
-#     bus = DublinBus()
-#     return render(request, 'busRoute/routes.html', {'bikes': bikes, 'bus': bus, 'weather': weather})
+def routes(request):
+    weather = query_weather()
+    bikes = bikes_query()
+    bus = DublinBus()
+    return render(request, 'busRoute/routes.html', {'bikes': bikes, 'bus': bus, 'weather': weather})
     
 
 class homeView(generic.TemplateView):
@@ -227,6 +248,12 @@ class routesView(generic.TemplateView):
 def tourism(request):
     return render(request, 'busRoute/tourism.html',{})
 
+
+def test(request):
+    bus = DublinBus()
+    routes = get_route_data()
+    return render(request, 'busRoute/test.html',{'routes': routes, 'bus': bus})
+
 def timeGenerator(request, chosen_time):
 
     ''''this is a very basic function to display a time chosen'''
@@ -329,6 +356,7 @@ def readTimeIn(time):
     return hour
 
 def arrivalTime(depart, travel):
+
     ''' Function with input parameters depart time and total travel time which returns a string of the arrival time'''
 
     #Test for correct input
@@ -370,5 +398,52 @@ def parseDate(d):
     except:
         return -1
     return ans.strftime("%A")
+
+
+
+def get_route_data():
+
+        '''accessing route information for the 39A from RTPI
+        will need to make it more dynamic in terms of the other bus stops'''
+
+        url = requests.get("http://data.dublinked.ie/cgi-bin/rtpi/routeinformation?routeid=39A&operator=bac&format=json")
+        url = url.json()
+       
+        results = []
+
+        x = url['results'][1]['stops']
+
+        for i in x: 
+
+            # print(i['latitude'])
+
+            Info= {'lat': i['latitude'],
+                     'lng':i['longitude'],
+                     'name': i['fullname'],
+                     'id': i['stopid']
+                    }
+
+            dbInfo = json.dumps(Info) 
+            loadedBikes = json.loads(dbInfo)
+            results.append(loadedBikes)
+      
+        print(results)
+        return results
+            
+
+
+    
+
+       
+
+      
+    
+
+
+
+
+          
+                   
+                  
 
 
