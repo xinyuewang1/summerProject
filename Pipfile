@@ -9,6 +9,7 @@ whitenoise = "*"
 requests = "*"
 brotlipy = "*"
 mysqlclient = "*"
+numpy = "*"
 
 [requires]
 python_version = "3.5.2"
