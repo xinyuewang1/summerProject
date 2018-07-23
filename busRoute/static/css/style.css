@@ -2,6 +2,7 @@ body{
     background-color: rgb(219,238,233);
     margin:0px;
     padding:0pc;
+    
 }
 
 #Title{
@@ -52,6 +53,8 @@ h3{
 #map {
     height: 300px;
 }
+
+
 
 #twitterFeed{
     width: 300px;
@@ -189,10 +192,6 @@ h3{
     opacity: 0.4;
 }
 
-p{
-    font-size: 100px;
-    text-align: center;
-}
 
 #icon > img{
     width: 100px;
@@ -257,4 +256,30 @@ input[type=text], select {
 
 .time input[type=text], select {
     width: 60%;
+}
+
+.planner-toggle  {    
+}
+
+#planner{
+    margin-top: 0px;  
+    margin-bottom: 30px; 
+    background: gray;
+    width: auto;
+    height:auto;
+}
+
+#planner-toggle 
+{
+    display: block;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    font-variant: small-caps;
+    text-decoration:none;
+}
+
+#aplanner-toggle:hover 
+{
+    text-decoration:none;
 }

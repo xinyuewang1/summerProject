@@ -1,5 +1,7 @@
 import pickle
 import numpy
+import os
+from django.conf import settings
 
 
 class Ett39A():
@@ -11,13 +13,28 @@ class Ett39A():
         self.time = int(time)
         self.month = month
         self.day = day
-        routeDict = pickle.load(open('pickles/routeDict.pkl', 'rb'))
+    
+    def estimatedTime(self):
+        print("The file path is", os.path.dirname(os.path.abspath(__file__)))
+        with open(os.path.join(settings.STATIC_ROOT, 'pickles/39A_40lr.pkl'), 'rb') as f:
+            model = pickle.load(f)
+        routeDict = pickle.load(open(os.path.join(settings.STATIC_ROOT, 'pickles/routeDict.pkl'), 'rb'))
         for key, route in routeDict.items():
             if route == int(self.source):
-                self.sourceK = key
+                source = key
             if route == int(self.dest):
-                self.destK = key
-    
+                destination = key
+        now = (self.time)*60
+        inputList = [int(now), int(self.weather)]
+        inputs=[0]*(destination - source)
+        i = 0
+        while source < destination:
+            inputs[i] = inputList + self.timeValue() + self.routeFind(source) + self.monthWeek()
+            source += 1
+            i += 1
+        return model.predict(inputs).sum()
+
+
     def timeValue(self):
         timeList = [0]*7
         if self.time//3 == 0:
@@ -48,45 +65,6 @@ class Ett39A():
         routeList[current-1] = 1
         return routeList
 
-    def checkDirection(self):
-        if self.sourceK <= self.destK:
-            return True
-        elif self.sourceK > self.destK:
-            return False
-
-    def forwardInputs(self):
-        now = (self.time)*3600
-        inputList = [int(now), int(self.weather)]
-        inputs=[0]*(self.destK - self.sourceK)
-        i = 0
-        while self.sourceK < self.destK:
-            inputs[i] = inputList + self.timeValue() + self.routeFind(self.sourceK) + self.monthWeek()
-            self.sourceK += 1
-            i += 1
-        return inputs
-    
-    def backwardInputs(self):
-        now = (self.time)*3600
-        inputList = [int(now), int(self.weather)]
-        inputs=[0]*(self.sourceK - self.destK)
-        i = 0
-        while self.destK < self.sourceK:
-            inputs[i] = inputList + self.timeValue() + self.routeFind(self.destK) + self.monthWeek()
-            self.destK += 1
-            i += 1
-        return inputs
-
-    
-    def estimatedTime(self):
-        if self.checkDirection() == True:
-            modelIn = self.forwardInputs()
-            with open('pickles/39A_40lr.pkl', 'rb') as f:
-                model = pickle.load(f)
-        elif self.checkDirection() == False:
-            modelIn = self.backwardInputs()
-            with open('pickles/39A_40lr.pkl', 'rb') as f:
-                model = pickle.load(f)
-        return model.predict(modelIn).sum()
 
 class Ann39A:
 
@@ -123,7 +101,7 @@ class Ann39A:
     def peakTimes(self):
         peakList = [0]*7
         for i in range(0, 7):
-            if int(self.time) > 14400+(i*10,800) && int(self.time) <= 25200+(i*10,800):
+            if int(self.time) > 14400+(i*10800) && int(self.time) <= 25200+(i*10800):
                 peakList[i] = 1
         return peakList
     
