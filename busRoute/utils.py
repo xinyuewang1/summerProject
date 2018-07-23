@@ -90,18 +90,29 @@ class Ett39A():
 
 class Ann39A:
 
-    def __init__(self, source, dest, actualArr, rain, day):
+    def __init__(self, source, dest, plannedTime, rain, day, distanceTravelled, temp, timeSec, month, date):
         self.source = source
         self.dest = dest
-        self.actualArr = actualArr
+        self.plannedTime = plannedTime
+        self.time = timeSec
         self.rain = rain
+        self.temp = temp
+        self.distanceTravelled = distanceTravelled
         self.day = day
+        self.month = month
+        self.date = date
         routeDict = pickle.load(open('pickles/routeDict.pkl', 'rb'))
         for key, route in routeDict.items():
             if route == int(self.source):
                 self.sourceK = key
             if route == int(self.dest):
                 self.destK = key
+        distanceDict = pickle.load(open('','rb'))
+        for key, distance in distanceDict.items():
+            if key == int(self.source):
+                self.sourceDist = distance
+            if key == int(self.dest):
+                self.destDist = distance
     
     def checkDirection(self):
         if self.sourceK <= self.destK:
@@ -109,30 +120,39 @@ class Ann39A:
         elif self.sourceK > self.destK:
             return False
 
-    def forwardAlgo(self):
-        with open('ann.pkl', 'rb') as f:
-            model = pickle.load(f)
-        if self.sourceK == 1:
-            modelIn = [self.destK, int(self.actualArr), float(self.rain), int(self.day)]
-            return model.predict(modelIn)
+    def peakTimes(self):
+        peakList = [0]*7
+        for i in range(0, 7):
+            if int(self.time) > 14400+(i*10,800) && int(self.time) <= 25200+(i*10,800):
+                peakList[i] = 1
+        return peakList
+    
+    def isWeekendOrTerm(self):
+        weekOrTermList = [0]*3
+        weekday = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+        if self.day in weekday:
+            weekOrTermList[0] = 1
         else:
-            modelInS = [self.sourceK, int(self.actualArr), float(self.rain), int(self.day)]
-            modelInD = [self.destK, int(self.actualArr), float(self.rain), int(self.day)]
-            return model.predict(modelInS) - model.predict(modelInD)
-
-    def backwardAlgo(self):
-        with open('annback.pkl', 'rb') as f:
-            model = pickle.load(f)
-        if self.sourceK == 73:
-            modelIn = [self.destK, int(self.actualArr), float(self.rain), int(self.day)]
-            return model.predict(modelIn)
-        else:
-            modelInS = [self.sourceK, int(self.actualArr), float(self.rain), int(self.day)]
-            modelInD = [self.destK, int(self.actualArr), float(self.rain), int(self.day)]
-            return model.predict(modelInS) - model.predict(modelInD)
+            weekOrTermList[1] = 1
+        if self.date >= '2016-01-25' && self.date <= '2016-04-29' 
+            || self.date >= '2016-05-09' && self.date <= '2016-05-21'
+            || self.date >= '2017-01-23' && self.date <= '2016-04-28'
+            || self.date >= '2016-05-08' && self.date <= '2016-05-19':
+            weekOrTermList[3] = 1
+        return weekOrTermList
+        
 
     def estimatedTime(self):
         if self.checkDirection() == True:
-            return self.forwardAlgo()
+            with open('ann.pkl', 'rb') as f:
+                model = pickle.load(f)
         else:
-            return self.backwardAlgo()
+            with open('ann.pkl', 'rb') as f:
+                model = pickle.load(f)
+        if self.sourceK == 1:
+            modelIn = [self.destK, float(self.rain), int(self.day), self.distanceTravelled] + self.peakTimes() + [self.temp] + self.isWeekendOrTerm()
+            return model.predict(modelIn)
+        else:
+            modelInS = [self.sourceK, float(self.rain), int(self.day), self.distanceTravelled] + self.peakTimes() + [self.temp] + self.isWeekendOrTerm()
+            modelInD = [self.destK, float(self.rain), int(self.day), self.distanceTravelled] + self.peakTimes() + [self.temp] + self.isWeekendOrTerm()
+            return model.predict(modelInS) - model.predict(modelInD)
