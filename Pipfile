@@ -10,6 +10,7 @@ requests = "*"
 brotlipy = "*"
 mysqlclient = "*"
 numpy = "*"
+django-heroku = "*"
 
 [requires]
 python_version = "3.5.2"
