@@ -11,6 +11,7 @@ brotlipy = "*"
 mysqlclient = "*"
 numpy = "*"
 django-heroku = "*"
+rq = "*"
 
 [requires]
 python_version = "3.5.2"

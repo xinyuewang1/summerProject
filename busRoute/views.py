@@ -297,16 +297,14 @@ def query_weather():
 
     return loaded_weather
 
-<<<<<<< HEAD
-def Est39A(source, dest, weather, time, month, day):
-    ett = Ett39A(source, dest, weather, time, month, day)
-    result = ett.estimatedTime()
-    return result
+# def Est39A(source, dest, weather, time, month, day):
+#     ett = Ett39A(source, dest, weather, time, month, day)
+#     result = ett.estimatedTime()
+#     return result
 
-def AnnEst39A(source, dest, actualArr, rain, day):
-    ett = Ann39A(source, dest, actualArr, rain, day)
-    return ett.estimatedTime()
-=======
+# def AnnEst39A(source, dest, actualArr, rain, day):
+#     ett = Ann39A(source, dest, actualArr, rain, day)
+#     return ett.estimatedTime()
 
 def bikes_query():
     
@@ -457,5 +455,4 @@ def get_route_data():
                    
                   
 
->>>>>>> 8df23093f60afdb7608a3aab997a8050350df038
 
