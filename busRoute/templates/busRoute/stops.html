@@ -79,7 +79,96 @@
 
 
                 <div class="col-sm-4">
-                    <div class="col-sm-12 shadow rounded mt-4" style="background-color:rgb(105,143,123);padding:2px;">
+                    <div class = "col-sm-12">
+                        <div class="col-sm-12 rounded shadow mt-4" style = "background-color:rgb(105,143,123);">
+                            <h3>Route Planner</h3>
+                        </div>
+                    </div>
+
+                    <div class = "col-sm-12">
+                        <div class="col-sm-12 rounded shadow mt-3" style = "background-color:rgb(105,143,123);">
+                            <div class = "row text-center text-white">
+                                <div class = "col-6 nav-justified" style = "background-color: rgb(105,143,123)" id = "stopSearch" onclick="swapSearch()">
+                                    <strong>By Stop</strong>
+                                </div>
+                                <div class = "col-6 text-center" style = "background-color: black;" id = "addSearch" onclick="swapSearch()">
+                                    <strong>By Address</strong>
+                                </div>
+                            </div>
+                            <form id = "routePlanner" role = "form" method="POST">
+                                {% csrf_token %}
+                                <div class = "row mt-2">
+                                    
+                                    <div class = "j btn-block ml-2 mr-2">From: {{ form.source }}
+                                    <!-- <a onclick = "swapDirection()">&#8645</a> --></div>
+                                    <div class = "j btn-block ml-2 mr-2">To: &nbsp &nbsp  {{ form.destination }}</div>
+                                   
+                                    <div class = "j btn-block m-2 mt-0">
+                                        <input id = "single" type= "radio" name="trip" value="single" checked> Single &nbsp &nbsp &nbsp &nbsp
+                                        <input id = "return" type= "radio" name="trip" value="return"> Return 
+                                        <div class = "row">
+                                            <div class = "col-6 planner">{{ form.departTime }}</div>
+                                            <div class = "col-6 planner">{{ form.departDate }}</div>
+                                        </div>
+
+                                        <div class = "row mt-1">
+                                            <div class = "col-6 planner">{{ form.returnTime }}</div>
+                                            <div class = "col-6 planner">{{ form.returnDate }}</div>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                        <script>
+                                            var d = new Date();
+                                            var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
+                                            document.getElementById("id_departDate").value = fullDate;
+                                            $('#id_departTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now', timeFormat: "H:i" });
+                                            $( function() {
+                                            $( "#id_departDate" ).datepicker();
+                                            });
+                                            $('#id_returnTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now',timeFormat: "H:i" });
+                                            $( function() {
+                                            $( "#id_returnDate" ).datepicker({});
+                                            });
+                                        </script>
+                                    
+                                </div>   
+                                <div class = "row">
+                                    <button type ="button" class = "btn btn-block btn-primary m-2" name = "go" onclick="generateQuery(); showRoute();">GO!</button>
+                                    <script>
+                                        function generateQuery() {
+                                            //this function gets real time information for the stop that is selected.
+                                            var jqxhr = $.getJSON(
+                                                'https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?stopid=' +
+                                                document.getElementById("id_source").value + '&format=json',
+                                                function (daily) {
+                                                    console.log("TRying to find realtime")
+                                                    console.log(daily);
+                                                    var table = "";
+                                                           table = "<table>";
+                                                           table += "<td>Route</td>";
+                                                           table += "<td>Destination</td>";
+                                                           table += "<td>Arrival Time</td>";
+                                                           x = daily.results;
+                                                           for (var i = 0; i < x.length; i++) {
+                                                               table += "<tr>";
+                                                               table += "<td>" + x[i].route + "</td>";
+                                                               table += "<td>" + x[i].destination + "</td>";
+                                                               table += "<td>" + x[i].arrivaldatetime + "</td>";
+                                                               table += "</tr>";
+                                                               table += "</table>";
+                                                               document.getElementById("table").innerHTML =
+                                                                   table;
+                                                           }
+                                                })
+                                            };
+                                    </script>
+                                </div>
+                            </form>
+                            
+                        </div>
+                    </div>
+                    <!-- <div class="col-sm-12 shadow rounded mt-4" style="background-color:rgb(105,143,123);padding:2px;">
                         <div class = "container-fluid mt-2 mb-1">
                             <h1 style = "text-align:center;font-size:23px;" class = "text-white">Dublin, {{ weather.day }} {{ weather.date }} {{ weather.month }}</h1>
                         </div>
@@ -115,69 +204,39 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
 
-            <div class="row" style = "margin-top:20px;">
+
+
+
+            <div class="row" style = "margin-top:20px;" id = "routeResult">
                 <div class = "col-sm-12">
                     <div class="col-sm-12 rounded shadow" style = "background-color:rgb(105,143,123);">
-                        <form id = "routePlanner" role = "form" method="POST">
-                            {% csrf_token %}
-                            <div class = "row">
-                                
-                                <div class = "col-sm-5 mt-2 address">
-                                    <div class = "j btn-block">From: {{ form.source }}
-                                    <a onclick = "swapDirection()">&#8645</a></div>
-                                    <div class = "j btn-block">To: &nbsp &nbsp &nbsp {{ form.destination }}</div>
-                                </div>  
-
-                                <div class = "col-sm-3 mt-2 time">  
-                                    <div class = "j btn-block"><input id = "single" type= "radio" name="trip" value="single" checked> Single {{ form.departTime }}</div>
-                                    <div class = "j btn-block"><input id = "return" type= "radio" name="trip" value="return"> Return {{ form.returnTime }}</div>
-                                </div>
-                                <div class = "col-sm-4 mt-2"> 
-                                    <div id = "dDate" class = "j btn-block">Date: {{ form.departDate }}</div>
-                                    <div class = "j btn-block">Date: {{ form.returnDate }}</div>
-                                    
-                                    <script>
-                                        var d = new Date();
-                                        var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
-                                        document.getElementById("id_departDate").value = fullDate;
-                                        $('#id_departTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now', timeFormat: "H:i" });
-                                        $( function() {
-                                        $( "#id_departDate" ).datepicker();
-                                        });
-                                        $('#id_returnTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now',timeFormat: "H:i" });
-                                        $( function() {
-                                        $( "#id_returnDate" ).datepicker({});
-                                        });
-                                    </script>
-                                </div>
-                            </div>   
-                            <div class = "row">
-                                <button type ="submit" class = "btn btn-block btn-primary m-2" name = "go" onclick="timeEstimate(); showRoute();">GO!</button>
-                                <button type ="button" class = "btn btn-block btn-primary m-2" name = "Test" onclick="document.getElementById('routeResult').style.display = 'block' ;;">Test</button>
-                            </div>
-                        </form>
-                        <div id = "timeEst"></div> 
-                    </div>
-                </div>
-            </div>
-
-            <div class="row" style = "margin-top:20px;display:none;" id = "routeResult">
-                <div class = "col-sm-12">
-                    <div class="col-sm-12 rounded shadow" style = "background-color:rgb(105,143,123);">
-                        <div class = "display-4 mb-3 border-bottom border-black">Tuesday 10 July</div>
+                        <div class = "display-4 mb-3 border-bottom border-black text-white">{{ weather.day }} {{ weather.date }} {{ weather.month }}</div>
                         
-                        <div class = "row">
+
+                        <div class = "row" style = "color:white;font-size: 14px;">
+                            <div class = "col-sm-2" style = "background-color:blue;">
+                                <div id = "icon"><img src = {{weather.icon}} ></div>
+                            </div>
+                            <div class = "col-sm-2" style = "padding:0px;background-color:blue;">
+                                <b>Weather: </b>{{weather.main}} <br>
+                                <b>Temp: </b>{{weather.temp}} °C<br>
+                                <b>Wind: </b>{{weather.wind}} km/h<br>
+                                <b>Max: </b>{{weather.temp_max}} °C<br>
+                            </div>
+                            
+                        </div>
+                        <div><table id = "table"></table></div>
+                        <!-- <div class = "row">
                             <div class = "col-sm-3">
                                 <div class = "col-sm-12 rounded shadow mb-3" style = "background-color:white;">
                                     <h1 class = "display-4">{{ depart_time }}</h1>
                                     <h2 class = "ml-2 font-weight-bold text-uppercase">UCD</h2>
                                     <h2 class = "ml-2">Stop {{source}}</h2>
-                                    <!-- <h4 class = "ml-2 mt-2">Depart in 5 mins</h4> -->
                                     <br>
                                 </div>
                             </div>
@@ -192,22 +251,17 @@
                                     <h1 class = "display-4">{{ arrival_time }}</h1>
                                     <h2 class = "ml-2 font-weight-bold text-uppercase">Delhurst</h2>
                                     <h2 class = "ml-2">Stop {{ destination }}</h2>
-                                    <!-- <h4 class = "ml-2 mt-2">Depart in 5 mins</h4> -->
                                     <br>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
+
+
                     </div>
                 </div>
             </div>
 
-            <!-- <h2>{{ source }}</h2>
-            <h2>{{ destination }}</h2>
-            <h2>{{ depart_time }}</h2>
-            <h2>{{ return_time }}</h2>
-            <h2>{{ depart_date }}</h2>
-            <h2>{{ return_date }}</h2>
-            <h2>{{ est }}</h2> -->
+        
         </div>
         <!-- <div class="container-fluid footer">
             <div class = "row">

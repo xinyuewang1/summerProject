@@ -10,6 +10,7 @@ import json
 import datetime
 from datetime import date
 import calendar
+import time
 
     
 
@@ -59,6 +60,7 @@ class stopsView(generic.TemplateView):
         form = routeForm()
         weather = query_weather()
         context = {'weather': weather, 'form': form}
+        print(parseTime())
         return render(request, self.template_name, context)
     
     def post(self, request):
@@ -73,6 +75,7 @@ class stopsView(generic.TemplateView):
 
         hour = readTimeIn(depart_time)
         day = parseDate(depart_date)
+    
         
         if hour != -1:
             est = Est39A(source_address, destination_address, 0, hour, 'Jan', day)
@@ -212,5 +215,15 @@ def parseDate(d):
         return -1
 
     return ans.strftime("%A")
+
+def parseTime():
+    t = "18:21:41"
+    #ti = datetime.datetime.strptime(t, '%H:%M:%S')
+    ti = datetime.datetime.now()
+    time.sleep(2)
+    n = datetime.datetime.now()
+    b = str(ti - n)
+    c = datetime.datetime.strptime(b, '%H:%M:%S')
+    return(c)
 
 

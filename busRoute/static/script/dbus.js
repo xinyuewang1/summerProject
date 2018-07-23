@@ -61,15 +61,7 @@ $(document).ready(function() {
     });
   });
 
-function timeEstimate() {
 
-    //Function for the actions taken by the 'Go!' button on the stops page
-
-    var jqxhr =  $.getJSON( '/'+document.getElementById("departTime").value+'/', function( daily ){
-
-        document.getElementById("timeEst").innerHTML = daily;
-    }  
-    )};
 
 
 // ---------------- Jquery ----------------

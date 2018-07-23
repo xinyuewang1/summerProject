@@ -255,6 +255,10 @@ input[type=text], select {
     width: 60%;
 }
 
+.planner input[type=text], select {
+    width: 100%;
+}
+
 .planner-toggle  {    
 }
 
