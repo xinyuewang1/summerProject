@@ -10,6 +10,7 @@ import json
 import datetime
 from datetime import date
 import calendar
+import time as timey
 
 def getSource(request):
 
@@ -182,7 +183,7 @@ class stopsView(generic.TemplateView):
         weather = query_weather()
         bikes = bikes_query()
         bus = DublinBus()
-
+        print(parseTime())
         context = {'weather': weather, 'bikes': bikes, 'bus': bus, 'form': form}
         return render(request, self.template_name, context)
     
@@ -429,6 +430,18 @@ def get_route_data():
       
         print(results)
         return results
+
+def parseTime():
+    t = "18:21:41"
+    #ti = datetime.datetime.strptime(t, '%H:%M:%S')
+    ti = datetime.datetime.now().strftime('%H:%M:%S')
+    n = datetime.datetime.now()
+    #ti = datetime.datetime.strptime(str(n), '%H:%M:%S')
+    c = datetime.datetime.strptime(t, '%H:%M:%S')
+
+    d = datetime.datetime.combine(date.today(), c.time()) - datetime.datetime.combine(date.today(), n.time())
+    d = d.__str__()
+    return(ti, d)
             
 
 
