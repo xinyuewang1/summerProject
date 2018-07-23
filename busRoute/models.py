@@ -93,7 +93,7 @@ class Busstops(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'busStops'
+        db_table = 'Busstops'
         unique_together = (('stop_id', 'stop_name'),)
 
 
