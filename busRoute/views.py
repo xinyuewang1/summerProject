@@ -4,7 +4,6 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from .models import Testtrip, Busstops
 from busRoute.forms import routeForm
-from .utils import Ett39A
 import requests
 import json
 import datetime
@@ -350,6 +349,7 @@ def DublinBus():
         results.append(loadedBikes)
 
     return results
+
 def Est39A(source, dest, weather, time, month, day):
     ett = Ett39A(source, dest, weather, time, month, day)
     result = ett.estimatedTime()

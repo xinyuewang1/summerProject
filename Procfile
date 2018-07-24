@@ -1,2 +1,2 @@
-web: gunicorn busApp.wsgi:application --log-level debug
+web: gunicorn busApp.wsgi:application --log-file -
 worker: python worker.py
