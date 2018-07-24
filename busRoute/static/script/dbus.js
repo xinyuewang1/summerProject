@@ -369,6 +369,8 @@ function swapSearch() {
 };
 
 
+
+
 // References:
 // https://github.com/jonthornton/jquery-timepicker 
 //http://api.jqueryui.com/datepicker/

@@ -8,14 +8,14 @@ urlpatterns = [
 
     url(r'^index', views.homeView.as_view(), name='index'),
 
-    url(r'^stop', views.stopsView.as_view(), name='stops'),
+    url(r'^planner', views.plannerView.as_view(), name='planner'),
 
     url(r'^routes', views.routesView.as_view(), name='routes'),
 
+    url(r'^result', views.resultView.as_view(), name='result'),
+
     url(r'^tour', views.tourism, name='tourism'),
 
-    url(r'^test', views.test, name='tourism'),
-    
  
     url(r'^(?P<busroutenum>[0-9]+)/$', views.timeGenerator, name='detail'),
 
@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^api/getAddressSource/', views.getAddressSource, name='getSourceAddress'),
 
     url(r'^api/getAddressDestination/', views.getAddressDestination, name='getDestinationAddress'),
+
     #Pickle
     url(r'Ett39A', Est39A, name="Ett39A"),
 

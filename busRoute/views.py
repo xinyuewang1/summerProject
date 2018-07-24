@@ -161,21 +161,31 @@ class homeView(generic.TemplateView):
             source_address = form.cleaned_data['source']
             destination_address = form.cleaned_data['destination']
             depart_time = form.cleaned_data['departTime']
-            return_time = form.cleaned_data['returnTime']
+            #return_time = form.cleaned_data['returnTime']
             depart_date = form.cleaned_data['departDate']
-            return_date = form.cleaned_data['returnDate']
+            #return_date = form.cleaned_data['returnDate']
         
+        hour = readTimeIn(depart_time)
+        day = parseDate(depart_date)
+        bus = DublinBus()
+        bikes = bikes_query()
         
+        if hour != -1:
+            est = Est39A(source_address, destination_address, 0, hour, 'Jan', day)
+        else:
+            est = "unavailable"
 
+        
+        arrival = arrivalTime(depart_time, est)
         weather = query_weather()
-        args = {'form': form, 'source': source_address, 'time' : time, 'destination': destination_address, 'depart_time': depart_time, 'return_time': return_time, 'depart_date': depart_date , 'return_date': return_date, 'weather': weather}
-        return render(request, self.template_name, args)
+        args = {'form': form, 'bus': bus, 'bikes':bikes, 'source': source_address, 'destination': destination_address, 'depart_time': depart_time, 'depart_date': depart_date , 'arrival_time': arrival, 'est': est, 'weather': weather}
+        return render(request, "busRoute/result.html", args)
 
 
-class stopsView(generic.TemplateView):
+class plannerView(generic.TemplateView):
     '''Class for stops.html page which renders the page, the form and the weather'''
 
-    template_name = "busRoute/stops.html"
+    template_name = "busRoute/planner.html"
     context_object_name = 'weather'
 
     def get(self,request):
@@ -183,7 +193,6 @@ class stopsView(generic.TemplateView):
         weather = query_weather()
         bikes = bikes_query()
         bus = DublinBus()
-        print(parseTime())
         context = {'weather': weather, 'bikes': bikes, 'bus': bus, 'form': form}
         return render(request, self.template_name, context)
     
@@ -193,13 +202,51 @@ class stopsView(generic.TemplateView):
             source_address = form.cleaned_data['source']
             destination_address = form.cleaned_data['destination']
             depart_time = form.cleaned_data['departTime']
-            # return_time = form.cleaned_data['returnTime']
+            #return_time = form.cleaned_data['returnTime']
             depart_date = form.cleaned_data['departDate']
-            # return_date = form.cleaned_data['returnDate']
+            #return_date = form.cleaned_data['returnDate']
 
         hour = readTimeIn(depart_time)
         day = parseDate(depart_date)
-        time = datetime.datetime.now().time()
+        bus = DublinBus()
+        bikes = bikes_query()
+        
+        if hour != -1:
+            est = Est39A(source_address, destination_address, 0, hour, 'Jan', day)
+        else:
+            est = "unavailable"
+
+        
+        arrival = arrivalTime(depart_time, est)
+        weather = query_weather()
+        args = {'form': form, 'bus': bus, 'bikes':bikes, 'source': source_address, 'destination': destination_address, 'depart_time': depart_time, 'depart_date': depart_date , 'arrival_time': arrival, 'est': est, 'weather': weather}
+        return render(request, "busRoute/result.html", args)
+
+
+class resultView(generic.TemplateView):
+    '''Class for stops.html page which renders the page, the form and the weather'''
+
+    template_name = "busRoute/result.html"
+    context_object_name = 'weather'
+
+    def get(self,request):
+        form = routeForm()
+        weather = query_weather()
+        bikes = bikes_query()
+        bus = DublinBus()
+        context = {'weather': weather, 'bikes': bikes, 'bus': bus, 'form': form}
+        return render(request, self.template_name, context)
+    
+    def post(self, request):
+        form = routeForm(request.POST)
+        if form.is_valid():
+            source_address = form.cleaned_data['source']
+            destination_address = form.cleaned_data['destination']
+            depart_time = form.cleaned_data['departTime']
+            depart_date = form.cleaned_data['departDate']
+
+        hour = readTimeIn(depart_time)
+        day = parseDate(depart_date)
         bus = DublinBus()
         bikes = bikes_query()
         
@@ -236,9 +283,9 @@ class routesView(generic.TemplateView):
             source_address = form.cleaned_data['source']
             destination_address = form.cleaned_data['destination']
             depart_time = form.cleaned_data['departTime']
-            return_time = form.cleaned_data['returnTime']
+           # return_time = form.cleaned_data['returnTime']
             depart_date = form.cleaned_data['departDate']
-            return_date = form.cleaned_data['returnDate']
+           # return_date = form.cleaned_data['returnDate']
 
         weather = query_weather()
         args = {'form': form, 'source': source_address, 'destination': destination_address, 'depart_time': depart_time, 'return_time': return_time, 'depart_date': depart_date , 'return_date': return_date, 'weather': weather}
