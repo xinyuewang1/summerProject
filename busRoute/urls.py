@@ -16,6 +16,10 @@ urlpatterns = [
 
     url(r'^tour', views.tourism, name='tourism'),
 
+     #This URL passes the route to the get_route_data function in views.py
+
+    path('details/<slug:route>/', views.get_route_data, name='detail'),
+
  
     url(r'^(?P<busroutenum>[0-9]+)/$', views.timeGenerator, name='detail'),
 

@@ -488,6 +488,59 @@ def parseTime():
     d = datetime.datetime.combine(date.today(), c.time()) - datetime.datetime.combine(date.today(), n.time())
     d = d.__str__()
     return(ti, d)
+
+
+
+
+def get_route_data(request, route):
+
+
+    ''''this backend function takes an argument from a url (a route) and uses to query the smart dublin api for its route information '''
+
+    url = requests.get(f"http://data.dublinked.ie/cgi-bin/rtpi/routeinformation?routeid={route}&operator=bac&format=json")
+    url = url.json()
+
+    results = []
+
+    x = url['results'][1]['stops']
+  
+    for i in x: 
+    
+    # print(i['latitude'])
+
+        Info= {'lat': i['latitude'],
+                        'lng':i['longitude'],
+                        'name': i['fullname'],
+                        'id': i['stopid']
+                        }
+
+        dbInfo = json.dumps(Info) 
+        loadedBikes = json.loads(dbInfo)
+        results.append(loadedBikes)
+
+    return JsonResponse(results, safe=False)
+
+
+def getRoutes(request):
+
+    '''this function returns the autocomplete for routes that match the users input when searching for routes information'''
+
+    if request.is_ajax():
+            q = request.GET.get('term', '')
+            places = Testtrip.objects.filter(lineid__icontains=q)
+            results = []
+            for pl in places:
+                place_json = {}
+                place_json = pl.lineid
+                if place_json in results:
+                    pass
+                else: 
+                    results.append(place_json)
+                data = json.dumps(results)
+    else:
+        data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
             
 
 

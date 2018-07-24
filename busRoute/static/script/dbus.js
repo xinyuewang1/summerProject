@@ -379,6 +379,21 @@ function swapSearch() {
             var selectedObj = ui.item;
         }
     }
+
+
+    $(function () {
+        $("#test").autocomplete({
+            source: "/api/getRoutes/",
+            select: function (event, ui) { //item selected
+                AutoCompleteSelectHandler(event, ui)
+            },
+            minLength: 1,
+        });
+    });
+    
+    function AutoCompleteSelectHandler(event, ui) {
+        var selectedObj = ui.item;
+    }
 };
 
 
