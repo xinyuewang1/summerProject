@@ -10,7 +10,6 @@ function myMap() {
 
         //this code is reponsible for finding and displaing the users current location. 
         //This came from https://developers.google.com/maps/documentation/javascript/examples/map-geolocation
-        // Try HTML5 geolocation.
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(function(position) {
              pos = {
@@ -52,6 +51,8 @@ function myMap() {
         infoWindow.open(map);
       }
 
+
+
 // Function used for displaying/hiding the traffic information using a check variable 
 var trafficCheck = 0;
 function toggleTraffic(btn){
@@ -80,59 +81,6 @@ function toggleTraffic(btn){
     }
 }
 
-//this function is responsible for the autocomplete function for the source input box in the form on the stops page
-$(function() {
-    $("#autocomplete").autocomplete({
-      source: "api/getSource/",
-      select: function (event, ui) { //item selected
-        AutoCompleteSelectHandler(event, ui)
-      },
-      minLength: 1,
-    });
-  });
-
-  function AutoCompleteSelectHandler(event, ui)
-  {
-    var selectedObj = ui.item;
-  } 
-
-
-//this function is responsible for the autocomplete function for the source input box in the form on the routes page
-
-  $(function() {
-    $("#dAdd").autocomplete({
-      source: "api/getAddressDestination/",
-      select: function (event, ui) { //item selected
-        AutoCompleteSelectHandler(event, ui)
-      },
-      minLength: 3,
-    });
-  });
-
-  function AutoCompleteSelectHandler(event, ui)
-  {
-    var selectedObj = ui.item;
-  } 
-
-  //this function is responsible for the autocomplete function for the destination input box in the form on the routes page
-
-  $(function() {
-    $("#sAdd").autocomplete({
-      source: "api/getAddressDestination/",
-      select: function (event, ui) { //item selected
-        AutoCompleteSelectHandler(event,  ui)
-      },
-      minLength: 3,
-     
-    });
-  });
-
-  function AutoCompleteSelectHandler(event, ui)
-  {
-    var selectedObj = ui.item;
-
-  } 
-
 var swap = 0;
 function swapDirection() {
     // Function to swap source address to destination and vica versa
@@ -153,54 +101,11 @@ function showRoute() {
     x.style.display = 'block';
 }
 
-<<<<<<< HEAD
 $(document).ready(function() {
     $("#routePlanner").submit(function(e) {
       $("#routeResult").show();
     });
   });
-
-
-=======
-    //Function for the actions taken by the 'Go!' button on the stops page
-    //it causes the url generation to get the information the user has chosen
-    //for the moment these simply display what the user has chosenbut later, they will cause queries to take place.
-
-    var jqxhr =  $.getJSON( '/'+document.getElementById("departTime").value+'/', function( deptTime ){
-
-        //this function displays the departure time chosen
-
-        document.getElementById("timeEst").innerHTML = deptTime;
-    }  
-    );
-
-    var jqxhr2 =  $.getJSON( 'return/'+document.getElementById("returnDepartTime").value+'/', function( returntime ){
-
-         //this function displays the departure return time chosen
-
-        document.getElementById("returnTimeEst").innerHTML = returntime;
-    }
-    )
-
-    var jqxhr3 =  $.getJSON( 'month/'+document.getElementById("departDate").value+'/', function( deptdate ){
-
-         //this function displays the departure departure date chosen
-
-        document.getElementById("monthChosen").innerHTML = deptdate;
-    }
-    )
-
-
-    var jqxhr4 =  $.getJSON( 'return/month/'+document.getElementById("returnDepartDate").value+'/', function( returndate ){
-
-         //this function displays the departure departure time chosen
-
-        document.getElementById("retmonthChosen").innerHTML = returndate;
-    }
-    )
-};
->>>>>>> 0e3e233621585830a2288639b2ac1c4ec8abc46c
-
 
 // ---------------- Jquery ----------------
 
@@ -247,55 +152,6 @@ $(document).ready(function(){
     });
 
 
-//Autocomplete initialisation for the route planner form source
-$(function() {
-    $('input[name=source]').autocomplete({
-        source: "api/getSource/", 
-        select: function (event, ui) { //item selected
-        AutoCompleteSelectHandler(event, ui)
-      },
-      minLength: 1,
-    });
-  });
- 
-  function AutoCompleteSelectHandler(event, ui){
-    var selectedObj = ui.item;
-  }
-
-//Autocomplete initialisation for the route planner form destination
-$(function() {
-    $("#id_destination").autocomplete({
-        source: "api/getDesintation/",
-        select: function (event, ui) { //item selected
-        AutoCompleteSelectHandler(event, ui)
-      },
-      minLength: 1,
-    });
-  });
-
-  function AutoCompleteSelectHandler(event, ui){
-    var selectedObj = ui.item;
-  }
-
-  //this function is responsible for the autocomplete function for the destination input box in the form on the stops page
-
-  $(function() {
-    $("#id_destination").autocomplete({
-    source: "api/getDesintation/",
-    select: function (event, ui) { //item selected
-        AutoCompleteSelectHandler(event, ui)
-    },
-    minLength: 1,
-    });
-});
-
-function AutoCompleteSelectHandler(event, ui)
-{
-    var selectedObj = ui.item;
-}
-
-
-
 //Function to swap the autocomplete in the form between the stop numbers and the stop addresses.
 function swapSearch() {
 
@@ -308,36 +164,39 @@ function swapSearch() {
         document.getElementById("addSearch").style.backgroundColor = "rgb(105,143,123)";
         document.getElementById('id_source').placeholder = 'Source Address..';
 
-        //Changes the autocomplete in the source to address
-        $(function() {
-            $('input[name=source]').autocomplete({
-              source: "api/getAddressDestination/",
-              select: function (event, ui) { //item selected
-                AutoCompleteSelectHandler(event, ui)
-              },
-              minLength: 3,
-            });
-          });
-        
-            function AutoCompleteSelectHandler(event, ui){
-                var selectedObj = ui.item;
-            } 
+        //Changes the autocomplete in the source to address based on name
+        //     $('input[name=source]').autocomplete({
+     
 
+    
 
-        //Changes the autocomplete in the destination to address
-        $(function() {
-            $("#id_destination").autocomplete({
-              source: "api/getAddressDestination/",
-              select: function (event, ui) { //item selected
-                AutoCompleteSelectHandler(event, ui)
-              },
-              minLength: 3,
-            });
+   
+    //Autocomplete for Stop Num in the Destination Input
+  
+        $(document).ready(function() {
+            $.ajax({
+              type: "GET",
+              url: "RouteInfo",
+              dataType: "json",
+             
+               success: function(data) {createArray(data);}
+           });
           });
-        
-            function AutoCompleteSelectHandler(event, ui){
-                var selectedObj = ui.item;
-            } 
+          
+          
+          function createArray(Data) {
+          
+       
+          var results = [];
+          for (var i = 0; i < Data.length; i++){
+              results.push(Data[i].num);
+          }
+          $( "#id_destination" ).autocomplete({
+              source: results,
+              minLength: 2,
+          });
+             
+        } 
 
 
     } else {
@@ -346,53 +205,31 @@ function swapSearch() {
         document.getElementById("stopSearch").style.backgroundColor = "rgb(105,143,123)";
         document.getElementById('id_source').placeholder = 'Source Stop..';
 
-        //Changes the autocomplete in the source to stops
-        $(function() {
-            $('input[name=source]').autocomplete({
-                source: "api/getSource/", 
-                select: function (event, ui) { //item selected
-                AutoCompleteSelectHandler(event, ui)
-              },
-              minLength: 1,
-            });
+        //Autocomplete for Stop Addresses in the Destination Input
+        $(document).ready(function() {
+            $.ajax({
+              type: "GET",
+              url: "RouteInfo",
+              dataType: "json",
+             
+               success: function(data) {createArray(data);}
+           });
           });
-         
-          function AutoCompleteSelectHandler(event, ui)
-          {
-            var selectedObj = ui.item;
+          
+          
+          function createArray(Data) {
+          
+          var results = [];
+          for (var i = 0; i < Data.length; i++){
+              results.push(Data[i].name);
           }
+          $( "#id_destination" ).autocomplete({
+              source: results,
+              minLength: 2,
+          });
+             
+        } 
 
-
-        //Changes the autocomplete in the destination to stops
-        $(function() {
-            $("#id_destination").autocomplete({
-            source: "api/getDesintation/",
-            select: function (event, ui) { //item selected
-                AutoCompleteSelectHandler(event, ui)
-            },
-            minLength: 1,
-            });
-        });
-        
-        function AutoCompleteSelectHandler(event, ui)
-        {
-            var selectedObj = ui.item;
-        }
-    }
-
-
-    $(function () {
-        $("#test").autocomplete({
-            source: "/api/getRoutes/",
-            select: function (event, ui) { //item selected
-                AutoCompleteSelectHandler(event, ui)
-            },
-            minLength: 1,
-        });
-    });
-    
-    function AutoCompleteSelectHandler(event, ui) {
-        var selectedObj = ui.item;
     }
 };
 
@@ -402,3 +239,4 @@ function swapSearch() {
 // References:
 // https://github.com/jonthornton/jquery-timepicker 
 //http://api.jqueryui.com/datepicker/
+ //the code for the new Autocmplete function was inspired by; https://stackoverflow.com/questions/24594662/jqueryui-autocomplete-data-from-text-csv-file-with-ajax

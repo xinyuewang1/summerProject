@@ -90,7 +90,7 @@
                     </script>
                 </div>
                 
-
+                <!-- <input type="text" id="id_source"> -->
                 
                 <div class="col-sm-12 rounded shadow mt-3" style = "background-color:rgb(105,143,123);">
                     <div class = "row text-center text-white">
@@ -101,6 +101,8 @@
                             <strong>By Address</strong>
                         </div>
                     </div>
+
+                   
                     <form id = "routePlanner" role = "form" method="POST">
                         {% csrf_token %}
                         <div class = "row mt-2">
@@ -228,11 +230,7 @@
 
                         table += "</tbody></table>";
                         document.getElementById("RouteDiv").innerHTML = table;
-                    })
-
-
-
-
+                    })  
                 };
                                 function generateQuery() {
 
@@ -415,7 +413,7 @@
                 long = parseFloat(long);
 
 
-                if (x == "{{ p.id }}") {
+                if (x == "{{ p.num }}") {
 
 
                     var directionsService = new google.maps.DirectionsService();
@@ -504,7 +502,12 @@
                 });
             };
 
+
             initialize();
+
+
+
+            
 
             var busMarkers = 0;
 
@@ -529,7 +532,7 @@
                     var lat = "{{ p.lat }}"
                     var long = "{{ p.lng }}"
                     var name = "{{ p.name }}"
-                    var id = "{{ p.id }}";
+                    var id = "{{ p.num }}";
 
                     var lat = parseFloat(lat);
                     var long = parseFloat(long);
@@ -556,7 +559,7 @@
                     google.maps.event.addListener(marker, 'click', (function (markers) {
                         return function () {
 
-                            document.getElementById("autocomplete").value = '{{ p.id }}';
+                            document.getElementById("id_source").value = '{{ p.name }}';
                         }
                     })(markers));
 
@@ -664,37 +667,20 @@
 
             };
 
-            $(function () {
-                $("#id_destination").autocomplete({
-                    source: "api/getDesintation/",
-                    select: function (event, ui) { //item selected
-                        AutoCompleteSelectHandler(event, ui)
-                    },
-                    minLength: 1,
-                });
-            });
+            // $(function () {
+            //     $("#id_destination").autocomplete({
+            //         source: "api/getDesintation/",
+            //         select: function (event, ui) { //item selected
+            //             AutoCompleteSelectHandler(event, ui)
+            //         },
+            //         minLength: 1,
+            //     });
+            // });
 
-            function AutoCompleteSelectHandler(event, ui) {
-                var selectedObj = ui.item;
-            }
+            // function AutoCompleteSelectHandler(event, ui) {
+            //     var selectedObj = ui.item;
+            // }
         </script>
- <script>
-
- $(function () {
-    $("#routeSearch").autocomplete({
-        source: "/api/getRoutes/",
-        select: function (event, ui) { //item selected
-            AutoCompleteSelectHandler(event, ui)
-        },
-        minLength: 1,
-    });
-});
-
-function AutoCompleteSelectHandler(event, ui) {
-    var selectedObj = ui.item;
-}
-
-
-        </script>
+    
     </body>
 {% endblock %}

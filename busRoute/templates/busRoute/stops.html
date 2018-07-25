@@ -298,20 +298,20 @@
 
         <script>
         //Autcomplete stops code
-        $(function() {
-            $("#id_source").autocomplete({
-                source: "api/getSource/", 
-                select: function (event, ui) { //item selected
-                AutoCompleteSelectHandler(event, ui)
-              },
-              minLength: 1,
-            });
-          });
+        // $(function() {
+        //     $("#id_source").autocomplete({
+        //         source: "api/getSource/", 
+        //         select: function (event, ui) { //item selected
+        //         AutoCompleteSelectHandler(event, ui)
+        //       },
+        //       minLength: 1,
+        //     });
+        //   });
          
-          function AutoCompleteSelectHandler(event, ui)
-          {
-            var selectedObj = ui.item;
-          }</script>
+        //   function AutoCompleteSelectHandler(event, ui)
+        //   {
+        //     var selectedObj = ui.item;
+        //   }</script>
     </body>
     
 </html>

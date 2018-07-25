@@ -1,10 +1,13 @@
 from django.conf.urls import url
 from django.urls import path
 from . import views
+
 from .views import Est39A
+from busRoute.views import GenBusData
 from .models import Testtrip
 
 urlpatterns = [
+
 
     url(r'^index', views.homeView.as_view(), name='index'),
 
@@ -16,22 +19,18 @@ urlpatterns = [
 
     url(r'^tour', views.tourism, name='tourism'),
 
+    #This URL is used for Autocomplete Information
+    
+    url(r'^RouteInfo', views.GenBusData, name='RouteInfo'),
+
      #This URL passes the route to the get_route_data function in views.py
 
     path('details/<slug:route>/', views.get_route_data, name='detail'),
 
+    
+
  
     url(r'^(?P<busroutenum>[0-9]+)/$', views.timeGenerator, name='detail'),
-
-    url(r'^api/getRoutes/', views.getRoutes, name='getRoutes'),
-
-    url(r'^api/getSource/', views.getSource, name='getSource'),
-
-    url(r'^api/getDesintation/', views.getDestination, name='getDestination'),
-
-    url(r'^api/getAddressSource/', views.getAddressSource, name='getSourceAddress'),
-
-    url(r'^api/getAddressDestination/', views.getAddressDestination, name='getDestinationAddress'),
 
     #Pickle
     url(r'Ett39A', Est39A, name="Ett39A"),

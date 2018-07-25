@@ -10,126 +10,15 @@ import json
 import datetime
 from datetime import date
 import calendar
+import os
+from django.conf import settings
 
-def getSource(request):
-
-        '''This function performs the query to find the matches to the users input in the source search bar'''
-
-        if request.is_ajax():
-            q = request.GET.get('term', '')
-            places = Busstops.objects.filter(stop_id__icontains=q)
-            results = []
-            for pl in places:
-                place_json = {}
-                place_json = pl.stop_id
-                if place_json in results:
-                    pass
-                else: 
-                    results.append(place_json)
-                data = json.dumps(results)
-        else:
-            data = 'fail'
-        mimetype = 'application/json'
-        return HttpResponse(data, mimetype)
-
-
-def getDestination(request):
-
-        '''This function performs the query to find the matches to the users input in the destination search bar'''
-
-
-        if request.is_ajax():
-            q = request.GET.get('term', '')
-            places = Busstops.objects.filter(stop_id__icontains=q)
-            results = []
-            for pl in places:
-                place_json = {}
-                place_json = pl.stop_id
-                if place_json in results:
-                    pass
-                else: 
-                    results.append(place_json)
-                data = json.dumps(results)
-        else:
-            data = 'fail'
-        mimetype = 'application/json'
-        return HttpResponse(data, mimetype)
-
-
-
-def getAddressSource(request):
-
-
-    '''this function returns the addresses that match the users input into the source input on the routes page'''
-
-
-    if request.is_ajax():
-            q = request.GET.get('term', '')
-            places = Busstops.objects.filter(stop_name__icontains=q)
-            results = []
-            for pl in places:
-                place_json = {}
-                place_json = pl.stop_name
-                if place_json in results:
-                    pass
-                else: 
-                    results.append(place_json)
-                data = json.dumps(results)
-    else:
-            data = 'fail'
-    mimetype = 'application/json'
-    return HttpResponse(data, mimetype)
-
-
-
-def getAddressDestination(request):
-
-    '''this function returns the addresses that match the users input into the destination input on the routes page'''
-
-    if request.is_ajax():
-            q = request.GET.get('term', '')
-            places = Busstops.objects.filter(stop_name__icontains=q)
-            results = []
-            for pl in places:
-                place_json = {}
-                place_json = pl.stop_name
-                if place_json in results:
-                    pass
-                else: 
-                    results.append(place_json)
-                data = json.dumps(results)
-    else:
-        data = 'fail'
-    mimetype = 'application/json'
-    return HttpResponse(data, mimetype)
-
-
-def getRoutes(request):
-
-    '''this function returns the routes that match the users input when searching for routes information'''
-
-    if request.is_ajax():
-            q = request.GET.get('term', '')
-            places = Testtrip.objects.filter(lineid__icontains=q)
-            results = []
-            for pl in places:
-                place_json = {}
-                place_json = pl.lineid
-                if place_json in results:
-                    pass
-                else: 
-                    results.append(place_json)
-                data = json.dumps(results)
-    else:
-        data = 'fail'
-    mimetype = 'application/json'
-    return HttpResponse(data, mimetype)
+import csv
     
 def routes(request):
     weather = query_weather()
     bikes = bikes_query()
-    bus = DublinBus()
-    return render(request, 'busRoute/routes.html', {'bikes': bikes, 'bus': bus, 'weather': weather})
+    return render(request, 'busRoute/routes.html', {'bikes': bikes, 'weather': weather})
     
 
 class homeView(generic.TemplateView):
@@ -150,8 +39,7 @@ class homeView(generic.TemplateView):
         form = routeForm()
         weather = query_weather()
         bikes = bikes_query()
-        bus = DublinBus()
-        context = {'weather': weather, 'bus': bus, 'bikes': bikes, 'form': form}
+        context = {'weather': weather,'bikes': bikes, 'form': form}
         return render(request, self.template_name, context)
     
     def post(self, request):
@@ -166,7 +54,6 @@ class homeView(generic.TemplateView):
         
         hour = readTimeIn(depart_time)
         day = parseDate(depart_date)
-        bus = DublinBus()
         bikes = bikes_query()
         
         if hour != -1:
@@ -177,7 +64,7 @@ class homeView(generic.TemplateView):
         
         arrival = arrivalTime(depart_time, est)
         weather = query_weather()
-        args = {'form': form, 'bus': bus, 'bikes':bikes, 'source': source_address, 'destination': destination_address, 'depart_time': depart_time, 'depart_date': depart_date , 'arrival_time': arrival, 'est': est, 'weather': weather}
+        args = {'form': form,'bikes':bikes, 'source': source_address, 'destination': destination_address, 'depart_time': depart_time, 'depart_date': depart_date , 'arrival_time': arrival, 'est': est, 'weather': weather}
         return render(request, "busRoute/result.html", args)
 
 
@@ -192,7 +79,7 @@ class plannerView(generic.TemplateView):
         weather = query_weather()
         bikes = bikes_query()
         bus = DublinBus()
-        context = {'weather': weather, 'bikes': bikes, 'bus': bus, 'form': form}
+        context = {'weather': weather, 'bikes': bikes,'form': form, 'bus': bus}
         return render(request, self.template_name, context)
     
     def post(self, request):
@@ -207,8 +94,8 @@ class plannerView(generic.TemplateView):
 
         hour = readTimeIn(depart_time)
         day = parseDate(depart_date)
-        bus = DublinBus()
         bikes = bikes_query()
+        bus = DublinBus()
         
         if hour != -1:
             est = Est39A(source_address, destination_address, 0, hour, 'Jan', day)
@@ -218,7 +105,7 @@ class plannerView(generic.TemplateView):
         
         arrival = arrivalTime(depart_time, est)
         weather = query_weather()
-        args = {'form': form, 'bus': bus, 'bikes':bikes, 'source': source_address, 'destination': destination_address, 'depart_time': depart_time, 'depart_date': depart_date , 'arrival_time': arrival, 'est': est, 'weather': weather}
+        args = {'form': form, 'bikes':bikes, 'source': source_address, 'destination': destination_address, 'depart_time': depart_time, 'depart_date': depart_date , 'arrival_time': arrival, 'est': est, 'weather': weather, 'bus': bus}
         return render(request, "busRoute/result.html", args)
 
 
@@ -232,8 +119,7 @@ class resultView(generic.TemplateView):
         form = routeForm()
         weather = query_weather()
         bikes = bikes_query()
-        bus = DublinBus()
-        context = {'weather': weather, 'bikes': bikes, 'bus': bus, 'form': form}
+        context = {'weather': weather, 'bikes': bikes,'form': form}
         return render(request, self.template_name, context)
     
     def post(self, request):
@@ -246,7 +132,7 @@ class resultView(generic.TemplateView):
 
         hour = readTimeIn(depart_time)
         day = parseDate(depart_date)
-        bus = DublinBus()
+    
         bikes = bikes_query()
         
         if hour != -1:
@@ -257,7 +143,7 @@ class resultView(generic.TemplateView):
         
         arrival = arrivalTime(depart_time, est)
         weather = query_weather()
-        args = {'form': form, 'bus': bus, 'bikes':bikes, 'source': source_address, 'destination': destination_address, 'depart_time': depart_time, 'depart_date': depart_date , 'arrival_time': arrival, 'est': est, 'weather': weather}
+        args = {'form': form, 'bikes':bikes, 'source': source_address, 'destination': destination_address, 'depart_time': depart_time, 'depart_date': depart_date , 'arrival_time': arrival, 'est': est, 'weather': weather}
         return render(request, self.template_name, args)
 
 
@@ -271,9 +157,8 @@ class routesView(generic.TemplateView):
         form = routeForm()
         weather = query_weather()
         bikes = bikes_query()
-        bus = DublinBus()
 
-        context = {'weather': weather, 'bikes': bikes, 'bus': bus, 'form': form}
+        context = {'weather': weather, 'bikes': bikes, 'form': form}
         return render(request, self.template_name, context)
     
     def post(self, request):
@@ -297,9 +182,9 @@ def tourism(request):
 
 
 def test(request):
-    bus = DublinBus()
     routes = get_route_data()
-    return render(request, 'busRoute/test.html',{'routes': routes, 'bus': bus})
+    return render(request, 'busRoute/test.html',{'routes': routes})
+
 
 def timeGenerator(request, chosen_time):
 
@@ -307,14 +192,6 @@ def timeGenerator(request, chosen_time):
 
     return JsonResponse("You chose %s" % chosen_time, safe=False)
 
-# def detail(request, busroutenum):
-#     print("Testing stuff")
-#     all_trips = Testtrip.objects.all()
-#     html = ''
-#     for trip in all_trips:
-#         print(trip)
-#         html += '<h2>Route number is ' + str(trip.lineid) + '</h2><br>'
-#     return HttpResponse(html)
 
 
 '''these are the more general queries called inside the above classes'''
@@ -370,24 +247,101 @@ def bikes_query():
 
     return results
           
+
 def DublinBus():
 
-    '''this function creates a dictionary from the dublin bus data to be accessed on the page'''
+    '''this function creates a dictionary from the dublin bus data located inside Routes.csv to be accessed on the page'''
 
-    data = Busstops.objects.all()
     results = []
-    for i in data:
 
-        Info= {'lat': i.stop_lat,
-                     'lng':i.stop_lon, 
-                     'name': i.stop_name,
-                     'id': i.stop_id
+    with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r') as f:
+
+        reader = csv.reader(f)
+
+        for i in reader:
+               
+            
+                Info= {'lat': i[2],
+                        'lng':i[3],
+                        'name': i[1],
+                        'num': i[0]
                     }
+
+            
+                dbInfo = json.dumps(Info) 
+                loadedBikes = json.loads(dbInfo)
+                results.append(loadedBikes)
+        
+    
+    return results
+
+
+
+def get_route_data(request, route):
+
+
+    ''''this backend function takes an argument from a url (a route) and uses to query the smart dublin api for its route information '''
+
+    url = requests.get(f"http://data.dublinked.ie/cgi-bin/rtpi/routeinformation?routeid={route}&operator=bac&format=json")
+    url = url.json()
+
+    results = []
+
+    x = url['results'][1]['stops']
+  
+    for i in x: 
+    
+    # print(i['latitude'])
+
+        Info= {'lat': i['latitude'],
+                        'lng':i['longitude'],
+                        'name': i['fullname'],
+                        'id': i['stopid']
+                        }
+
         dbInfo = json.dumps(Info) 
         loadedBikes = json.loads(dbInfo)
         results.append(loadedBikes)
 
-    return results
+    return JsonResponse(results, safe=False)    
+
+
+            
+                
+def GenBusData(request): 
+
+
+    '''This Data is used for the autocomplete function'''
+
+
+    results = []
+
+    with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r') as f:
+
+        reader = csv.reader(f)
+
+        for i in reader:
+               
+            
+                Info= {'lat': i[2],
+                        'lng':i[3],
+                        'name': i[1],
+                        'num': i[0]
+                    }
+
+            
+                dbInfo = json.dumps(Info) 
+                loadedBikes = json.loads(dbInfo)
+                results.append(loadedBikes)
+      
+    return JsonResponse(results, safe=False) 
+
+
+# def WalkMeDictionary():
+
+
+                
+               
 def Est39A(source, dest, weather, time, month, day):
     ett = Ett39A(source, dest, weather, time, month, day)
     result = ett.estimatedTime()
@@ -448,34 +402,6 @@ def parseDate(d):
 
 
 
-def get_route_data():
-
-        '''accessing route information for the 39A from RTPI
-        will need to make it more dynamic in terms of the other bus stops'''
-
-        url = requests.get("http://data.dublinked.ie/cgi-bin/rtpi/routeinformation?routeid=39A&operator=bac&format=json")
-        url = url.json()
-       
-        results = []
-
-        x = url['results'][1]['stops']
-
-        for i in x: 
-
-            # print(i['latitude'])
-
-            Info= {'lat': i['latitude'],
-                     'lng':i['longitude'],
-                     'name': i['fullname'],
-                     'id': i['stopid']
-                    }
-
-            dbInfo = json.dumps(Info) 
-            loadedBikes = json.loads(dbInfo)
-            results.append(loadedBikes)
-      
-        print(results)
-        return results
 
 def parseTime():
     t = "18:21:41"
@@ -492,56 +418,8 @@ def parseTime():
 
 
 
-def get_route_data(request, route):
 
 
-    ''''this backend function takes an argument from a url (a route) and uses to query the smart dublin api for its route information '''
-
-    url = requests.get(f"http://data.dublinked.ie/cgi-bin/rtpi/routeinformation?routeid={route}&operator=bac&format=json")
-    url = url.json()
-
-    results = []
-
-    x = url['results'][1]['stops']
-  
-    for i in x: 
-    
-    # print(i['latitude'])
-
-        Info= {'lat': i['latitude'],
-                        'lng':i['longitude'],
-                        'name': i['fullname'],
-                        'id': i['stopid']
-                        }
-
-        dbInfo = json.dumps(Info) 
-        loadedBikes = json.loads(dbInfo)
-        results.append(loadedBikes)
-
-    return JsonResponse(results, safe=False)
-
-
-def getRoutes(request):
-
-    '''this function returns the autocomplete for routes that match the users input when searching for routes information'''
-
-    if request.is_ajax():
-            q = request.GET.get('term', '')
-            places = Testtrip.objects.filter(lineid__icontains=q)
-            results = []
-            for pl in places:
-                place_json = {}
-                place_json = pl.lineid
-                if place_json in results:
-                    pass
-                else: 
-                    results.append(place_json)
-                data = json.dumps(results)
-    else:
-        data = 'fail'
-    mimetype = 'application/json'
-    return HttpResponse(data, mimetype)
-            
 
 
     
