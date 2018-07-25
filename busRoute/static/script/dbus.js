@@ -194,7 +194,7 @@ function swapSearch() {
           });
              
         } 
-        
+
     } else {
         //Changes the colour of the tab and placeholder of the search form
         document.getElementById("addSearch").style.backgroundColor = "black";
@@ -225,7 +225,6 @@ function swapSearch() {
           });
              
         } 
-
     }   
 };
 
@@ -282,6 +281,31 @@ function generateQuery() {
                     
         })
     };
+
+//Autocomplete for Route Search
+    $(document).ready(function() {
+        $.ajax({
+          type: "GET",
+          url: "dublinBusRoutes",
+          dataType: "json",
+         
+           success: function(data) {createArray(data);}
+       });
+      });
+      
+      
+      function createArray(Data) {
+      
+      var results = [];
+      for (var i = 0; i < Data.length; i++){
+          results.push(Data[i].route);
+      }
+      $( "#routeSearch" ).autocomplete({
+          source: results,
+          minLength: 1,
+      });
+         
+    } 
 
 
 

@@ -315,9 +315,33 @@
        
 
         <script>
+
+            $(document).ready(function() {
+            $.ajax({
+              type: "GET",
+              url: "dublinBusRoutes",
+              dataType: "json",
+             
+               success: function(data) {createArray(data);}
+           });
+          });
+          
+          
+          function createArray(Data) {
+          
+          var results = [];
+          for (var i = 0; i < Data.length; i++){
+              results.push(Data[i].route);
+          }
+          $( "#routeSearch" ).autocomplete({
+              source: results,
+              minLength: 1,
+          });
+             
+        } 
             var placeSearch, autocomplete;
 
-            function initialize() {
+            function placeSearch() {
 
 
                 //https://www.w3docs.com/learn-javascript/places-autocomplete.html
@@ -359,7 +383,7 @@
             };
 
 
-            initialize();
+            placeSearch();
 
             var busMarkers = 0;
 
