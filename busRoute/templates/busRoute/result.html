@@ -53,23 +53,6 @@
                 
                 <div class="col-sm-12 rounded shadow mt-4" style = "background-color:rgb(105,143,123);">
                     <h3>Route Planner</h3>
-                    <!-- <button type="button" class="btn btn-block btn-info" data-toggle="collapse" data-target="#demo">Dont Know Stop?</button>
-                    <div id="demo" class="collapse">
-                        <div class="pac-card" id="pac-card">
-
-                            <div id="pac-container">
-                                <br>
-                                <h6>You can use the below search option to zoom in on a specific area on the map</h6>
-                                <br>
-                                <h6>Once the map has zoomed to that area, you can choose to toggle the markers to show the stops</h6>
-                                <br>
-
-                                <div>
-                                    <input id="genSearch" placeholder="Search General Area" type="text"></input>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
                     <script>
                         $(document).ready(function(){
                             $('[data-toggle="popover"]').popover();   
@@ -130,61 +113,6 @@
                         </div>   
                         <div class = "row">
                             <button type ="submit" class = "btn btn-block btn-primary m-2" name = "go" onclick="showRoute(),getValue()">GO!</button>
-                            <script>
-                                function generateQuery() {
-
-                                    //this function gets real time information for the stop that is selected.
-
-                                    var jqxhr = $.getJSON(
-                                        'https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?stopid=' +
-                                        document.getElementById("id_source").value + '&format=json',
-                                        function (daily) {
-                                            var now = new Date();
-                                            var temp = new Date();
-
-                                            var table = "";
-                                                    table = "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped overflow-y: hidden'>";
-                                                    table += "<tr><thead>";
-                                                    table += "<th>Route</th>";
-                                                    table += "<th>Destination</th>";
-                                                    table += "<th>Arrival Time</th>";
-                                                    table += "<th>Expected</th>";
-                                                    table += "</tr></thead><tbody>";
-                                                    x = daily.results;
-                                                    for (var i = 0; i < x.length; i++) {
-                                                        
-                                                        var ti = x[i].arrivaldatetime.slice(11,);
-                                                        
-                                                        var array = ti.split(":");
-                                                        temp.setHours(array[0]);
-                                                        temp.setMinutes(array[1]);
-                                                        temp.setSeconds(array[2]);
-                                                        var difference = new Date();
-                                                        difference.setTime(temp-now);
-                                                        var m = difference.getMinutes();
-                                                        
-                                                        if (difference.getSeconds() >= 30){
-                                                            m = m + 1;
-                                                        };
-                                                        if (m == 0){
-                                                            m = "Due"
-                                                        } else{
-                                                            m = String(m) + " mins"
-                                                        };
-                                              
-                                                        table += "<tr>";
-                                                        table += "<td>" + x[i].route + "</td>";
-                                                        table += "<td>" + x[i].destination + "</td>";
-                                                        table += "<td>" + ti.slice(0 ,5) + "</td>";
-                                                        table += "<td>" + m + "</td>";
-                                                        table += "</tr>";
-                                                        }
-                                                    table += "</tbody></table>";
-                                                    document.getElementById("realtimeTable").innerHTML = table;
-                                                    
-                                        })
-                                    };
-                            </script>
                         </div>
                     </form>
                     
@@ -192,9 +120,6 @@
                 
             </div>
         </div>
-
-
-        
 
         <script>
 
@@ -267,12 +192,33 @@
             </div>
         </div>
 
-    
-       
-
         <script>
 
             function getValue() {
+
+
+                //this function is responsible for the Google Maps Direction Service. 
+
+//             $(document).ready(function() {
+//             $.ajax({
+//               type: "GET",
+//               url: "RouteInfo",
+//               dataType: "json",
+             
+//                success: function(data) {createArray(data);}
+              
+//            });
+//           });
+
+// function createArray(Data) {
+          
+//        for (var i = 0; i < Data.length; i++){
+//         console.log(Data[i].lat);
+//         console.log(Data[i].lng);
+
+
+//        }     
+//         } 
 
                 //this function is responsible for the directions service. 
                 //it takes the source destintion input value to find its long/lat through an if statament
@@ -294,7 +240,7 @@
                 var lat = "{{ p.lat }}"
                 var long = "{{ p.lng }}"
 
-                console.log(lat);
+          
 
 
                 lat = parseFloat(lat);
@@ -342,7 +288,6 @@
                 "{% endfor %}"
                 "{% endif %}"
 
-
             }
 
 
@@ -369,7 +314,7 @@
 
                 google.maps.event.addListener(autocomplete, 'place_changed', function () {
                     var place = autocomplete.getPlace();
-                    console.log(place);
+                   
 
                     if (!place.geometry) {
                         // User entered the name of a Place that was not suggested and
@@ -545,28 +490,8 @@
 
                     document.getElementById("bikesbutton").innerHTML = "Bikes";
                     bikeMarkers--;
-
                 }
-
             };
-// <!-- 
-//             $(function () {
-//                 $("#id_destination").autocomplete({
-//                     source: "api/getDesintation/",
-//                     select: function (event, ui) { //item selected
-//                         AutoCompleteSelectHandler(event, ui)
-//                     },
-//                     minLength: 1,
-//                 });
-//             });
-
-//             function AutoCompleteSelectHandler(event, ui) {
-//                 var selectedObj = ui.item;
-//             } -->
-        </script>
-
-
-
         </script>
     </body>
 {% endblock %}

@@ -167,9 +167,6 @@ function swapSearch() {
         //Changes the autocomplete in the source to address based on name
         //     $('input[name=source]').autocomplete({
      
-
-    
-
    
     //Autocomplete for Stop Num in the Destination Input
   
@@ -191,14 +188,13 @@ function swapSearch() {
           for (var i = 0; i < Data.length; i++){
               results.push(Data[i].num);
           }
-          $( "#id_destination" ).autocomplete({
+          $( "#id_destination, #id_source" ).autocomplete({
               source: results,
               minLength: 2,
           });
              
         } 
-
-
+        
     } else {
         //Changes the colour of the tab and placeholder of the search form
         document.getElementById("addSearch").style.backgroundColor = "black";
@@ -223,16 +219,69 @@ function swapSearch() {
           for (var i = 0; i < Data.length; i++){
               results.push(Data[i].name);
           }
-          $( "#id_destination" ).autocomplete({
+          $( "#id_destination, #id_source" ).autocomplete({
               source: results,
               minLength: 2,
           });
              
         } 
 
-    }
+    }   
 };
 
+function generateQuery() {
+
+    //this function gets real time information for the stop that is selected.
+
+    var jqxhr = $.getJSON(
+        'https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?stopid=' +
+        document.getElementById("id_source").value + '&format=json',
+        function (daily) {
+            var now = new Date();
+            var temp = new Date();
+
+            var table = "";
+                    table = "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped overflow-y: hidden'>";
+                    table += "<tr><thead>";
+                    table += "<th>Route</th>";
+                    table += "<th>Destination</th>";
+                    table += "<th>Arrival Time</th>";
+                    table += "<th>Expected</th>";
+                    table += "</tr></thead><tbody>";
+                    x = daily.results;
+                    for (var i = 0; i < x.length; i++) {
+                        
+                        var ti = x[i].arrivaldatetime.slice(11,);
+                        
+                        var array = ti.split(":");
+                        temp.setHours(array[0]);
+                        temp.setMinutes(array[1]);
+                        temp.setSeconds(array[2]);
+                        var difference = new Date();
+                        difference.setTime(temp-now);
+                        var m = difference.getMinutes();
+                        
+                        if (difference.getSeconds() >= 30){
+                            m = m + 1;
+                        };
+                        if (m == 0){
+                            m = "Due"
+                        } else{
+                            m = String(m) + " mins"
+                        };
+              
+                        table += "<tr>";
+                        table += "<td>" + x[i].route + "</td>";
+                        table += "<td>" + x[i].destination + "</td>";
+                        table += "<td>" + ti.slice(0 ,5) + "</td>";
+                        table += "<td>" + m + "</td>";
+                        table += "</tr>";
+                        }
+                    table += "</tbody></table>";
+                    document.getElementById("realtimeTable").innerHTML = table;
+                    
+        })
+    };
 
 
 

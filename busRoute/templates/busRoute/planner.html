@@ -44,30 +44,6 @@
                 
                 <div class="col-sm-12 rounded shadow mt-4" style = "background-color:rgb(105,143,123);">
                     <h3>Route Planner</h3>
-                    <!-- <button type="button" class="btn btn-block btn-info" data-toggle="collapse" data-target="#demo">Dont Know Stop?</button>
-                    <div id="demo" class="collapse">
-                        <div class="pac-card" id="pac-card">
-
-                            <div id="pac-container">
-                                <br>
-                                <h6>You can use the below search option to zoom in on a specific area on the map</h6>
-                                <br>
-                                <h6>Once the map has zoomed to that area, you can choose to toggle the markers to show the stops</h6>
-                                <br>
-
-                                <div>
-                                    <input id="genSearch" placeholder="Search General Area" type="text"></input>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
-                    <!-- <script>
-                        $(document).ready(function(){
-                            $('[data-toggle="popover"]').popover();   
-                        });
-                        </script>
-                    <a href="#" data-toggle="popover" title="Find a stop number" data-content="You can use the below search option to zoom in on a specific area on the map. Once the map has zoomed to that area, you can choose to toggle the markers to show the stops"><button class = "btn btn-success btn-block">Don't Know Stop?</button></a>
-                    <button class = "btn btn-block btn-secondary">Search by Route</button> -->
                     <div class = "row">
                         <div class = "col-6 text-center text-white border border-white border-top-0 border-left-0 border-bottom-0">
                             <a href = "#" onclick = "findStop()">Find Stop</a>
@@ -124,10 +100,6 @@
                                     <div class = "col-6 planner">{{ form.returnDate }}</div>
                                 </div>
                             </div>
-
-                            
-                            
-                            
                                 <script>
                                     var d = new Date();
                                     var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
@@ -293,10 +265,6 @@
                 
             </div>
         </div>
-
-
-        
-
         <script>
 
             var d = new Date();
@@ -323,47 +291,6 @@
 
         <div class="row" style="margin-top:20px;">
             <div class="col-sm-12">
-                <!-- <div class="col-sm-12 rounded shadow" style="background-color:rgb(105,143,123);">
-                    <div class="display-4 mb-3 border-bottom border-black">Tuesday 10 July</div>
-
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <div class="col-sm-12 rounded shadow mb-3" style="background-color:white;">
-                                <h1 class="display-4">{{ depart_time }}</h1>
-                                <h2 class="ml-2 font-weight-bold text-uppercase">UCD</h2>
-                                <h2 class="ml-2">Stop {{ source }}</h2>
-                                <br>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 text-center">
-                            <strong>---------</strong>
-                            <img class="animated bounce infinite" src="{% static 'images/dbuscartoon.png' %}">
-                            <strong>---------</strong>
-                            <h4 class="ml-2 mt-2 text-white">Travel Time {{ est }} mins</h4>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="col-sm-12 rounded shadow" style="background-color:white;">
-                                <h1 class="display-4">{{ arrival_time }}</h1>
-                                <h2 class="ml-2 font-weight-bold text-uppercase">Delhurst</h2>
-                                <h2 class="ml-2">Stop {{ destination }}</h2>
-                                <br>
-                            </div>
-                        </div>
-                    </div>
-                    <div class = "row">
-                        <div class = "col-sm-4 mb-3">
-                            <a href = "#homeCenter"><button class = "btn btn-block btn-success" onclick = "getValue();">Walk Me</button></a>
-                        </div>
-                        <div class = "col-sm-4">
-                            <button class = "btn btn-block btn-danger" onclick="generateQuery()">Real-time</button>
-                        </div>
-                        <div class = "col-sm-4">
-                            <button class = "btn btn-block btn-warning text-white">Timetable</button>
-                        </div>
-                    </div>
-                    <div class = "container mb-3" style = "background-color: aliceblue;" id = "table"></div>
-                    
-                </div> -->
                 <div class="row shadow rounded" style = "margin-top:20px;background-color:rgb(105,143,123);">
                     <div class="col-sm-8">
                         
@@ -388,76 +315,6 @@
        
 
         <script>
-            function getValue() {
-
-                //this function is responsible for the directions service. 
-                //it takes the source destintion input value to find its long/lat through an if statament
-                //and the users current location 
-                //and it will display the results on the map and the actual written directions below!
-
-                var curLat = pos.lat;
-                var curLng = pos.lng;
-
-
-                var x = document.getElementById("id_source").value;
-
-
-                "{% if bus %}"
-                "{% for p in bus %}"
-
-                var lat = "{{ p.lat }}"
-                var long = "{{ p.lng }}"
-
-
-                lat = parseFloat(lat);
-                long = parseFloat(long);
-
-
-                if (x == "{{ p.num }}") {
-
-
-                    var directionsService = new google.maps.DirectionsService();
-                    var directionsDisplay = new google.maps.DirectionsRenderer();
-
-                    var start = new google.maps.LatLng(curLat, curLng);
-                    var end = new google.maps.LatLng(lat, long);
-
-                    var mapProp = {
-                        center: new google.maps.LatLng(53.347515, -6.265377),
-                        zoom: 10,
-                    };
-                    map = new google.maps.Map(document.getElementById("map"), mapProp);
-                    directionsDisplay.setMap(map);
-                    directionsDisplay.setPanel(document.getElementById('directionsPanel'));
-
-
-                    function calcRoute() {
-
-                        var request = {
-                            origin: start,
-                            destination: end,
-                            travelMode: 'WALKING'
-                        };
-                        directionsService.route(request, function (result, status) {
-                            if (status == 'OK') {
-                                directionsDisplay.setDirections(result);
-                            }
-                        });
-
-                    }
-
-                    calcRoute();
-                }
-
-
-
-                "{% endfor %}"
-                "{% endif %}"
-
-
-            }
-
-
             var placeSearch, autocomplete;
 
             function initialize() {
@@ -481,8 +338,7 @@
 
                 google.maps.event.addListener(autocomplete, 'place_changed', function () {
                     var place = autocomplete.getPlace();
-                    console.log(place);
-
+                
                     if (!place.geometry) {
                         // User entered the name of a Place that was not suggested and
                         // pressed the Enter key, or the Place Details request failed.
@@ -504,10 +360,6 @@
 
 
             initialize();
-
-
-
-            
 
             var busMarkers = 0;
 
@@ -548,18 +400,17 @@
 
                     markers.push(marker);
 
-
                     google.maps.event.addListener(marker, 'mouseover', (function (markers) {
                         return function () {
                             infoBus.open(map, this);
-                            infoBus.setContent('{{ p.name }}' + '<br>' + '(' + '{{ p.id }}' + ')');
+                            infoBus.setContent('{{ p.name }}' + '<br>' + '(' + '{{ p.num }}' + ')');
                         }
                     })(markers));
 
                     google.maps.event.addListener(marker, 'click', (function (markers) {
                         return function () {
 
-                            document.getElementById("id_source").value = '{{ p.name }}';
+                            document.getElementById("id_source").value = '{{ p.num }}';
                         }
                     })(markers));
 
@@ -667,19 +518,6 @@
 
             };
 
-            // $(function () {
-            //     $("#id_destination").autocomplete({
-            //         source: "api/getDesintation/",
-            //         select: function (event, ui) { //item selected
-            //             AutoCompleteSelectHandler(event, ui)
-            //         },
-            //         minLength: 1,
-            //     });
-            // });
-
-            // function AutoCompleteSelectHandler(event, ui) {
-            //     var selectedObj = ui.item;
-            // }
         </script>
     
     </body>
