@@ -128,8 +128,8 @@ def getRoutes(request):
 def routes(request):
     weather = query_weather()
     bikes = bikes_query()
-    bus = DublinBus()
-    return render(request, 'busRoute/routes.html', {'bikes': bikes, 'bus': bus, 'weather': weather})
+    #bus = DublinBus()
+    return render(request, 'busRoute/routes.html', {'bikes': bikes, 'weather': weather})
     
 
 class homeView(generic.TemplateView):
@@ -150,8 +150,8 @@ class homeView(generic.TemplateView):
         form = routeForm()
         weather = query_weather()
         bikes = bikes_query()
-        bus = DublinBus()
-        context = {'weather': weather, 'bus': bus, 'bikes': bikes, 'form': form}
+        #bus = DublinBus()
+        context = {'weather': weather, 'bikes': bikes, 'form': form}
         return render(request, self.template_name, context)
     
     def post(self, request):
@@ -181,9 +181,9 @@ class stopsView(generic.TemplateView):
         form = routeForm()
         weather = query_weather()
         bikes = bikes_query()
-        bus = DublinBus()
+        #bus = DublinBus()
 
-        context = {'weather': weather, 'bikes': bikes, 'bus': bus, 'form': form}
+        context = {'weather': weather, 'bikes': bikes, 'form': form}
         return render(request, self.template_name, context)
     
     def post(self, request):
@@ -224,9 +224,9 @@ class routesView(generic.TemplateView):
         form = routeForm()
         weather = query_weather()
         bikes = bikes_query()
-        bus = DublinBus()
+        #bus = DublinBus()
 
-        context = {'weather': weather, 'bikes': bikes, 'bus': bus, 'form': form}
+        context = {'weather': weather, 'bikes': bikes, 'form': form}
         return render(request, self.template_name, context)
     
     def post(self, request):
@@ -250,9 +250,9 @@ def tourism(request):
 
 
 def test(request):
-    bus = DublinBus()
+    #bus = DublinBus()
     routes = get_route_data()
-    return render(request, 'busRoute/test.html',{'routes': routes, 'bus': bus})
+    return render(request, 'busRoute/test.html',{'routes': routes, })
 
 def timeGenerator(request, chosen_time):
 
@@ -331,24 +331,24 @@ def bikes_query():
 
     return results
           
-def DublinBus():
+# def DublinBus():
 
-    '''this function creates a dictionary from the dublin bus data to be accessed on the page'''
+#     '''this function creates a dictionary from the dublin bus data to be accessed on the page'''
 
-    data = Busstops.objects.all()
-    results = []
-    for i in data:
+#     data = Busstops.objects.all()
+#     results = []
+#     for i in data:
 
-        Info= {'lat': i.stop_lat,
-                     'lng':i.stop_lon, 
-                     'name': i.stop_name,
-                     'id': i.stop_id
-                    }
-        dbInfo = json.dumps(Info) 
-        loadedBikes = json.loads(dbInfo)
-        results.append(loadedBikes)
+#         Info= {'lat': i.stop_lat,
+#                      'lng':i.stop_lon, 
+#                      'name': i.stop_name,
+#                      'id': i.stop_id
+#                     }
+#         dbInfo = json.dumps(Info) 
+#         loadedBikes = json.loads(dbInfo)
+#         results.append(loadedBikes)
 
-    return results
+#     return results
 
 def Est39A(source, dest, weather, time, month, day):
     ett = Ett39A(source, dest, weather, time, month, day)

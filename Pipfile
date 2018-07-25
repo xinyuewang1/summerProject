@@ -10,7 +10,6 @@ requests = "*"
 brotlipy = "*"
 mysqlclient = "*"
 numpy = "*"
-django-heroku = "*"
 rq = "*"
 
 [requires]
