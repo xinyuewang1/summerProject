@@ -3,6 +3,7 @@ from django.urls import path
 from . import views
 from .views import Est39A
 from .models import Testtrip
+from .views import Est39A #, AnnEst39A
 
 urlpatterns = [
 
@@ -28,5 +29,7 @@ urlpatterns = [
  
     #Pickle
     url(r'Ett39A', Est39A, name="Ett39A"),
+
+    #url(r'Ann39A', AnnEst39A, name='Ann39A'),
 
 ]

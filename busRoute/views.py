@@ -201,6 +201,14 @@ def query_weather():
     loaded_weather = json.loads(weatherInfo)
     return loaded_weather
 
+# def Est39A(source, dest, weather, time, month, day):
+#     ett = Ett39A(source, dest, weather, time, month, day)
+#     result = ett.estimatedTime()
+#     return result
+
+# def AnnEst39A(source, dest, actualArr, rain, day):
+#     ett = Ann39A(source, dest, actualArr, rain, day)
+#     return ett.estimatedTime()
 
 def bikes_query():
     """ 
