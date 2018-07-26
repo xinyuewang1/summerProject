@@ -6,31 +6,27 @@ from .models import Testtrip
 
 urlpatterns = [
 
+    #URLs for the main pages
     url(r'^index', views.homeView.as_view(), name='index'),
 
     url(r'^planner', views.plannerView.as_view(), name='planner'),
-
-    url(r'^routes', views.routesView.as_view(), name='routes'),
 
     url(r'^result', views.resultView.as_view(), name='result'),
 
     url(r'^tour', views.tourism, name='tourism'),
 
+
+
+    #This URL is used for Autocomplete Information for the form
+    url(r'^RouteInfo', views.GenBusData, name='RouteInfo'),
+
+    # This URL is used for Autocomplete Information for the Route Search Option
+    url(r'^dublinBusRoutes', views.DublinBusRoutes, name='dublinBusRoutes'),
+
+     #This URL passes the route to the get_route_data function in views.py
+    path('details/<slug:route>/', views.get_route_data, name='detail'),
  
-    url(r'^(?P<busroutenum>[0-9]+)/$', views.timeGenerator, name='detail'),
-
-    url(r'^api/getRoutes/', views.getRoutes, name='getRoutes'),
-
-    url(r'^api/getSource/', views.getSource, name='getSource'),
-
-    url(r'^api/getDesintation/', views.getDestination, name='getDestination'),
-
-    url(r'^api/getAddressSource/', views.getAddressSource, name='getSourceAddress'),
-
-    url(r'^api/getAddressDestination/', views.getAddressDestination, name='getDestinationAddress'),
-
     #Pickle
     url(r'Ett39A', Est39A, name="Ett39A"),
 
 ]
-

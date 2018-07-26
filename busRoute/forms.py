@@ -36,7 +36,7 @@ class routeForm(f.Form):
     returnTime = f.CharField(required = False, widget=f.TextInput(
         attrs={
             'class': 'disable form-control form-control-sm',
-            'placeholder': '--:--',
+            'placeholder': 'Return Time',
             'disabled': True
         }
     ))
@@ -44,7 +44,7 @@ class routeForm(f.Form):
     returnDate= f.CharField(required = False, widget=f.TextInput(
         attrs={
             'class': 'form-control form-control-sm',
-            'placeholder': 'mm/dd/yyyy',
+            'placeholder': 'Return Date',
             'disabled': True
         }
     ))
