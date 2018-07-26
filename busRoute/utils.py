@@ -15,8 +15,10 @@ class Ett39A():
         self.day = day
     
     def estimatedTime(self):
-        print("The file path is", os.path.dirname(os.path.abspath(__file__)))
-        with open(os.path.join(settings.STATIC_ROOT, 'pickles/39A_40lr.pkl'), 'rb') as f:
+        name = '39A_40lr.pkl'
+        pic_name = 'pickles/'+ name
+        #print("The file path is", os.path.dirname(os.path.abspath(__file__)))
+        with open(os.path.join(settings.STATIC_ROOT, pic_name), 'rb') as f:
             model = pickle.load(f)
         routeDict = pickle.load(open(os.path.join(settings.STATIC_ROOT, 'pickles/routeDict.pkl'), 'rb'))
         for key, route in routeDict.items():

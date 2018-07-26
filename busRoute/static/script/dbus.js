@@ -148,45 +148,6 @@ function swapDirection() {
     }
 }
 
-function timeEstimate() {
-
-    //Function for the actions taken by the 'Go!' button on the stops page
-    //it causes the url generation to get the information the user has chosen
-    //for the moment these simply display what the user has chosenbut later, they will cause queries to take place.
-
-    var jqxhr =  $.getJSON( '/'+document.getElementById("departTime").value+'/', function( deptTime ){
-
-        //this function displays the departure time chosen
-
-        document.getElementById("timeEst").innerHTML = deptTime;
-    }  
-    );
-
-    var jqxhr2 =  $.getJSON( 'return/'+document.getElementById("returnDepartTime").value+'/', function( returntime ){
-
-         //this function displays the departure return time chosen
-
-        document.getElementById("returnTimeEst").innerHTML = returntime;
-    }
-    )
-
-    var jqxhr3 =  $.getJSON( 'month/'+document.getElementById("departDate").value+'/', function( deptdate ){
-
-         //this function displays the departure departure date chosen
-
-        document.getElementById("monthChosen").innerHTML = deptdate;
-    }
-    )
-
-
-    var jqxhr4 =  $.getJSON( 'return/month/'+document.getElementById("returnDepartDate").value+'/', function( returndate ){
-
-         //this function displays the departure departure time chosen
-
-        document.getElementById("retmonthChosen").innerHTML = returndate;
-    }
-    )
-};
 
 
 // ---------------- Jquery ----------------
@@ -292,82 +253,140 @@ function swapSearch() {
     if (c != "black") {
         //Changes the colour of the tab and placeholder of the search form
         document.getElementById("stopSearch").style.backgroundColor = "black";
-        document.getElementById("addSearch").style.backgroundColor = "rgb(105,143,123)";
+        document.getElementById("addSearch").style.backgroundColor = "#00743F";
         document.getElementById('id_source').placeholder = 'Source Address..';
 
-        //Changes the autocomplete in the source to address
-        $(function() {
-            $('input[name=source]').autocomplete({
-              source: "api/getAddressDestination/",
-              select: function (event, ui) { //item selected
-                AutoCompleteSelectHandler(event, ui)
-              },
-              minLength: 3,
-            });
+        //Changes the autocomplete in the source to address based on name
+        //     $('input[name=source]').autocomplete({
+     
+   
+    //Autocomplete for Stop Num in the Destination Input
+  
+        $(document).ready(function() {
+            $.ajax({
+              type: "GET",
+              url: "RouteInfo",
+              dataType: "json",
+             
+               success: function(data) {createArray(data);}
+           });
           });
-        
-            function AutoCompleteSelectHandler(event, ui){
-                var selectedObj = ui.item;
-            } 
-
-
-        //Changes the autocomplete in the destination to address
-        $(function() {
-            $("#id_destination").autocomplete({
-              source: "api/getAddressDestination/",
-              select: function (event, ui) { //item selected
-                AutoCompleteSelectHandler(event, ui)
-              },
-              minLength: 3,
-            });
+          
+          
+          function createArray(Data) {
+          
+       
+          var results = [];
+          for (var i = 0; i < Data.length; i++){
+              results.push(Data[i].name);
+          }
+          $( "#id_destination, #id_source" ).autocomplete({
+              source: results,
+              minLength: 2,
           });
-        
-            function AutoCompleteSelectHandler(event, ui){
-                var selectedObj = ui.item;
-            } 
-
+             
+        } 
 
     } else {
         //Changes the colour of the tab and placeholder of the search form
         document.getElementById("addSearch").style.backgroundColor = "black";
-        document.getElementById("stopSearch").style.backgroundColor = "rgb(105,143,123)";
+        document.getElementById("stopSearch").style.backgroundColor = "#00743F";
         document.getElementById('id_source').placeholder = 'Source Stop..';
 
-        //Changes the autocomplete in the source to stops
-        $(function() {
-            $('input[name=source]').autocomplete({
-                source: "api/getSource/", 
-                select: function (event, ui) { //item selected
-                AutoCompleteSelectHandler(event, ui)
-              },
-              minLength: 1,
-            });
+        //Autocomplete for Stop Addresses in the Destination Input
+        $(document).ready(function() {
+            $.ajax({
+              type: "GET",
+              url: "RouteInfo",
+              dataType: "json",
+             
+               success: function(data) {createArray(data);}
+           });
           });
-         
-          function AutoCompleteSelectHandler(event, ui)
-          {
-            var selectedObj = ui.item;
+          
+          
+          function createArray(Data) {
+          
+          var results = [];
+          for (var i = 0; i < Data.length; i++){
+              results.push(Data[i].num);
           }
-
-
-        //Changes the autocomplete in the destination to stops
-        $(function() {
-            $("#id_destination").autocomplete({
-            source: "api/getDesintation/",
-            select: function (event, ui) { //item selected
-                AutoCompleteSelectHandler(event, ui)
-            },
-            minLength: 1,
-            });
-        });
-        
-        function AutoCompleteSelectHandler(event, ui)
-        {
-            var selectedObj = ui.item;
-        }
-    }
+          $( "#id_destination, #id_source" ).autocomplete({
+              source: results,
+              minLength: 2,
+          });
+             
+        } 
+    }   
 };
 
+//Functions to display/hide the stop search and route search
+function findStop(){
+    if (document.getElementById("stopSearchOptions").style.display == "none"){
+        document.getElementById("stopSearchOptions").style.display = "block";
+        document.getElementById("routeSearchOptions").style.display = "none";
+    } else {
+        document.getElementById("stopSearchOptions").style.display = "none";
+    }
+}
+function findRoute(){
+    if (document.getElementById("routeSearchOptions").style.display == "none"){
+        document.getElementById("routeSearchOptions").style.display = "block";
+        document.getElementById("stopSearchOptions").style.display = "none";
+    } else{
+        document.getElementById("routeSearchOptions").style.display = "none";
+    }
+}
+
+//Autocomplete for Route Search
+$(document).ready(function() {
+    $.ajax({
+      type: "GET",
+      url: "dublinBusRoutes",
+      dataType: "json",
+     
+       success: function(data) {createArray(data);}
+   });
+  });
+  
+  
+  function createArray(Data) {
+  
+  var results = [];
+  for (var i = 0; i < Data.length; i++){
+      results.push(Data[i].route);
+  }
+  $( "#routeSearch" ).autocomplete({
+      source: results,
+      minLength: 1,
+  });
+     
+} 
+
+//Load stop search on initial page load
+$(document).ready(function() {
+    $.ajax({
+      type: "GET",
+      url: "RouteInfo",
+      dataType: "json",
+     
+       success: function(data) {createArray(data);}
+   });
+  });
+  
+  
+  function createArray(Data) {
+  
+  var results = [];
+  for (var i = 0; i < Data.length; i++){
+      results.push(Data[i].num);
+  }
+  $( "#id_destination, #id_source" ).autocomplete({
+      source: results,
+      minLength: 2,
+  });
+     
+} 
 
 // References:
 // https://github.com/jonthornton/jquery-timepicker 
