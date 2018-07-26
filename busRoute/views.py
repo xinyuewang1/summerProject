@@ -442,8 +442,38 @@ def parseTime():
 
 
 
+#Tourism Page Reccomendations Google PLaces Request. 
 
 
+def stopNearMe(request):
+
+    url = requests.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=53.3090972,-6.2237539&radius=500&type=bus_station&key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0")
+    url = url.json()
+
+
+    x = url['results']
+    results = []
+    for i in x:
+
+        Info= {'name': i['name'],
+                'lat': i['geometry']['location']['lat'],
+                'long': i['geometry']['location']['lng']
+                    
+                }
+
+        dbInfo = json.dumps(Info) 
+        loadedBikes = json.loads(dbInfo)
+        results.append(loadedBikes)
+      
+       
+
+    return JsonResponse(results, safe=False)
+
+
+
+
+
+ 
 
 
     

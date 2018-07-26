@@ -24,6 +24,10 @@ urlpatterns = [
     url(r'^RouteInfo', views.GenBusData, name='RouteInfo'),
 
 
+
+    url(r'^nearestBus', views.stopNearMe, name='nearestBus'),
+
+
     # This URL is used for Autocomplete Information for the Route Search Option
     url(r'^dublinBusRoutes', views.DublinBusRoutes, name='dublinBusRoutes'),
 

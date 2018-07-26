@@ -186,7 +186,7 @@ function swapSearch() {
        
           var results = [];
           for (var i = 0; i < Data.length; i++){
-              results.push(Data[i].num);
+              results.push(Data[i].name);
           }
           $( "#id_destination, #id_source" ).autocomplete({
               source: results,
@@ -217,7 +217,7 @@ function swapSearch() {
           
           var results = [];
           for (var i = 0; i < Data.length; i++){
-              results.push(Data[i].name);
+              results.push(Data[i].num);
           }
           $( "#id_destination, #id_source" ).autocomplete({
               source: results,
@@ -232,10 +232,10 @@ function generateQuery() {
 
     //this function gets real time information for the stop that is selected.
 
-    var jqxhr = $.getJSON(
-        'https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?stopid=' +
-        document.getElementById("id_source").value + '&format=json',
-        function (daily) {
+        var jqxhr = $.getJSON(
+            'https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?stopid=' +
+            document.getElementById("id_source").value + '&format=json',
+            function (daily) {
             var now = new Date();
             var temp = new Date();
 
@@ -293,7 +293,7 @@ function generateQuery() {
        });
       });
       
-      
+
       function createArray(Data) {
       
       var results = [];
@@ -307,6 +307,78 @@ function generateQuery() {
          
     } 
 
+
+    $(document).ready(function() {
+        $.ajax({
+          type: "GET",
+          url: "RouteInfo",
+          dataType: "json",
+         
+           success: function(data) {createArray(data);}
+       });
+      });
+      
+      
+      function createArray(Data) {
+      
+   
+      var results = [];
+      for (var i = 0; i < Data.length; i++){
+          results.push(Data[i].num);
+      }
+      $( "#id_destination, #id_source" ).autocomplete({
+          source: results,
+          minLength: 2,
+      });
+         
+    } 
+
+
+    function stopsNearMe() {
+
+        var jqxhr = $.getJSON('/nearestBus/',
+            document.getElementById("id_source").value + '&format=json',
+            function (daily) {
+
+
+
+                for (var i = 0; i < daily.length; i++) {
+
+                    var name = daily[i].name;
+                    var lat = parseFloat(daily[i].lat);
+                    var long = parseFloat(daily[i].long);
+
+
+
+                    infoWindow = new google.maps.InfoWindow;
+                    infoBus = new google.maps.InfoWindow;
+
+                    //this function displays the dublin bus markers
+                    myLatLng = new google.maps.LatLng(lat, long)
+                    marker = new google.maps.Marker({
+                        position: myLatLng,
+                        map: map,
+                        title: name
+                    });
+
+                    marker.addListener('mouseover', function () {
+                        infoBus.open(map, this);
+                        infoBus.setContent(this.title);
+                    })
+
+                    marker.addListener('click', function () {
+                        document.getElementById("id_source").value = this.title;
+
+                    })
+
+                    markers.push(marker);
+
+                }
+
+
+
+            })
+    }
 
 
 // References:
