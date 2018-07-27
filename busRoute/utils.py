@@ -111,13 +111,16 @@ def getFirstAndLastStops3(route, stop1, stop2):
     #path = os.path.join(settings.STATIC_ROOT,'static/pickles/stopLists/')
     path  = 'static/pickles/stopLists/'
     for l in load_obj('static/pickles/sortedIdList'):
-        if l.startswith(route):
+        if l.split('_')[0] == route:
             stopList = load_obj(path + l)
             if stop1 in stopList and stop2 in stopList:
                 progrnumber1 = stopList.index(stop1) + 1
                 progrnumber2 = stopList.index(stop2) + 1
                 # index starts with 0, progrnumber starts with 1
-                return stopList[0], stopList[-1], progrnumber1, progrnumber2
+                if progrnumber1 < progrnumber2:
+                    return stopList[0], stopList[-1], progrnumber1, progrnumber2
+                else:
+                    raise Exception("Wrong input order: The bus run from "+str(progrnumber1)+" to "+str(progrnumber2))
 
 
 class Ett39A:
