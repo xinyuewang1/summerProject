@@ -3,7 +3,7 @@ from django.urls import path
 from . import views
 
 from .views import Est39A
-from busRoute.views import GenBusData
+from busRoute.views import GenBusData, bikes_query, DublinBus
 from .models import Testtrip
 from .views import Est39A #, AnnEst39A
 
@@ -18,25 +18,22 @@ urlpatterns = [
 
     url(r'^tour', views.tourism, name='tourism'),
 
-    #This URL is used for Autocomplete Information for the form
-
+    #These URL's contain the data necessary for Autocomplete functions. 
     url(r'^RouteInfo', views.GenBusData, name='RouteInfo'),
 
-
-
-    url(r'^nearestBus', views.stopNearMe, name='nearestBus'),
-
-
-    # This URL is used for Autocomplete Information for the Route Search Option
     url(r'^dublinBusRoutes', views.DublinBusRoutes, name='dublinBusRoutes'),
 
-     #This URL passes the route to the get_route_data function in views.py
+    #contains the information for the bikes data 
+    url(r'^dublinBikeInfo', views.bikes_query, name='dublinBikeInfo'),
 
+    url(r'dublinBusInfo', views.DublinBus, name = 'DublinBusInfo'),
+
+    #data rendered here is used for the suggested stops near the user selections. 
+    url(r'^nearestBus', views.stopNearMe, name='nearestBus'),
+
+    #This URL passes the route to the get_route_data function in views.py
     path('details/<slug:route>/', views.get_route_data, name='detail'),
 
-     #This URL passes the route to the get_route_data function in views.py
-    path('details/<slug:route>/', views.get_route_data, name='detail'),
- 
     #Pickle
     url(r'Ett39A', Est39A, name="Ett39A"),
 
