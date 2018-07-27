@@ -387,31 +387,6 @@ function findRoute(){
             })
     }
 
-//Load stop search on initial page load
-$(document).ready(function() {
-    $.ajax({
-      type: "GET",
-      url: "RouteInfo",
-      dataType: "json",
-     
-       success: function(data) {createArray(data);}
-   });
-  });
-  
-  
-  function createArray(Data) {
-  
-  var results = [];
-  for (var i = 0; i < Data.length; i++){
-      results.push(Data[i].num);
-  }
-  $( "#id_destination, #id_source" ).autocomplete({
-      source: results,
-      minLength: 2,
-  });
-     
-} 
-
 // References:
 // https://github.com/jonthornton/jquery-timepicker 
 //http://api.jqueryui.com/datepicker/
