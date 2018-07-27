@@ -1,0 +1,391 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block body %}
+    <body>
+        <!-- Link to main javaScript file -->
+        <script src = "{% static 'script/dbus.js' %}"></script>
+        <!-- Google Map js link -->
+ <!-- Google Map js link -->
+ <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0&libraries=places&callback=myMap"
+ async defer></script>
+        <script src = "{% static 'script/jquery.timepicker.min.js' %}"> </script>
+        
+  
+        <!-- Header with main page title, main navigation bar and team name & Logo -->
+        
+
+        <div id = "homeCenter" class="container">
+            <div class="row">
+                <div class="planner-toggle col-sm-12 shadow text-center text-white mt-2" style = "background-color:rgb(255, 113, 19);">
+                    <a href = "#0" id = "planner-toggle">Expand Route Planner <span class = "text-md-center text-sm-left">&#x2A01</span></a>
+                </div>
+
+                <div id = "planner" class="col-sm-12 text-center text-white" style = "display:none;background-color:green;">
+                    <form id = "routePlanner" role = "form" method="POST">
+                        {% csrf_token %}
+                        <div class = "row">
+                            
+                            <div class = "col-sm-5 mt-2 address">
+                                <div class = "j btn-block"><input type="text" id= "test">
+                                <a onclick = "swapDirection()">&#8645</a></div>
+                                <div class = "j btn-block">To: &nbsp &nbsp &nbsp {{ form.destination }}</div>
+                            </div>  
+
+                            <div class = "col-sm-3 mt-2 time">  
+                                <div class = "j btn-block"><input id = "single" type= "radio" name="trip" value="single" checked> Single {{ form.departTime }}</div>
+                                <div class = "j btn-block"><input id = "return" type= "radio" name="trip" value="return"> Return {{ form.returnTime }}</div>
+                            </div>
+                            <div class = "col-sm-4 mt-2"> 
+                                <div id = "dDate" class = "j btn-block">Date: {{ form.departDate }}</div>
+                                <div class = "j btn-block">Date: {{ form.returnDate }}</div>
+                            </div>
+                        </div>   
+                        <div class = "row">
+                            <button type ="submit" class = "btn btn-block btn-primary m-2" type = "button" name = "go" onclick="timeEstimate()">GO!</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="container">
+
+                    <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">Dont Know Stop?</button>
+                    <div id="demo" class="collapse">
+                        <div class="pac-card" id="pac-card">
+        
+                            <div id="pac-container">
+                                <br>
+                                <h6>You can use the below search option to zoom in on a specific area on the map</h6>
+                                <br>
+                                <h6>Once the map has zoomed to that area, you can choose to toggle the markers to show the stops</h6>
+                                <br>
+        
+                                <div>
+                                    <input id="genSearch" placeholder="Search General Area" type="text"></input>
+
+                                    
+                                </div>
+        
+        
+                            </div>
+                        </div>
+                    </div>
+
+       
+            
+
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="col-sm-12 shadow rounded mt-4" style="background-color:rgb(105,143,123);padding:3px;">
+                        <div class = "container-fluid">
+                            <div class="row">
+                                <div class="col nav2 border border-white border-top-0 border-left-0 border-bottom-0"><a class = "nav-link" id = "trafficButton" onclick="toggleTraffic(this)" href = "#">Traffic</a></div>
+                                <div class="col nav2 border border-white border-top-0 border-left-0 border-bottom-0"><a class = "nav-link" href = "#" onclick="displayBusMarkers()" id="markersbutton">Markers</a></div>
+                                <div class="col nav2"><a class = "nav-link" href = "#" onclick = "displayBikeMarkers()" id="bikesbutton">Bikes</a></div>
+                            </div>
+                        </div>
+                        <div id = "map"></div>
+                    </div>
+                </div>
+
+        
+                <div class="col-sm-4">
+                    <div class="col-sm-12 shadow rounded mt-4" style="background-color:rgb(105,143,123);padding:2px;">
+                        <div class = "container-fluid mt-2 mb-1">
+                            <h1 style = "text-align:center;font-size:23px;" class = "text-white">Dublin, {{weather.day}} {{weather.date}} {{weather.month}}</h1>
+                        </div>
+                        <div class = "container-fluid ">
+                            <div class = "row" style = "color:white;font-size: 14px;">
+                                <div class = "col-sm-5">
+                                    <div id = "icon"><img src = {{weather.icon}}></div>
+                                </div>
+                                <div class = "col-sm-7" style = "padding:0px;">
+                                    <b>Weather: </b>{{weather.main}} <br>
+                                    <b>Temp: </b>{{weather.temp}} °C<br>
+                                    <b>Wind: </b>{{weather.wind}} km/h<br>
+                                    <b>Max: </b>{{weather.temp_max}} °C<br>
+                                </div>
+                            </div>
+
+                            <div class="container-fluid rounded pt-1 pb-1" style = "background-color:white;margin:5px;">
+                                <div class = "flex-column">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item border border-black border-top-0 border-left-0 border-right-0">
+                                            <a class="nav-link rounded" href="#">News <span style = "float:right;color:black">&#8674</span></a>
+                                        </li>
+                                        <li class="nav-item border border-black border-top-0 border-left-0 border-right-0">
+                                            <a class="nav-link rounded" href="stops.html">Stops <span style = "float: right;color:black">&#8674</span></a>
+                                        </li>
+                                        <li class="nav-item border border-black border-top-0 border-left-0 border-right-0">
+                                            <a class="nav-link rounded" href="routes.html">Address<span style = "float: right;color:black">&#8674</span></a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link rounded" href="#">Weekly Weather<span style = "float: right;color:black">&#8674</span></a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link rounded" href="test.html">Test<span style = "float: right;color:black">&#8674</span></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="row shadow rounded" style = "margin-top:20px;background-color:rgb(105,143,123);">
+                <div class="col-sm-8">
+                    
+                    <img src= "{% static 'images/bus.jpg' %}" alt = "Bus Picture" style = "width:100%;">
+                    <div class = "img-centered"><h3>New to Dublin Bus?<br>Check out Fares Info</h3>
+                        <button class = "img-button">Fares</button>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div id = "twitterFeed">
+                        <a class="twitter-timeline" data-height="200" data-theme="light" data-link-color="#2B7BB9" href="https://twitter.com/dublinbusnews?ref_src=twsrc%5Etfw">Tweets by dublinbusnews</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                    </div>
+                    <div id = "twitterFeed">
+                        <a class="twitter-timeline" data-height="200" data-theme="light" data-link-color="#2B7BB9" href="https://twitter.com/aaroadwatch?ref_src=twsrc%5Etfw">Tweets by aaroadwatch</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    
+        <script>
+
+                        var busMarkers = 0;   
+                    
+                    function displayBusMarkers(){    
+
+                        if (busMarkers == 0) {
+
+
+                        var markers = []
+
+
+                        //this function displays the dublin bus markers
+                    
+                            "{% if bus %}"
+                            "{% for p in bus %}"
+
+                            var data = "{{ p }}"
+                            var lat = "{{ p.lat }}"
+                            var long = "{{ p.lng }}"
+                            var name = "{{ p.name }}"
+                            var id = "{{ p.id }}"
+
+                            var lat = parseFloat(lat);
+                            var long = parseFloat(long);
+
+
+                            
+                var latlng = new google.maps.LatLng(lat, long);
+                var marker = new google.maps.Marker({
+                    position: latlng,
+                    title:  name
+                    });
+
+                    markers.push(marker);
+
+                      google.maps.event.addListener(marker, 'mouseover', (function(markers) {
+                        return function() {
+                            infoBikes.open(map, this);
+                            infoBikes.setContent('{{ p.name }}'+'<br>'+'('+'{{ p.id }}'+')');
+                        }
+                    })(markers));
+
+                      google.maps.event.addListener(marker, 'click', (function (markers) {
+                        return function () {
+
+                            document.getElementById("id_source").value = '{{ p.name }}';
+                        }
+                    })(markers));
+
+                    
+                            "{% endfor %}" 
+                            "{% endif %}"
+
+
+                var markerCluster = new MarkerClusterer(map, markers,
+                    {imagePath: "{% static 'images/m' %}"});
+
+                    document.getElementById("markersbutton").innerHTML = "Hide Markers";
+                            
+                    busMarkers++; 
+                    
+                    } 
+
+
+                    else {
+
+                var mapProp= {
+                center:new google.maps.LatLng(53.347515, -6.265377),
+                zoom:10,
+                };
+                map=new google.maps.Map(document.getElementById("map"),mapProp);
+
+                document.getElementById("markersbutton").innerHTML = "Markers";
+                busMarkers--;
+
+                };
+                        }
+
+
+
+                var bikeMarkers = 0;
+
+
+                infoWindow = new google.maps.InfoWindow;
+                infoBikes = new google.maps.InfoWindow;
+
+                function displayBikeMarkers() {   
+
+                if (bikeMarkers == 0) {
+
+                //this function displays the dublin bikes markers
+
+
+                var markers = [];
+
+
+                "{% if bikes %}"
+                "{% for i in bikes %}"
+
+                var data = "{{ i }}"
+                var lat = "{{ i.lat }}"
+                var long = "{{ i.lng }}"
+                var name = " {{ i.name }}"
+
+                
+
+                var latlng = new google.maps.LatLng(lat, long);
+                var marker = new google.maps.Marker({
+                    position: latlng,
+                    title:  name
+                    });
+
+                        markers.push(marker);
+
+                    google.maps.event.addListener(marker, 'mouseover', (function(markers) {
+                        return function() {
+                            infoBikes.open(map, this);
+                            infoBikes.setContent('{{ p.name }}'+'<br>'+'('+'{{ p.id }}'+')');
+                        }
+                    })(markers));
+
+                "{% endfor %}" 
+                "{% endif %}"
+
+                var markerCluster = new MarkerClusterer(map, markers,
+                    {imagePath: "{% static 'images/m' %}"});
+
+                    bikeMarkers++;
+
+                    document.getElementById("bikesbutton").innerHTML = "Hide Bikes";
+
+
+                }
+
+
+                else {
+
+
+                var mapProp= {
+                center:new google.maps.LatLng(53.347515, -6.265377),
+                zoom:10,
+                };
+                map=new google.maps.Map(document.getElementById("map"),mapProp);
+
+                document.getElementById("bikesbutton").innerHTML = "Bikes";
+                bikeMarkers--;
+
+                }
+
+                };
+
+
+            </script>
+    
+        <script>
+            var d = new Date();
+            var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
+            document.getElementById("id_departDate").value = fullDate;
+            $('#id_departTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now', timeFormat: "H:i" });
+            $( function() {
+            $( "#id_departDate" ).datepicker();
+            });
+            $('#id_returnTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now',timeFormat: "H:i" });
+            $( function() {
+            $( "#id_returnDate" ).datepicker({});
+            });
+
+        var placeSearch, autocomplete;
+
+function initialize() {
+
+
+    //https://www.w3docs.com/learn-javascript/places-autocomplete.html
+    //https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-multiple-countries
+
+    //the below function used a combination of the above two efforts. 
+
+
+    //This function is responsible for allowing the user to search for a general address
+    //the map will then zoom in on that place
+    //they can then chose to view the markers in that area.
+
+    autocomplete = new google.maps.places.Autocomplete(document.getElementById('genSearch'));
+
+    autocomplete.setComponentRestrictions({
+        'country': 'ie'
+    });
+
+    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+        var place = autocomplete.getPlace();
+
+        if (!place.geometry) {
+            // User entered the name of a Place that was not suggested and
+            // pressed the Enter key, or the Place Details request failed.
+            window.alert("No details available for input: '" + place.name + "'");
+            return;
+        }
+
+        // If the place has a geometry, then present it on a map.
+        if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+        } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(17); // Why 17? Because it looks good.
+        }
+        marker.setPosition(place.geometry.location);
+        marker.setVisible(true);
+    });
+};
+
+initialize();
+
+       $(function() {
+    $("#id_destination").autocomplete({
+    source: "api/getDesintation/",
+    select: function (event, ui) { //item selected
+        AutoCompleteSelectHandler(event, ui)
+    },
+    minLength: 1,
+    });
+});
+
+function AutoCompleteSelectHandler(event, ui)
+{
+    var selectedObj = ui.item;
+}
+
+        </script>
+    
+
+        </body>
+    {% endblock %}
