@@ -1,0 +1,18 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+
+[packages]
+django = "*"
+gunicorn = "*"
+whitenoise = "*"
+requests = "*"
+brotlipy = "*"
+mysqlclient = "*"
+numpy = "*"
+rq = "*"
+scikit-learn = "*"
+scipy = "*"
+
+[requires]
+python_version = "3.5.2"

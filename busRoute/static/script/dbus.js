@@ -96,16 +96,6 @@ function swapDirection() {
     }
 }
 
-function showRoute() {
-    var x = document.getElementById("routeResult");
-    x.style.display = 'block';
-}
-
-$(document).ready(function() {
-    $("#routePlanner").submit(function(e) {
-      $("#routeResult").show();
-    });
-  });
 
 // ---------------- Jquery ----------------
 
@@ -161,7 +151,7 @@ function swapSearch() {
     if (c != "black") {
         //Changes the colour of the tab and placeholder of the search form
         document.getElementById("stopSearch").style.backgroundColor = "black";
-        document.getElementById("addSearch").style.backgroundColor = "rgb(105,143,123)";
+        document.getElementById("addSearch").style.backgroundColor = "#00743F";
         document.getElementById('id_source').placeholder = 'Source Address..';
 
         //Changes the autocomplete in the source to address based on name
@@ -198,7 +188,7 @@ function swapSearch() {
     } else {
         //Changes the colour of the tab and placeholder of the search form
         document.getElementById("addSearch").style.backgroundColor = "black";
-        document.getElementById("stopSearch").style.backgroundColor = "rgb(105,143,123)";
+        document.getElementById("stopSearch").style.backgroundColor = "#00743F";
         document.getElementById('id_source').placeholder = 'Source Stop..';
 
         //Autocomplete for Stop Addresses in the Destination Input
@@ -307,6 +297,23 @@ function generateQuery() {
          
     } 
 
+//Functions to display/hide the stop search and route search
+function findStop(){
+    if (document.getElementById("stopSearchOptions").style.display == "none"){
+        document.getElementById("stopSearchOptions").style.display = "block";
+        document.getElementById("routeSearchOptions").style.display = "none";
+    } else {
+        document.getElementById("stopSearchOptions").style.display = "none";
+    }
+}
+function findRoute(){
+    if (document.getElementById("routeSearchOptions").style.display == "none"){
+        document.getElementById("routeSearchOptions").style.display = "block";
+        document.getElementById("stopSearchOptions").style.display = "none";
+    } else{
+        document.getElementById("routeSearchOptions").style.display = "none";
+    }
+}
 
     $(document).ready(function() {
         $.ajax({
@@ -380,6 +387,30 @@ function generateQuery() {
             })
     }
 
+//Load stop search on initial page load
+$(document).ready(function() {
+    $.ajax({
+      type: "GET",
+      url: "RouteInfo",
+      dataType: "json",
+     
+       success: function(data) {createArray(data);}
+   });
+  });
+  
+  
+  function createArray(Data) {
+  
+  var results = [];
+  for (var i = 0; i < Data.length; i++){
+      results.push(Data[i].num);
+  }
+  $( "#id_destination, #id_source" ).autocomplete({
+      source: results,
+      minLength: 2,
+  });
+     
+} 
 
 // References:
 // https://github.com/jonthornton/jquery-timepicker 

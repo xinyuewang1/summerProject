@@ -24,7 +24,7 @@
     <div id="homeCenter" class="container">
         <div class="row">
             <div class="col-sm-8">
-                <div class="col-sm-12 shadow rounded mt-4" style="background-color:rgb(105,143,123);padding:3px;">
+                <div class="c1 col-sm-12 shadow rounded mt-4" style="padding:3px;">
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col nav2 border border-white border-top-0 border-left-0 border-bottom-0">
@@ -42,31 +42,34 @@
 
                     <div id="map"></div>
 
-
                 </div>
 
                 <div id="directionsPanel" class = "m-2" style="background-color:white;float:right"></div>
 
             </div>
 
+
             <div class="col-sm-4">
-                
-                <div class="col-sm-12 rounded shadow mt-4" style = "background-color:rgb(105,143,123);">
+                <div class="c1 col-sm-12 rounded shadow mt-4">
                     <h3>Route Planner</h3>
-                    <script>
-                        $(document).ready(function(){
-                            $('[data-toggle="popover"]').popover();   
-                        });
-                        </script>
-                    <a href="#" data-toggle="popover" title="Find a stop number" data-content="You can use the below search option to zoom in on a specific area on the map. Once the map has zoomed to that area, you can choose to toggle the markers to show the stops"><button class = "btn btn-success btn-block">Don't Know Stop?</button></a>
-                    <button class = "btn btn-block btn-secondary">Search by Route</button>
+                    <div class = "row">
+                        <div class = "col-6 text-center text-white border border-white border-top-0 border-left-0 border-bottom-0">
+                            <a href = "#" onclick = "findStop()">Find Stop</a>
+                        </div>
+                        <div class = "col-6 text-center text-white">
+                            <a href = "#" onclick = "findRoute()">Route Info</a>
+                        </div>
+                    </div>
+                    <div id = "stopSearchOptions" style = "display:none;"><p class = "text-white">Enter a location below to view the it's local stops</p><div><input id='genSearch' placeholder='Search Area' type='text'></input></div></div>
+                    <div id = "routeSearchOptions" style = "display:none;"><p class = "text-white">Enter a route number to view on map</p><input id = "routeSearch" placeholder="Search Routes"></div>
+                    
                 </div>
                 
 
                 
-                <div class="col-sm-12 rounded shadow mt-3" style = "background-color:rgb(105,143,123);">
+                <div class="c1 col-sm-12 rounded shadow mt-3" >
                     <div class = "row text-center text-white">
-                        <div class = "col-6 nav-justified" style = "background-color: rgb(105,143,123)" id = "stopSearch" onclick="swapSearch()">
+                        <div class = "c1 col-6 nav-justified" id = "stopSearch" onclick="swapSearch()">
                             <strong>By Stop</strong>
                         </div>
                         <div class = "col-6 text-center" style = "background-color: black;" id = "addSearch" onclick="swapSearch()">
@@ -112,7 +115,122 @@
                             
                         </div>   
                         <div class = "row">
-                            <button type ="submit" class = "btn btn-block btn-primary m-2" name = "go" onclick="showRoute(),getValue()">GO!</button>
+                            <button type ="submit" class = "btn btn-block btn-primary m-2" name = "go" onclick="showRoute();">GO!</button>
+                            <script>
+                                var onEnter = document.getElementById("routeSearch");
+                                    onEnter.addEventListener("keydown", function (value) {
+                                        if (value.keyCode === 13) {
+                                            getStops(value);
+                                        }
+                                    });
+                                    var markers = [];
+                                    function getStops() {
+                                        //this function is responsible for displaying the route information
+                                        //It uses jQuery to intitialise and pass the value to the url and to grab the data that is returned by get_route_info
+                                        // poly = new google.maps.Polyline({
+                                        //     strokeColor: '#000000',
+                                        //     strokeOpacity: 1.0,
+                                        //     strokeWeight: 3
+                                        // });
+                                        // poly.setMap(map);
+                                        if (markers)
+                                            //this checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
+                                            for (var i = 0; i < markers.length; i++) {
+                                                markers[i].setMap(null);
+                                            }
+                                        var jqxhr = $.getJSON('/details/' + document.getElementById("routeSearch").value + '/', function (daily) {
+                                            var table = "";
+                                            table =
+                                                "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped overflow-y: hidden'>";
+                                            table += "<tr><thead>";
+                                            table += "<th>Stop</th>";
+                                            table += "</tr></thead><tbody>";
+                                            for (var i = 0; i < daily.length; i++) {
+                                                var lat = daily[i].lat;
+                                                var long = daily[i].lng;
+                                                var name = daily[i].name;
+                                                var id = daily[i].id;
+                                                table += "<tr>";
+                                                table += "<td>" + daily[i].name + "(" + id + ")" + "</td>";
+                                                table += "</tr>";
+                                                infoWindow = new google.maps.InfoWindow;
+                                                infoBus = new google.maps.InfoWindow;
+                                                //this function displays the dublin bus markers
+                                                myLatLng = new google.maps.LatLng(lat, long)
+                                                marker = new google.maps.Marker({
+                                                    position: myLatLng,
+                                                    map: map,
+                                                    title: name + "(" + id + ")"
+                                                });
+                                                marker.addListener('mouseover', function () {
+                                                    infoBus.open(map, this);
+                                                    infoBus.setContent(this.title);
+                                                })
+                                                markers.push(marker);
+                                                // <!-- 
+                                                //                             var path = poly.getPath();
+                                                //                             path.push(myLatLng); -->
+                                            }
+                                            table += "</tbody></table>";
+                                            document.getElementById("RouteDiv").innerHTML = table;
+                                        })
+                                    };
+                                </script>
+                            <script>
+                                function generateQuery() {
+
+                                    //this function gets real time information for the stop that is selected.
+
+                                    var jqxhr = $.getJSON(
+                                        'https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?stopid=' +
+                                        document.getElementById("id_source").value + '&format=json',
+                                        function (daily) {
+                                            var now = new Date();
+                                            var temp = new Date();
+
+                                            var table = "";
+                                                    table = "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped overflow-y: hidden'>";
+                                                    table += "<tr><thead>";
+                                                    table += "<th>Route</th>";
+                                                    table += "<th>Destination</th>";
+                                                    table += "<th>Arrival Time</th>";
+                                                    table += "<th>Expected</th>";
+                                                    table += "</tr></thead><tbody>";
+                                                    x = daily.results;
+                                                    for (var i = 0; i < x.length; i++) {
+                                                        
+                                                        var ti = x[i].arrivaldatetime.slice(11,);
+                                                        
+                                                        var array = ti.split(":");
+                                                        temp.setHours(array[0]);
+                                                        temp.setMinutes(array[1]);
+                                                        temp.setSeconds(array[2]);
+                                                        var difference = new Date();
+                                                        difference.setTime(temp-now);
+                                                        var m = difference.getMinutes();
+                                                        
+                                                        if (difference.getSeconds() >= 30){
+                                                            m = m + 1;
+                                                        };
+                                                        if (m == 0){
+                                                            m = "Due"
+                                                        } else{
+                                                            m = String(m) + " mins"
+                                                        };
+                                              
+                                                        table += "<tr>";
+                                                        table += "<td>" + x[i].route + "</td>";
+                                                        table += "<td>" + x[i].destination + "</td>";
+                                                        table += "<td>" + ti.slice(0 ,5) + "</td>";
+                                                        table += "<td>" + m + "</td>";
+                                                        table += "</tr>";
+                                                        }
+                                                    table += "</tbody></table>";
+                                                    document.getElementById("realtimeTable").innerHTML = table;
+                                                    
+                                        })
+                                    };
+                            </script>
                         </div>
                     </form>
                     
@@ -147,14 +265,14 @@
 
         <div class="row" style="margin-top:20px;">
             <div class="col-sm-12" id = "results">
-                <div class="col-sm-12 rounded shadow" style="background-color:rgb(105,143,123);">
+                <div class="c1 col-sm-12 rounded shadow">
                     <div class="display-4 mb-3 border-bottom border-black">{{weather.day}} {{weather.date}} {{weather.month}} </div>
 
                     <div class="row">
                         <div class="col-sm-3">
                             <div class="col-sm-12 rounded shadow mb-3" style="background-color:white;">
-                                <h1 class="display-4">{{ depart_time }}</h1>
-                                <h2 class="ml-2 font-weight-bold text-uppercase">UCD</h2>
+                                <h1 class="c1_font display-4">{{ depart_time }}</h1>
+                                <h2 class="ml-2 font-weight-bold text-uppercase">{{ source_name }}</h2>
                                 <h2 class="ml-2">Stop {{ source }}</h2>
                                 <br>
                             </div>
@@ -167,8 +285,8 @@
                         </div>
                         <div class="col-sm-3">
                             <div class="col-sm-12 rounded shadow" style="background-color:white;">
-                                <h1 class="display-4">{{ arrival_time }}</h1>
-                                <h2 class="ml-2 font-weight-bold text-uppercase">Delhurst</h2>
+                                <h1 class="c1_font display-4">{{ arrival_time }}</h1>
+                                <h2 class='ml-2 font-weight-bold text-uppercase'>{{ destination_name }}</h2>
                                 <h2 class="ml-2">Stop {{ destination }}</h2>
                                 <br>
                             </div>
@@ -191,6 +309,49 @@
                 </div>
             </div>
         </div>
+        <script>
+        function googDirections(){
+            var startLat = 53.309442;
+            var startLng =  -6.218855;
+
+            var finLat = 53.395760;
+            var finLng = -6.439536;
+
+            var directionsService = new google.maps.DirectionsService();
+            var directionsDisplay = new google.maps.DirectionsRenderer();
+
+            var start = new google.maps.LatLng(startLat, startLng);
+            var end = new google.maps.LatLng(lat, long);
+
+            var mapOptions = {
+                zoom: 14,
+                center: start
+            }
+            var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+            directionsDisplay.setMap(map); 
+        }
+
+        function calcRouteNum() {
+            var selectedMode = document.getElementById('mode').value;
+            var request = {
+                origin: start,
+                destination: end,
+                travelMode: 'TRANSIT',
+                transitOptions: {
+                //departureTime: new Date(1337675679473),
+                modes: ['BUS'],
+                routingPreference: 'FEWER_TRANSFERS'
+            },
+            };
+            directionsService.route(request, function(response, status) {
+                if (status == 'OK') {
+                directionsDisplay.setDirections(response);
+                }
+            });
+            }
+        </script>
+    
+       
 
         <script>
 
@@ -233,18 +394,13 @@
 
 
                 var x = document.getElementById("id_source").value;
-
-                console.log(x);
-
+                
 
                 "{% if bus %}"
                 "{% for p in bus %}"
 
                 var lat = "{{ p.lat }}"
                 var long = "{{ p.lng }}"
-
-          
-
 
                 lat = parseFloat(lat);
                 long = parseFloat(long);
@@ -258,6 +414,7 @@
 
                     var start = new google.maps.LatLng(curLat, curLng);
                     var end = new google.maps.LatLng(lat, long);
+                    
 
                     var mapProp = {
                         center: new google.maps.LatLng(53.347515, -6.265377),

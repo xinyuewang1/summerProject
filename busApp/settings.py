@@ -22,7 +22,7 @@ SECRET_KEY = 'jo8u7=)fsv1+@%!_h&5gd0vr$qd4ej!k9=79tw5p&r9ulf-0^x'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = [ 'majestic-zion-95130.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
@@ -123,4 +123,3 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'busRoute/static')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
