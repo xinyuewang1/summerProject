@@ -549,51 +549,7 @@
             };
 
 
-            function stopsNearMe() {
-
-                var jqxhr = $.getJSON('/nearestBus/',
-                    document.getElementById("id_source").value + '&format=json',
-                    function (daily) {
-
-
-
-                        for (var i = 0; i < daily.length; i++) {
-
-                            var name = daily[i].name;
-                            var lat = parseFloat(daily[i].lat);
-                            var long = parseFloat(daily[i].long);
-
-
-
-                            infoWindow = new google.maps.InfoWindow;
-                            infoBus = new google.maps.InfoWindow;
-
-                            //this function displays the dublin bus markers
-                            myLatLng = new google.maps.LatLng(lat, long)
-                            marker = new google.maps.Marker({
-                                position: myLatLng,
-                                map: map,
-                                title: name
-                            });
-
-                            marker.addListener('mouseover', function () {
-                                infoBus.open(map, this);
-                                infoBus.setContent(this.title);
-                            })
-
-                            marker.addListener('click', function () {
-                                document.getElementById("id_source").value = this.title;
-
-                            })
-
-                            markers.push(marker);
-
-                        }
-
-
-
-                    })
-            }
+        
         </script>
 
 
