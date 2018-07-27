@@ -98,6 +98,7 @@ class plannerView(generic.TemplateView):
         hour = readTimeIn(depart_time)
         day = parseDate(depart_date)
         bikes = bikes_query()
+        bus = DublinBus()
 
         #Used to find the stop name using a given stop number
         for i in bus:

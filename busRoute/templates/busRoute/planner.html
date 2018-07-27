@@ -38,23 +38,31 @@
 
             <div class="col-sm-4">
                 <div class="c1 col-sm-12 rounded shadow mt-4">
-                        <h3>Route Planner</h3>
-                        <div class = "row">
-                            <div class = "col-6 text-center text-white border border-white border-top-0 border-left-0 border-bottom-0">
-                                <a href = "#" onclick = "findStop()">Find Stop</a>
-                            </div>
-                            <div class = "col-6 text-center text-white">
-                                <a href = "#" onclick = "findRoute()">Route Info</a>
-                            </div>
+                    <h3>Route Planner</h3>
+                    <div class="row">
+                        <div class="col-6 text-center text-white border border-white border-top-0 border-left-0 border-bottom-0">
+                            <a href="#" onclick="findStop()">Find Stop</a>
                         </div>
-                        <div id = "stopSearchOptions" style = "display:none;"><p class = "text-white">Enter a location below to view the it's local stops</p><div><input id='genSearch' placeholder='Search Area' type='text'></input></div></div>
-                        <div id = "routeSearchOptions" style = "display:none;"><p class = "text-white">Enter a route number to view on map</p><input id = "routeSearch" placeholder="Search Routes"></div>
+                        <div class="col-6 text-center text-white">
+                            <a href="#" onclick="findRoute()">Route Info</a>
+                        </div>
+                    </div>
+                    <div id="stopSearchOptions" style="display:none;">
+                        <p class="text-white">Enter a location below to view the it's local stops</p>
+                        <div>
+                            <input onfocus="placeSearch()" id='genSearch' placeholder='Search Area' type='text' onfocus=""></input>
+                        </div>
+                    </div>
+                    <div id="routeSearchOptions" style="display:none;">
+                        <p class="text-white">Enter a route number to view on map</p>
+                        <input onfocus="routeSearch()" id="routeSearch" placeholder="Search Routes">
+                    </div>
                 </div>
 
-                
+
                 <div class="c1 col-sm-12 rounded shadow">
-                    <div class = "row text-center text-white">
-                        <div class = "c1 col-6 nav-justified" id = "stopSearch" onclick="swapSearch()">
+                    <div class="row text-center text-white">
+                        <div class="c1 col-6 nav-justified" id="stopSearch" onclick="swapSearch()">
                             <strong>By Stop</strong>
                         </div>
                         <div class="col-6 text-center" style="background-color: black;" id="addSearch" onclick="swapSearch()">
@@ -85,85 +93,34 @@
                                     <div class="col-6 planner">{{ form.returnDate }}</div>
                                 </div>
                             </div>
-                            
-                            
-                                <script>
-                                    var d = new Date();
-                                    var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
-                                    document.getElementById("id_departDate").value = fullDate;
-                                    $('#id_departTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now', timeFormat: "H:i" });
-                                    $( function() {
-                                    $( "#id_departDate" ).datepicker();
-                                    });
-                                    $('#id_returnTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now',timeFormat: "H:i" });
-                                    $( function() {
-                                    $( "#id_returnDate" ).datepicker({});
-                                    });
-                                </script>
-                            
-                        </div>   
-                        <div class = "row">
-                            <button type ="submit" class = "btn btn-block btn-primary m-2" name = "go">GO!</button>
+
+
                             <script>
-                            var onEnter = document.getElementById("routeSearch");
-                                onEnter.addEventListener("keydown", function (value) {
-                                    if (value.keyCode === 13) {
-                                        getStops(value);
-                                    }
+                                var d = new Date();
+                                var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
+                                document.getElementById("id_departDate").value = fullDate;
+                                $('#id_departTime').timepicker({
+                                    'forceRoundTime': true,
+                                    'scrollDefault': 'now',
+                                    timeFormat: "H:i"
                                 });
-                                var markers = [];
-                                function getStops() {
-                                    //this function is responsible for displaying the route information
-                                    //It uses jQuery to intitialise and pass the value to the url and to grab the data that is returned by get_route_info
-                                    // poly = new google.maps.Polyline({
-                                    //     strokeColor: '#000000',
-                                    //     strokeOpacity: 1.0,
-                                    //     strokeWeight: 3
-                                    // });
-                                    // poly.setMap(map);
-                                    if (markers)
-                                        //this checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
-                                        for (var i = 0; i < markers.length; i++) {
-                                            markers[i].setMap(null);
-                                        }
-                                    var jqxhr = $.getJSON('/details/' + document.getElementById("routeSearch").value + '/', function (daily) {
-                                        var table = "";
-                                        table =
-                                            "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped overflow-y: hidden'>";
-                                        table += "<tr><thead>";
-                                        table += "<th>Stop</th>";
-                                        table += "</tr></thead><tbody>";
-                                        for (var i = 0; i < daily.length; i++) {
-                                            var lat = daily[i].lat;
-                                            var long = daily[i].lng;
-                                            var name = daily[i].name;
-                                            var id = daily[i].id;
-                                            table += "<tr>";
-                                            table += "<td>" + daily[i].name + "(" + id + ")" + "</td>";
-                                            table += "</tr>";
-                                            infoWindow = new google.maps.InfoWindow;
-                                            infoBus = new google.maps.InfoWindow;
-                                            //this function displays the dublin bus markers
-                                            myLatLng = new google.maps.LatLng(lat, long)
-                                            marker = new google.maps.Marker({
-                                                position: myLatLng,
-                                                map: map,
-                                                title: name + "(" + id + ")"
-                                            });
-                                            marker.addListener('mouseover', function () {
-                                                infoBus.open(map, this);
-                                                infoBus.setContent(this.title);
-                                            })
-                                            markers.push(marker);
-                                            // <!-- 
-                                            //                             var path = poly.getPath();
-                                            //                             path.push(myLatLng); -->
-                                        }
-                                        table += "</tbody></table>";
-                                        document.getElementById("RouteDiv").innerHTML = table;
-                                    })
-                                };
+                                $(function () {
+                                    $("#id_departDate").datepicker();
+                                });
+                                $('#id_returnTime').timepicker({
+                                    'forceRoundTime': true,
+                                    'scrollDefault': 'now',
+                                    timeFormat: "H:i"
+                                });
+                                $(function () {
+                                    $("#id_returnDate").datepicker({});
+                                });
                             </script>
+
+                        </div>
+                        <div class="row">
+                            <button type="submit" class="btn btn-block btn-primary m-2" name="go">GO!</button>
+
                             <script>
                                 var d = new Date();
                                 var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
@@ -190,6 +147,49 @@
                         <div class="row">
                             <button type="submit" class="btn btn-block btn-primary m-2" name="go" onclick="showRoute();">GO!</button>
                             <script>
+                                function placeSearch() {
+
+
+                                    //https://www.w3docs.com/learn-javascript/places-autocomplete.html
+                                    //https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-multiple-countries
+
+                                    //the below function used a combination of the above two efforts. 
+
+
+                                    //This function is responsible for allowing the user to search for a general address
+                                    //the map will then zoom in on that place
+                                    //they can then chose to view the markers in that area.
+
+                                    autocomplete = new google.maps.places.Autocomplete(document.getElementById(
+                                        'genSearch'));
+
+                                    autocomplete.setComponentRestrictions({
+                                        'country': 'ie'
+                                    });
+
+                                    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                                        var place = autocomplete.getPlace();
+
+
+                                        if (!place.geometry) {
+                                            // User entered the name of a Place that was not suggested and
+                                            // pressed the Enter key, or the Place Details request failed.
+                                            window.alert("No details available for input: '" + place.name + "'");
+                                            return;
+                                        }
+
+                                        // If the place has a geometry, then present it on a map.
+                                        if (place.geometry.viewport) {
+                                            map.fitBounds(place.geometry.viewport);
+                                        } else {
+                                            map.setCenter(place.geometry.location);
+                                            map.setZoom(17); // Why 17? Because it looks good.
+                                        }
+                                        marker.setPosition(place.geometry.location);
+                                        marker.setVisible(true);
+                                    });
+                                };
+
                                 //This piece of code allows the getStops function to be called when the user hits the enter key. 
 
                                 var onEnter = document.getElementById("routeSearch");
@@ -207,15 +207,6 @@
 
                                     //this function is responsible for displaying the route information
                                     //It uses jQuery to intitialise and pass the value to the url and to grab the data that is returned by get_route_info
-
-
-                                    // poly = new google.maps.Polyline({
-                                    //     strokeColor: '#000000',
-                                    //     strokeOpacity: 1.0,
-                                    //     strokeWeight: 3
-                                    // });
-                                    // poly.setMap(map);
-
 
                                     if (markers)
 
@@ -285,61 +276,6 @@
                                             document.getElementById("RouteDiv").innerHTML = table;
                                         })
                                 };
-
-                                function generateQuery() {
-
-                                    //this function gets real time information for the stop that is selected.
-
-                                    var jqxhr = $.getJSON(
-                                        'https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?stopid=' +
-                                        document.getElementById("id_source").value + '&format=json',
-                                        function (daily) {
-                                            var now = new Date();
-                                            var temp = new Date();
-
-                                            var table = "";
-                                            table =
-                                                "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped overflow-y: hidden'>";
-                                            table += "<tr><thead>";
-                                            table += "<th>Route</th>";
-                                            table += "<th>Destination</th>";
-                                            table += "<th>Arrival Time</th>";
-                                            table += "<th>Expected</th>";
-                                            table += "</tr></thead><tbody>";
-                                            x = daily.results;
-                                            for (var i = 0; i < x.length; i++) {
-
-                                                var ti = x[i].arrivaldatetime.slice(11, );
-
-                                                var array = ti.split(":");
-                                                temp.setHours(array[0]);
-                                                temp.setMinutes(array[1]);
-                                                temp.setSeconds(array[2]);
-                                                var difference = new Date();
-                                                difference.setTime(temp - now);
-                                                var m = difference.getMinutes();
-
-                                                if (difference.getSeconds() >= 30) {
-                                                    m = m + 1;
-                                                };
-                                                if (m == 0) {
-                                                    m = "Due"
-                                                } else {
-                                                    m = String(m) + " mins"
-                                                };
-
-                                                table += "<tr>";
-                                                table += "<td>" + x[i].route + "</td>";
-                                                table += "<td>" + x[i].destination + "</td>";
-                                                table += "<td>" + ti.slice(0, 5) + "</td>";
-                                                table += "<td>" + m + "</td>";
-                                                table += "</tr>";
-                                            }
-                                            table += "</tbody></table>";
-                                            document.getElementById("table").innerHTML = table;
-
-                                        })
-                                };
                             </script>
                         </div>
                     </form>
@@ -375,12 +311,14 @@
 
         <div class="row" style="margin-top:20px;">
             <div class="col-sm-12">
-                <div class="c1 row shadow rounded" style = "margin-top:20px;">
+                <div class="c1 row shadow rounded" style="margin-top:20px;">
                     <div class="col-sm-8">
                         <button onclick="googDirections()">Directions</button>
-                        <img src= "{% static 'images/bus.jpg' %}" alt = "Bus Picture" style = "width:100%;">
-                        <div class = "img-centered"><h3>New to Dublin Bus?<br>Check out Fares Info</h3>
-                            <button class = "img-button">Fares</button>
+                        <img src="{% static 'images/bus.jpg' %}" alt="Bus Picture" style="width:100%;">
+                        <div class="img-centered">
+                            <h3>New to Dublin Bus?
+                                <br>Check out Fares Info</h3>
+                            <button class="img-button">Fares</button>
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -399,7 +337,7 @@
             <button onclick="stopsNearMe()">Stops Near Me</button>
         </div>
         <script>
-            function googDirections(){
+            function googDirections() {
                 var x = document.getElementById("id_source").value;
                 var y = document.getElementById("id_destination").value;
 
@@ -427,7 +365,7 @@
 
                 "{% endfor %}"
                 "{% endif %}"
-                
+
                 // var startLat = 53.309442;
                 // var startLng =  -6.218855;
 
@@ -445,8 +383,8 @@
                     center: start
                 }
                 var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-                directionsDisplay.setMap(map); 
-            
+                directionsDisplay.setMap(map);
+
 
                 function calcRouteNum() {
                     var request = {
@@ -454,33 +392,32 @@
                         destination: end,
                         travelMode: 'TRANSIT',
                         transitOptions: {
-                        //departureTime: new Date(1337675679473),
-                        modes: ['BUS'],
-                        routingPreference: 'FEWER_TRANSFERS'
-                    },
+                            //departureTime: new Date(1337675679473),
+                            modes: ['BUS'],
+                            routingPreference: 'FEWER_TRANSFERS'
+                        },
                     };
-                    directionsService.route(request, function(response, status) {
+                    directionsService.route(request, function (response, status) {
                         if (status == 'OK') {
-                        directionsDisplay.setDirections(response);
-                        console.log(response);
-                        var x = response.routes[0].legs[0].steps;
-                        var buses = [];
-                        for (var i = 0; i< x.length;i++){
-                            try{
-                             buses.push(x[i].transit.line.short_name);
-                            } catch{
+                            directionsDisplay.setDirections(response);
+                            console.log(response);
+                            var x = response.routes[0].legs[0].steps;
+                            var buses = [];
+                            for (var i = 0; i < x.length; i++) {
+                                try {
+                                    buses.push(x[i].transit.line.short_name);
+                                } catch {}
                             }
-                        }
-                        //var res = response.routes[0].legs[0].steps[0].transit.line.short_name;
-                        console.log(buses);
+                            //var res = response.routes[0].legs[0].steps[0].transit.line.short_name;
+                            console.log(buses);
                         }
                     });
-                    }
+                }
                 calcRouteNum();
             }
         </script>
-    
-       
+
+
 
         <script>
             function getValue() {
@@ -550,53 +487,6 @@
 
 
             }
-
-
-            var placeSearch, autocomplete;
-
-            function placeSearch() {
-
-
-                //https://www.w3docs.com/learn-javascript/places-autocomplete.html
-                //https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-multiple-countries
-
-                //the below function used a combination of the above two efforts. 
-
-
-                //This function is responsible for allowing the user to search for a general address
-                //the map will then zoom in on that place
-                //they can then chose to view the markers in that area.
-
-                autocomplete = new google.maps.places.Autocomplete(document.getElementById('genSearch'));
-
-                autocomplete.setComponentRestrictions({
-                    'country': 'ie'
-                });
-
-                google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                    var place = autocomplete.getPlace();
-
-                    if (!place.geometry) {
-                        // User entered the name of a Place that was not suggested and
-                        // pressed the Enter key, or the Place Details request failed.
-                        window.alert("No details available for input: '" + place.name + "'");
-                        return;
-                    }
-
-                    // If the place has a geometry, then present it on a map.
-                    if (place.geometry.viewport) {
-                        map.fitBounds(place.geometry.viewport);
-                    } else {
-                        map.setCenter(place.geometry.location);
-                        map.setZoom(17); // Why 17? Because it looks good.
-                    }
-                    marker.setPosition(place.geometry.location);
-                    marker.setVisible(true);
-                });
-            };
-
-
-            placeSearch();
 
             var busMarkers = 0;
 
@@ -755,30 +645,34 @@
 
             };
 
-    //Autocomplete for Route Search
-    $(document).ready(function() {
-        $.ajax({
-          type: "GET",
-          url: "dublinBusRoutes",
-          dataType: "json",
-         
-           success: function(data) {createArray(data);}
-       });
-      });
-      
+            //Autocomplete for Route Search this is paired with an onfocus function to watch for a user click into the box. 
+            function routeSearch() {
+                $(document).ready(function () {
+                    $.ajax({
+                        type: "GET",
+                        url: "dublinBusRoutes",
+                        dataType: "json",
 
-      function createArray(Data) {
+                        success: function (data) {
+                            createArray(data);
+                        }
+                    });
+                });
 
-      var results = [];
-      for (var i = 0; i < Data.length; i++){
-          results.push(Data[i].route);
-      }
-      $( "#routeSearch" ).autocomplete({
-          source: results,
-          minLength: 1,
-      });
-} 
+
+                function createArray(Data) {
+
+                    var results = [];
+                    for (var i = 0; i < Data.length; i++) {
+                        results.push(Data[i].route);
+                    }
+                    $("#routeSearch").autocomplete({
+                        source: results,
+                        minLength: 1,
+                    });
+                }
+            }
         </script>
-    </body>
+</body>
 
 {% endblock %}

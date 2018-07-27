@@ -52,6 +52,7 @@ function myMap() {
       }
 
 
+      //autocomplete for general area
 
 // Function used for displaying/hiding the traffic information using a check variable 
 var trafficCheck = 0;
@@ -218,14 +219,100 @@ function swapSearch() {
     }   
 };
 
-function generateQuery() {
+  //This piece of code allows the getStops function to be called when the user hits the enter key. s
+  var markers = [];
+
+  function getStops() {
+
+      //this function is responsible for displaying the route information
+      //It uses jQuery to intitialise and pass the value to the url and to grab the data that is returned by get_route_info
+
+
+      // poly = new google.maps.Polyline({
+      //     strokeColor: '#000000',
+      //     strokeOpacity: 1.0,
+      //     strokeWeight: 3
+      // });
+      // poly.setMap(map);
+
+
+      if (markers)
+
+          //this checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
+          for (var i = 0; i < markers.length; i++) {
+
+              markers[i].setMap(null);
+
+          }
+
+
+      var jqxhr = $.getJSON('/details/' + document.getElementById("routeSearch").value +
+          '/',
+          function (daily) {
+
+
+              var table = "";
+              table =
+                  "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped overflow-y: hidden'>";
+              table += "<tr><thead>";
+              table += "<th>Stop</th>";
+              table += "</tr></thead><tbody>";
+
+              for (var i = 0; i < daily.length; i++) {
+
+
+                  var lat = daily[i].lat;
+                  var long = daily[i].lng;
+                  var name = daily[i].name;
+
+                  var id = daily[i].id;
+
+                  table += "<tr>";
+                  table += "<td>" + daily[i].name + "(" + id + ")" + "</td>";
+                  table += "</tr>";
+
+
+                  infoWindow = new google.maps.InfoWindow;
+                  infoBus = new google.maps.InfoWindow;
+
+                  //this function displays the dublin bus markers
+                  myLatLng = new google.maps.LatLng(lat, long)
+                  marker = new google.maps.Marker({
+                      position: myLatLng,
+                      map: map,
+                      title: name
+                  });
+
+                  marker.addListener('mouseover', function () {
+                      infoBus.open(map, this);
+                      infoBus.setContent(this.title);
+                  })
+
+                  marker.addListener('click', function () {
+                      document.getElementById("id_source").value = this.title;
+
+                  })
+
+                  markers.push(marker);
+
+                  // <!-- 
+                  //                             var path = poly.getPath();
+                  //                             path.push(myLatLng); -->
+              }
+
+              table += "</tbody></table>";
+              document.getElementById("RouteDiv").innerHTML = table;
+          })
+  };
+
+  function realTimeInfo() {
 
     //this function gets real time information for the stop that is selected.
 
-        var jqxhr = $.getJSON(
-            'https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?stopid=' +
-            document.getElementById("id_source").value + '&format=json',
-            function (daily) {
+    var jqxhr = $.getJSON(
+        'https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?stopid=' +
+        document.getElementById("id_source").value + '&format=json',
+        function (daily) {
             var now = new Date();
             var temp = new Date();
 
@@ -272,30 +359,7 @@ function generateQuery() {
         })
     };
 
-//Autocomplete for Route Search
-    $(document).ready(function() {
-        $.ajax({
-          type: "GET",
-          url: "dublinBusRoutes",
-          dataType: "json",
-         
-           success: function(data) {createArray(data);}
-       });
-      });
-      
 
-      function createArray(Data) {
-      
-      var results = [];
-      for (var i = 0; i < Data.length; i++){
-          results.push(Data[i].route);
-      }
-      $( "#routeSearch" ).autocomplete({
-          source: results,
-          minLength: 1,
-      });
-         
-    } 
 
 //Functions to display/hide the stop search and route search
 function findStop(){
@@ -315,7 +379,10 @@ function findRoute(){
     }
 }
 
-    $(document).ready(function() {
+    
+
+function routePlannerAutocomplete() {
+$(document).ready(function() {
         $.ajax({
           type: "GET",
           url: "RouteInfo",
@@ -332,6 +399,7 @@ function findRoute(){
       var results = [];
       for (var i = 0; i < Data.length; i++){
           results.push(Data[i].num);
+          
       }
       $( "#id_destination, #id_source" ).autocomplete({
           source: results,
@@ -339,6 +407,8 @@ function findRoute(){
       });
          
     } 
+
+}
 
 
     function stopsNearMe() {
@@ -385,6 +455,34 @@ function findRoute(){
 
 
             })
+    }
+
+
+
+    function routeSearch() {
+        $(document).ready(function() {
+            $.ajax({
+              type: "GET",
+              url: "dublinBusRoutes",
+              dataType: "json",
+             
+               success: function(data) {createArray(data);}
+           });
+          });
+          
+    
+          function createArray(Data) {
+    
+          var results = [];
+          for (var i = 0; i < Data.length; i++){
+              results.push(Data[i].route);
+          }
+          $( "#routeSearch" ).autocomplete({
+              source: results,
+              minLength: 1,
+          });
+    }
+
     }
 
 // References:
