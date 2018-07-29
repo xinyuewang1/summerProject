@@ -198,6 +198,7 @@ class Ett39A:
             
             filPath = os.path.join(settings.STATIC_ROOT, 'pickles/stopDicts')
             for d in os.listdir(filPath):
+                print(d)
                 if d.startswith(str(self.route) + '_' + str(identifier[0]) + '_' + str(identifier[1])):
                     print(d)
                     
