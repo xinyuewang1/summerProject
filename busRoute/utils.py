@@ -199,8 +199,12 @@ class Ett39A:
             filPath = os.path.join(settings.STATIC_ROOT, 'pickles/stopDicts')
             for d in os.listdir(filPath):
                 if d.startswith(str(self.route) + '_' + str(identifier[0]) + '_' + str(identifier[1])):
-                    raise Exception("exception",str(identifier[0]), str(identifier[1]), d)
+                    print(d)
+                    
                     headsign = d.split('_')[-1][:-4]
+                    print("headsign",headsign)
+                    d = d.rsplit('_', 1)[0]
+                    #raise Exception("exception",str(identifier[0]), str(identifier[1]), d)
                     data = load_obj('pickles/stopDicts/' + d)
                     dis1 = data[self.source]
                     dis2 = data[self.dest]
