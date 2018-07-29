@@ -203,8 +203,9 @@ class Ett39A:
                     
                     headsign = d.split('_')[-1][:-4]
                     print("headsign",headsign)
-                    #d = d.rsplit('_', 1)[0]
-                    raise Exception("exception",str(identifier[0]), str(identifier[1]), d)
+                    
+                    d = d.rsplit('.', 1)[0]
+                    #raise Exception("exception",str(identifier[0]), str(identifier[1]), d)
                     data = load_obj('pickles/stopDicts/' + d)
                     dis1 = data[self.source]
                     dis2 = data[self.dest]
