@@ -241,29 +241,28 @@ class Ett39A:
             return pred[1] - pred[0]
 
 
-
         else:
             raise Exception("Cannot find model for this route.")
 
-    def monthWeek(self):
-        monthList = [0] * 5
-        dayList = [0] * 6
-        months = ['Feb', 'Mar', 'Apr', 'May', 'Jun']
-        if self.month == 'Jan':
-            pass
-        else:
-            monthList[months.index(self.month)]
-        days = ['Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-        if self.day == 'Monday':
-            pass
-        else:
-            dayList[days.index(self.day)]
-        return monthList + dayList
+    # def monthWeek(self):
+    #     monthList = [0] * 5
+    #     dayList = [0] * 6
+    #     months = ['Feb', 'Mar', 'Apr', 'May', 'Jun']
+    #     if self.month == 'Jan':
+    #         pass
+    #     else:
+    #         monthList[months.index(self.month)]
+    #     days = ['Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    #     if self.day == 'Monday':
+    #         pass
+    #     else:
+    #         dayList[days.index(self.day)]
+    #     return monthList + dayList
 
-    def routeFind(self, current):
-        routeList = [0] * 71
-        routeList[current - 1] = 1
-        return routeList
+    # def routeFind(self, current):
+    #     routeList = [0] * 71
+    #     routeList[current - 1] = 1
+    #     return routeList
 
 
 # -------------------------Test set---------------
