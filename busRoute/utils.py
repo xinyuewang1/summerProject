@@ -110,7 +110,7 @@ def getFirstAndLastStops3(route, stop1, stop2):
         #print("l:", l)
         if l.split('_')[0] == route:
             stopList = load_obj(path + l)
-            print("stopList:", stopList)
+            #print("stopList:", stopList)
             if stop1 in stopList and stop2 in stopList:
                 progrnumber1 = stopList.index(stop1) + 1
                 progrnumber2 = stopList.index(stop2) + 1
@@ -199,6 +199,7 @@ class Ett39A:
             filPath = os.path.join(settings.STATIC_ROOT, 'pickles/stopDicts')
             for d in os.listdir(filPath):
                 if d.startswith(str(self.route) + '_' + str(identifier[0]) + '_' + str(identifier[1])):
+                    raise Exception("exception",str(identifier[1]))
                     headsign = d.split('_')[-1][:-4]
                     data = load_obj('pickles/stopDicts/' + d)
                     dis1 = data[self.source]
