@@ -27,13 +27,13 @@
                 <div class="c1 col-sm-12 shadow rounded mt-4" style="padding:3px;">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col nav2 border border-white border-top-0 border-left-0 border-bottom-0">
+                            <div class="col-4 nav2 border border-white border-top-0 border-left-0 border-bottom-0">
                                 <a class="nav-link" id="trafficButton" onclick="toggleTraffic(this)" href="#">Traffic</a>
                             </div>
-                            <div class="col nav2 border border-white border-top-0 border-left-0 border-bottom-0">
+                            <div class="col-4 nav2 border border-white border-top-0 border-left-0 border-bottom-0">
                                 <a class="nav-link" href="#" onclick="displayBusMarkers()" id="markersbutton">Markers</a>
                             </div>
-                            <div class="col nav2">
+                            <div class="col-4 nav2">
                                 <a class="nav-link" href="#" onclick="displayBikeMarkers()" id="bikesbutton">Bikes</a>
                             </div>
                         </div>
@@ -41,6 +41,18 @@
                     </div>
 
                     <div id="map"></div>
+                    <script>
+                        //Rezises the map div to a smaller value for very short phone screens
+                        $(document).ready(function(){
+                            var width = $(window).width(); 
+                            var height = $(window).height(); 
+    
+                            if (height<=740) {
+                                $('#map').css("height", "240px")
+                            }
+                            
+                        });
+                    </script>
 
                 </div>
 
@@ -60,8 +72,8 @@
                             <a href = "#" onclick = "findRoute()"><span style = "color:white;">Route Info</span></a>
                         </div>
                     </div>
-                    <div id = "stopSearchOptions" style = "display:none;"><p class = "text-white">Enter a location below to view the it's local stops</p><div><input id='genSearch' placeholder='Search Area' type='text'></input></div></div>
-                    <div id = "routeSearchOptions" style = "display:none;"><p class = "text-white">Enter a route number to view on map</p><input id = "routeSearch" placeholder="Search Routes"></div>
+                    <div id = "stopSearchOptions" style = "display:none;border-top:1px solid white;"><p class = "text-white">Enter a location below to view the it's local stops</p><div><input id='genSearch' placeholder='Search Area' type='text'></input></div></div>
+                    <div id = "routeSearchOptions" style = "display:none;border-top:1px solid white;"><p class = "text-white">Enter a route number to view on map</p><input id = "routeSearch" placeholder="Search Routes"></div>
                     
                 </div>
                 
@@ -189,7 +201,7 @@
                                             var temp = new Date();
 
                                             var table = "";
-                                                    table = "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped overflow-y: hidden'>";
+                                                    table = "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped' style = 'overflow-x:scroll;'>";
                                                     table += "<tr><thead>";
                                                     table += "<th>Route</th>";
                                                     table += "<th>Destination</th>";
@@ -269,7 +281,7 @@
         <div class="row" style="margin-top:20px;">
             <div class="col-sm-12" id = "results">
                 <div class="c1 col-sm-12 rounded shadow">
-                    <div class="display-4 mb-3 border-bottom border-black">{{weather.day}} {{weather.date}} {{weather.month}} </div>
+                    <div class="display-4 mb-3 border-bottom border-black" style = "font-size:50px;">{{header.day}} {{header.date}} {{header.month}} </div>
 
                     <div class="row">
                         <div class="col-sm-3">
@@ -308,7 +320,7 @@
                         </div>
                     </div>
                     <br>
-                    <div class = "container mb-3" style = "background-color: aliceblue;" id = "realtimeTable"></div>
+                    <div class = "container mb-3" style = "background-color: aliceblue;overflow-x:scroll;" id = "realtimeTable"></div>
                     
                 </div>
             </div>
