@@ -423,7 +423,8 @@ def bikes_query(request):
     return JsonResponse(results, safe=False)
 
 
-def DublinBus(request):
+def DublinBusInfo(request):
+    
     '''
     This function creates a dictionary from the dublin bus data located inside Routes.csv to be accessed on the page for the markers
     '''

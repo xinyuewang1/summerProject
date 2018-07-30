@@ -17,7 +17,7 @@ urlpatterns = [
     url(r'^result', views.resultView.as_view(), name='result'),
 
     url(r'^tourism', views.tourismView.as_view(), name='tourism'),
-    
+
     #These URL's contain the data necessary for Autocomplete functions. 
     url(r'^RouteInfo', views.GenBusData, name='RouteInfo'),
 
@@ -26,7 +26,7 @@ urlpatterns = [
     #contains the information for the bikes data 
     url(r'^dublinBikeInfo', views.bikes_query, name='dublinBikeInfo'),
 
-    url(r'dublinBusInfo', views.DublinBus, name = 'DublinBusInfo'),
+    url(r'dublinBusInfo', views.DublinBusInfo, name = 'DublinBusInfo'),
 
     #data rendered here is used for the suggested stops near the user selections. 
     url(r'^nearestBus', views.stopNearMe, name='nearestBus'),

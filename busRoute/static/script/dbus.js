@@ -191,70 +191,119 @@ function swapSearch() {
                 var startLat = parseFloat(sourceLat);
 
                 var startLng = parseFloat(sourceLong);
-        
+
                 var finLat = parseFloat(destinationLat);
                 var finLng = parseFloat(destinationLong);
-        
+
                 var directionsService = new google.maps.DirectionsService();
-             
-        
+
+
                 var start = new google.maps.LatLng(startLat, startLng);
                 var end = new google.maps.LatLng(finLat, finLng);
-        
-        
-        
+
+
+
                 function calcRouteNum() {
                     var request = {
                         origin: start,
                         destination: end,
                         travelMode: 'TRANSIT',
                         transitOptions: {
-        
+
                             modes: ['BUS'],
                             routingPreference: 'FEWER_TRANSFERS'
                         },
                     };
+
                     directionsService.route(request, function (response, status) {
-        
-                        if (status == 'OK'){
-                    
-                        var x = response.routes[0].legs[0].steps;
-                        console.log(x)
-                       
-                        for (var i = 0; i < x.length; i++) {
 
-                           console.log(x[i].distance);
+                        if (status == 'OK') {
 
-                         
-                            if (x[i].transit) {
+                            var x = response.routes[0].legs[0].steps;
 
-                                console.log(x[i].transit.arrival_stop.location.lat());
-                                console.log(x[i].transit.arrival_stop.location.lng());
-                                console.log(x[i].transit.departure_stop.location.lat());
-                                console.log(x[i].transit.departure_stop.location.lng());
-                    
-                                
-    
-                                
+                            for (var i = 0; i < x.length; i++) {
+
+                                if (x[i].transit) {
+
+                                    var DLat = x[i].transit.arrival_stop.location.lat();
+                                    var DLong = x[i].transit.arrival_stop.location.lng();
+                                    var SLat = x[i].transit.departure_stop.location.lat();
+                                    var Slong = x[i].transit.departure_stop.location.lng();
+
+
+                                    var destLatitude = parseFloat(DLat.toFixed(4));
+                                    var destLongtitude = parseFloat(DLong.toFixed(4));
+                                    var sourceLatitude = parseFloat(SLat.toFixed(3));
+                                    var sourceLongtitude = parseFloat(Slong.toFixed(3))
+                                 
+
+
+                                    $.ajax({
+                                        type: "GET",
+                                        url: "dublinBusInfo",
+                                        dataType: "json",
+
+                                        success: function (data) {
+
+                                            for (var i = 0; i < data.length; i++) {
+                                                var comparisonLat = parseFloat(data[i].lat).toFixed(4)
+                                                var comparisonLong = parseFloat(data[i].lng).toFixed(4)
+                                                var comparisonLat1 = parseFloat(data[i].lat).toFixed(3)
+                                                var comparisonLong1 = parseFloat(data[i].lng).toFixed(3)
+
+                                                
+
+                                                if (destLatitude == comparisonLat && destLongtitude == comparisonLong) {
+
+                                                    console.log(data[i].num);
+                                                    console.log(data[i].name);
+                                                    
+
+                                                }
+
+                                                if ( sourceLatitude== comparisonLat1 && sourceLongtitude == comparisonLong1) {
+
+                                                    console.log(data[i].num);
+                                                    console.log(data[i].name);
+
+                                                }
+
+
+
+
+
+
+
+                                            }
+                                              
+                                        }
+                                    });
+
+
+
+
+
+                                }
+
+
                             }
+
                         }
-        
-                        }
-        
+
                     })
-        
-        
-        
+
+
+
                 }
-        
+
                 calcRouteNum();
 
             })
         })
 
-      
 
-  
+
+
 
 
     } else {
