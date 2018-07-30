@@ -209,9 +209,11 @@ class Ett39A:
             #headsign, dis1, dis2 = None, None, None
             dis1, dis2 = None, None
 
-            for d in os.listdir('pickles/stopDicts'):
+            filPath = os.path.join(settings.STATIC_ROOT, 'pickles/stopDicts')
+            for d in os.listdir(filPath):
                 if d.startswith(str(self.route) + '_' + str(identifier[0]) + '_' + str(identifier[1])):
                     # headsign = d.split('_')[-1][:-4]
+                    d = d.rsplit('.', 1)[0]
                     data = load_obj('pickles/stopDicts/' + d)
                     dis1 = data[self.source]
                     dis2 = data[self.dest]
