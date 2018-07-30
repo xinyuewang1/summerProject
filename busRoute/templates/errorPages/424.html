@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block body %}
+
+<h1>Failed Dependancy</h1>
+<div>
+    <p>The request failed because it depended on another request which failed prior.</p>
+    <a href="index.html">Return to home page</a>
+</div>
+{% endblock %}
