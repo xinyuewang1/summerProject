@@ -305,6 +305,7 @@ class tourismView(generic.TemplateView):
         form = routeForm()
         weather = query_weather
         context = {'weather':weather, 'form': form}
+
         return render(request, self.template_name, context)
 
     def post(self, request):
@@ -384,7 +385,7 @@ def query_weather():
     Queries Open Weather API for current weather information of Dublin City. Parses input and returns dictionary
     of relevant weather information as well current date and time
     """
-    
+
     r = requests.get('http://api.openweathermap.org/data/2.5/weather?q=Dublin&APPID=094f61b4b2da3c4541e43364bab71b0b')
     r = r.json()
     now = datetime.datetime.now()
@@ -420,6 +421,7 @@ def bikes_query():
     url = 'https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey=163a27dc14a77d825fb26c4212d74477642b4469' # the website containing the data
    
     web_data = requests.get(url)
+
     if web_data.status_code == 200:
         data = json.loads(web_data.text)
         results = []
@@ -612,9 +614,11 @@ def arrivalTime(depart, travel):
     extra_hours = travel//60
     extra_mins = travel - (extra_hours*60)
 
+
     if (mins + extra_mins) > 60:
         extra_hours += 1
         extra_mins -= 60
+
     
     total_hours = hours + extra_hours
 
@@ -623,6 +627,7 @@ def arrivalTime(depart, travel):
         total_hours -= 24
         
     arrival = str(int(total_hours)) + ':' + str(int(mins + extra_mins))
+
 
     if arrival[1] == ':':
         final = '0' + arrival
@@ -633,7 +638,6 @@ def arrivalTime(depart, travel):
         return final[0:3] + '0' + final[3]
 
     return final
-
 
 
 def parseDate(date):
@@ -797,5 +801,4 @@ def findLatLong(location):
                 return latLng_str
         
     raise Exception("Unable to find this stop number")
-
 

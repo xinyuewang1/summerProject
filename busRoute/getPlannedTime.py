@@ -23,7 +23,8 @@ def findNextTime(timeList,t):
     pass
 
 
-def nextBus(t, route, stop, weekday, dest):
+#def nextBus(t, route, stop, weekday, dest):
+def nextBus(t, route, stop, weekday):
     '''
     Take the time and find the closest bus on schedule.
     In returned list--
@@ -73,7 +74,10 @@ def nextBus(t, route, stop, weekday, dest):
 #_____Test_________
 #nextBus("15:19",769,3,)
 
-def bus(time, route, start, end, weekday, dest):
+
+#def bus(time, route, start, end, weekday, dest):
+def bus(time, route, start, end, weekday):
+
     '''
     Provide which bus will come next for a certain time. for a certain condition.
     :param time: take time from user
@@ -81,10 +85,10 @@ def bus(time, route, start, end, weekday, dest):
     :param start: start stop
     :param end: end stop
     :param weekday: which weekday
-    :param dest: which destination is towarding.
     :return: two planned time seconds in a day for two stops
     '''
-    startStop = nextBus(time, route, start, weekday, dest)
+    startStop = nextBus(time, route, start, weekday)
+
     data = getStopTime(route, end)
     for result in data["results"]:
         #if result["destination"] == dest and result["startdayofweek"] == startStop[2] and result["enddayofweek"] == startStop[3]:
