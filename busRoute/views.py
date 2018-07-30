@@ -45,6 +45,7 @@ class homeView(generic.TemplateView):
 
         
         busNum = googDir(findLatLong(source_address),findLatLong(destination_address), depart_date, depart_time)[0]
+        busNum = busNum.upper()
 
         stops_local = []
         stops_local.extend(findLatLong(source_address).split(","))
@@ -83,6 +84,12 @@ class homeView(generic.TemplateView):
             print("in the except with", source_address, destination_address)
             print("oops")
 
+        dateChosen = datetime.datetime.strptime(depart_date, "%m/%d/%Y")
+        #my_date = date.today()
+        header = {'day': calendar.day_name[dateChosen.weekday()],
+                     'date': dateChosen.strftime("%d"),
+                     'month': dateChosen.strftime("%B")}
+
 
         #print(source_num, dest_num)
         print("take the bus", busNum)
@@ -98,7 +105,7 @@ class homeView(generic.TemplateView):
         args = {'form': form, 'bikes':bikes, 'bus': bus, 'busNum': busNum, 'source': source_address, 'source_name':source_name, 
         'destination': destination_address, 'destination_name': destination_name, 'depart_time': depart_time, 
         'depart_date': depart_date , 'arrival_time': arrival, 'startLat':startLat, 'startLng': startLng, 'finLat':finLat,
-        'finLng':finLng, 'est': est, 'weather': weather}
+        'finLng':finLng, 'est': est, 'weather': weather, 'header':header}
 
         return render(request, "busRoute/result.html", args)
 
@@ -221,6 +228,7 @@ class resultView(generic.TemplateView):
 
         
         busNum = googDir(findLatLong(source_address),findLatLong(destination_address), depart_date, depart_time)[0]
+        busNum = busNum.upper()
 
         stops_local = []
         stops_local.extend(findLatLong(source_address).split(","))
@@ -310,6 +318,7 @@ class tourismView(generic.TemplateView):
 
         
         busNum = googDir(findLatLong(source_address),findLatLong(destination_address), depart_date, depart_time)[0]
+        busNum = busNum.upper()
 
         stops_local = []
         stops_local.extend(findLatLong(source_address).split(","))
