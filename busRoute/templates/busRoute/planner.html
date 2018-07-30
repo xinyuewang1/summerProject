@@ -59,19 +59,19 @@
                         </div>
                         <div class="col-6 text-center text-white">
                             <a href="#" onclick="findRoute()">
-                                <span style="color:white;">Route Info</span>
+                                <span style="color:white" onclick="placeSearch()">Route Info</span>
                             </a>
                         </div>
                     </div>
                     <div id="stopSearchOptions" style="display:none;border-top:1px solid white;">
                         <p class="text-white">Enter a location below to view the it's local stops</p>
                         <div>
-                            <input  onfocus = "placeSearch()" id ='genSearch' placeholder='Search Area' type='text'></input>    
+                            <inputid='genSearch' placeholder='Search Area' type='text'></input>
                         </div>
                     </div>
                     <div id="routeSearchOptions" style="display:none;border-top:1px solid white;">
                         <p class="text-white">Enter a route number to view on map</p>
-                        <input onfocus = "routeSearch()" id="routeSearch" placeholder="Search Routes">
+                        <input onfocus="routeSearch()" id="routeSearch" placeholder="Search Routes">
                     </div>
 
                 </div>
@@ -113,32 +113,6 @@
 
 
                             <script>
-                                function routeSearch() {
-                                    $(document).ready(function () {
-                                        $.ajax({
-                                            type: "GET",
-                                            url: "dublinBusRoutes",
-                                            dataType: "json",
-
-                                            success: function (data) {
-                                                createArray(data);
-                                            }
-                                        });
-                                    });
-
-                                    function createArray(Data) {
-
-                                        var results = [];
-                                        for (var i = 0; i < Data.length; i++) {
-                                            results.push(Data[i].route);
-                                        }
-                                        $("#routeSearch").autocomplete({
-                                            source: results,
-                                            minLength: 1,
-                                        });
-                                    }
-
-                                }
                                 var d = new Date();
                                 var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
                                 document.getElementById("id_departDate").value = fullDate;
@@ -164,12 +138,11 @@
                         <div class="row">
                             <button type="submit" class="btn btn-block btn-primary m-2" name="go">GO!</button>
 
-                         
+
                         </div>
                         <div class="row">
 
                             <script>
-                                
                                 function placeSearch() {
 
 
@@ -381,7 +354,7 @@
 
                     var startLat = parseFloat(slat);
                     var startLng = parseFloat(slong);
-                    console.log(startLat);
+
                 };
 
                 if (y == "{{ p.num }}" || y == "{{ p.name }}") {
@@ -407,7 +380,7 @@
 
                 var start = new google.maps.LatLng(startLat, startLng);
                 var end = new google.maps.LatLng(finLat, finLng);
-                console.log("start", start, "end", end)
+
                 var mapOptions = {
                     zoom: 14,
                     center: start
@@ -430,7 +403,7 @@
                     directionsService.route(request, function (response, status) {
                         if (status == 'OK') {
                             directionsDisplay.setDirections(response);
-                            console.log(response);
+
                             var x = response.routes[0].legs[0].steps;
                             var buses = [];
                             for (var i = 0; i < x.length; i++) {
@@ -440,7 +413,7 @@
                             }
                         }
                         //var res = response.routes[0].legs[0].steps[0].transit.line.short_name;
-                        console.log(buses[0]);
+
 
                         var jqxhr = $.getJSON('/busNum/' + buses[0] + '/', function (daily) {
                             document.getElementById("busRouteNum").innerHTML = daily;
@@ -635,7 +608,6 @@
                                 };
 
 
-
                                 var latlng = new google.maps.LatLng(lat, long);
                                 var marker = new google.maps.Marker({
                                     position: latlng,
@@ -707,35 +679,6 @@
                         minLength: 1,
                     });
                 }
-            }
-
-
-            $(document).ready(function () {
-                $.ajax({
-                    type: "GET",
-                    url: "RouteInfo",
-                    dataType: "json",
-
-                    success: function (data) {
-                        createArray(data);
-                    }
-                });
-            });
-
-
-            function createArray(Data) {
-
-
-                var results = [];
-                for (var i = 0; i < Data.length; i++) {
-                    results.push(Data[i].num);
-
-                }
-                $("#id_destination, #id_source").autocomplete({
-                    source: results,
-                    minLength: 2,
-                });
-
             }
         </script>
 </body>
