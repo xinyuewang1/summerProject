@@ -15,54 +15,59 @@
                 <div class="c1 col-sm-12 shadow rounded mt-4" style="padding:3px;">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col nav2 border border-white border-top-0 border-left-0 border-bottom-0">
+                            <div class="col-4 nav2 border border-white border-top-0 border-left-0 border-bottom-0">
                                 <a class="nav-link" id="trafficButton" onclick="toggleTraffic(this)" href="#">Traffic</a>
                             </div>
-                            <div class="col nav2 border border-white border-top-0 border-left-0 border-bottom-0">
+                            <div class="col-4 nav2 border border-white border-top-0 border-left-0 border-bottom-0">
                                 <a class="nav-link" href="#" onclick="displayBusMarkers()" id="markersbutton">Markers</a>
                             </div>
-                            <div class="col nav2">
+                            <div class="col-4 nav2">
                                 <a class="nav-link" href="#" onclick="displayBikeMarkers()" id="bikesbutton">Bikes</a>
                             </div>
                         </div>
                     </div>
 
                     <div id="map"></div>
+                    <script>
+                        //Rezises the map div to a smaller value for very short phone screens
+                        $(document).ready(function(){
+                            var width = $(window).width(); 
+                            var height = $(window).height(); 
+    
+                            if (height<=740) {
+                                $('#map').css("height", "240px")
+                            }
+                            
+                        });
+                    </script>
                     <!-- <div id = "RouteDiv"></div> -->
                 </div>
 
                 <div id="directionsPanel" style="background-color:white;float:right"></div>
-
+                
             </div>
 
 
             <div class="col-sm-4">
                 <div class="c1 col-sm-12 rounded shadow mt-4">
                     <h3>Route Planner</h3>
-                    <div class="row">
-                        <div class="col-6 text-center text-white border border-white border-top-0 border-left-0 border-bottom-0">
-                            <a href="#" onclick="findStop()">Find Stop</a>
+                    <div class = "row">
+                        <div class = "col-6 text-center text-white border border-white border-top-0 border-left-0 border-bottom-0">
+                            <a href = "#" onclick = "findStop()"><span style = "color:white;">Find Stop</span></a>
                         </div>
-                        <div class="col-6 text-center text-white">
-                            <a href="#" onclick="findRoute()">Route Info</a>
-                        </div>
-                    </div>
-                    <div id="stopSearchOptions" style="display:none;">
-                        <p class="text-white">Enter a location below to view the it's local stops</p>
-                        <div>
-                            <input onfocus="placeSearch()" id='genSearch' placeholder='Search Area' type='text' onfocus=""></input>
+                        <div class = "col-6 text-center text-white">
+                            <a href = "#" onclick = "findRoute()"><span style = "color:white;">Route Info</span></a>
                         </div>
                     </div>
-                    <div id="routeSearchOptions" style="display:none;">
-                        <p class="text-white">Enter a route number to view on map</p>
-                        <input onfocus="routeSearch()" id="routeSearch" placeholder="Search Routes">
-                    </div>
+                    <div id = "stopSearchOptions" style = "display:none;border-top:1px solid white;"><p class = "text-white">Enter a location below to view the it's local stops</p><div><input id='genSearch' placeholder='Search Area' type='text'></input></div></div>
+                    <div id = "routeSearchOptions" style = "display:none;border-top:1px solid white;"><p class = "text-white">Enter a route number to view on map</p><input id = "routeSearch" placeholder="Search Routes"></div>
+                   
                 </div>
 
-
-                <div class="c1 col-sm-12 rounded shadow">
-                    <div class="row text-center text-white">
-                        <div class="c1 col-6 nav-justified" id="stopSearch" onclick="swapSearch()">
+                
+                <div class="c1 col-sm-12 rounded shadow mt-2">
+                    <div class = "row text-center text-white">
+                        <div class = "c1 col-6 nav-justified" id = "stopSearch" onclick="swapSearch()">
                             <strong>By Stop</strong>
                         </div>
                         <div class="col-6 text-center" style="background-color: black;" id="addSearch" onclick="swapSearch()">
@@ -311,24 +316,24 @@
 
         <div class="row" style="margin-top:20px;">
             <div class="col-sm-12">
-                <div class="c1 row shadow rounded" style="margin-top:20px;">
-                    <div class="col-sm-8">
-                        <button onclick="googDirections()">Directions</button>
-                        <img src="{% static 'images/bus.jpg' %}" alt="Bus Picture" style="width:100%;">
-                        <div class="img-centered">
-                            <h3>New to Dublin Bus?
-                                <br>Check out Fares Info</h3>
-                            <button class="img-button">Fares</button>
+                <div class = "col-sm-12">
+                    <div class="c1 row shadow rounded" style = "margin-top:20px;">
+                        <div class="col-sm-8">
+                            <!-- <button onclick="googDirections()">Directions</button>
+                            <button onclick = "busNumber()">route number</button> -->
+                            <div id ="busRouteNum"></div>
+                            <img src= "{% static 'images/bus.jpg' %}" alt = "Bus Picture" style = "width:100%;padding-top: 5px;">
+                            <div class = "img-centered"><h3>New to Dublin Bus?<br>Check Fares information</h3>
+                                <a href ="tourism.html"><button class = "img-button">Fares</button></a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div id="twitterFeed">
-                            <a class="twitter-timeline" data-height="200" data-theme="light" data-link-color="#2B7BB9" href="https://twitter.com/dublinbusnews?ref_src=twsrc%5Etfw">Tweets by dublinbusnews</a>
-                            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-                        </div>
-                        <div id="twitterFeed">
-                            <a class="twitter-timeline" data-height="200" data-theme="light" data-link-color="#2B7BB9" href="https://twitter.com/aaroadwatch?ref_src=twsrc%5Etfw">Tweets by aaroadwatch</a>
-                            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                        <div class="col-sm-4">
+                            <div id = "twitterFeed">
+                                <a class="twitter-timeline" data-height="200" data-theme="light" data-link-color="#2B7BB9" href="https://twitter.com/dublinbusnews?ref_src=twsrc%5Etfw">Tweets by dublinbusnews</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                            </div>
+                            <div id = "twitterFeed">
+                                <a class="twitter-timeline" data-height="200" data-theme="light" data-link-color="#2B7BB9" href="https://twitter.com/aaroadwatch?ref_src=twsrc%5Etfw">Tweets by aaroadwatch</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -340,11 +345,12 @@
             function googDirections() {
                 var x = document.getElementById("id_source").value;
                 var y = document.getElementById("id_destination").value;
+                
 
                 "{% if bus %}"
                 "{% for p in bus %}"
 
-                if (x == "{{ p.num }}") {
+                if (x == "{{ p.num }}" || x == "{{ p.name }}") {
 
                     var slat = "{{ p.lat }}"
                     var slong = "{{ p.lng }}"
@@ -354,7 +360,7 @@
                     console.log(startLat);
                 };
 
-                if (y == "{{ p.num }}") {
+                if (y == "{{ p.num }}" || y == "{{ p.name }}") {
 
                     var flat = "{{ p.lat }}"
                     var flong = "{{ p.lng }}"
@@ -377,7 +383,7 @@
 
                 var start = new google.maps.LatLng(startLat, startLng);
                 var end = new google.maps.LatLng(finLat, finLng);
-
+                console.log("start", start, "end", end)
                 var mapOptions = {
                     zoom: 14,
                     center: start
@@ -408,13 +414,20 @@
                                     buses.push(x[i].transit.line.short_name);
                                 } catch {}
                             }
-                            //var res = response.routes[0].legs[0].steps[0].transit.line.short_name;
-                            console.log(buses);
                         }
-                    });
-                }
-                calcRouteNum();
-            }
+                        //var res = response.routes[0].legs[0].steps[0].transit.line.short_name;
+                        console.log(buses[0]);
+                        
+                        var jqxhr = $.getJSON('/busNum/' + buses[0] + '/', function (daily) {
+                        document.getElementById("busRouteNum").innerHTML = daily;
+                        });
+                        }
+                    )};
+                    }
+                calcRouteNum()
+                
+            
+
         </script>
 
 

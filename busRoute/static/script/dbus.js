@@ -136,7 +136,7 @@ $(document).ready(function(){
         if ($("#planner-toggle").text() == "Expand Route Planner"){			
             $("#planner-toggle").html("Hide Route Planner")
         }
-        else {		
+        else if ($("#planner-toggle").text() == "Hide Route Planner") {		
             $("#planner-toggle").text("Expand Route Planner")
         }
         });

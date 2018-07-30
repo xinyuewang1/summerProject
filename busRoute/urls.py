@@ -16,7 +16,7 @@ urlpatterns = [
 
     url(r'^result', views.resultView.as_view(), name='result'),
 
-    url(r'^tour', views.tourism, name='tourism'),
+    url(r'^tourism', views.tourismView.as_view(), name='tourism'),
 
     #These URL's contain the data necessary for Autocomplete functions. 
     url(r'^RouteInfo', views.GenBusData, name='RouteInfo'),
@@ -34,6 +34,8 @@ urlpatterns = [
     #This URL passes the route to the get_route_data function in views.py
     path('details/<slug:route>/', views.get_route_data, name='detail'),
 
+    path('busNum/<slug:bus>/', views.getRoute, name='busNum'),
+ 
     #Pickle
     url(r'Ett39A', Est39A, name="Ett39A"),
 
