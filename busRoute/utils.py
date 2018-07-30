@@ -5,6 +5,7 @@ from django.conf import settings
 import urllib.request, json, operator
 from busRoute import getPlannedTime
 from datetime import datetime
+import time
 
 
 # Original Code from https://stackoverflow.com/questions/20252669/get-files-from-directory-argument-sorting-by-size
@@ -109,7 +110,7 @@ def getFirstAndLastStops3(route, stop1, stop2):
     '''
 
     #path = os.path.join(settings.STATIC_ROOT,'static/pickles/stopLists/')
-    path  = 'static/pickles/stopLists/'
+    path = 'static/pickles/stopLists/'
     for l in load_obj('static/pickles/sortedIdList'):
         if l.split('_')[0] == route:
             stopList = load_obj(path + l)
@@ -267,8 +268,10 @@ class Ett39A:
 
 # -------------------------Test set---------------
 #route, source, dest, precipitation, temp, timeStr, weekday, dateStr
-ett = Ett39A('67', 1444, 3914, 0, 18, "16:45", 3, "7/26/2018")
-print(ett.estimatedTime())
+#tic = time.time()
+#ett = Ett39A('67', 1444, 3913, 0, 18, "16:45", 3, "7/26/2018")
+#print(ett.estimatedTime())
+#print("Time:",time.time()-tic)
 
 # class Ann39A:
 
