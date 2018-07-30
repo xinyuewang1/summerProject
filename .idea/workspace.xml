@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8f414dcb-d6b4-4a5b-82cf-cef4d25b8bfd" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/InnovationStation.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/busRoute/static/pickles/sortedIdList.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/busRoute/templates/busRoute/routes.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/busRoute/templates/busRoute/test.html" afterDir="false" />
+    <list default="true" id="8f414dcb-d6b4-4a5b-82cf-cef4d25b8bfd" name="Default" comment="fixed picking wrong model issue.">
       <change beforePath="$PROJECT_DIR$/Pipfile" beforeDir="false" afterPath="$PROJECT_DIR$/Pipfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/busApp/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/busApp/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/busRoute/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/busRoute/getPlannedTime.py" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/getPlannedTime.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/busRoute/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/static/css/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/busRoute/static/script/dbus.js" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/static/script/dbus.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/busRoute/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/templates/base.html" afterDir="false" />
@@ -21,7 +12,6 @@
       <change beforePath="$PROJECT_DIR$/busRoute/templates/busRoute/tourism.html" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/templates/busRoute/tourism.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/busRoute/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/busRoute/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/busRoute/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -36,8 +26,8 @@
       <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/busRoute/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5916">
-              <caret line="348" lean-forward="true" selection-start-line="348" selection-end-line="348" />
+            <state relative-caret-position="1921">
+              <caret line="113" column="39" selection-start-line="113" selection-start-column="39" selection-end-line="113" selection-end-column="39" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -45,23 +35,83 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="getPlannedTime.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/busRoute/getPlannedTime.py">
+      <file leaf-file-name="requirements.txt" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/requirements.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="126">
-              <caret line="90" lean-forward="true" selection-start-line="90" selection-end-line="90" />
-              <folding>
-                <element signature="e#0#27#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="153">
+              <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/busRoute/views.py">
+      <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/busApp/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="803" lean-forward="true" selection-start-line="803" selection-end-line="803" />
+            <state relative-caret-position="24">
+              <caret line="74" column="13" selection-start-line="74" selection-start-column="13" selection-end-line="74" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="forms.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/busRoute/forms.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-384">
+              <caret line="13" column="17" lean-forward="true" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/busRoute/static/css/style.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="251">
+              <caret line="227" lean-forward="true" selection-start-line="227" selection-end-line="227" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="dbus.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/busRoute/static/script/dbus.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="200">
+              <caret line="394" lean-forward="true" selection-start-line="394" selection-end-line="394" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="base.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/busRoute/templates/base.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="20">
+              <caret line="61" lean-forward="true" selection-start-line="61" selection-end-line="61" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/busRoute/templates/busRoute/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-3822">
+              <caret line="186" lean-forward="true" selection-start-line="186" selection-end-line="186" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tourism.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/busRoute/templates/busRoute/tourism.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="241">
+              <caret line="171" lean-forward="true" selection-start-line="171" selection-end-line="171" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/busRoute/urls.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="143">
+              <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
               </folding>
@@ -85,8 +135,8 @@
       <find>cannot fi</find>
       <find>static_</find>
       <find>headsign</find>
-      <find>starts</find>
       <find>&lt;</find>
+      <find>starts</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -101,9 +151,19 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/busRoute/utils.py" />
         <option value="$PROJECT_DIR$/busRoute/getPlannedTime.py" />
         <option value="$PROJECT_DIR$/busRoute/views.py" />
+        <option value="$PROJECT_DIR$/busRoute/utils.py" />
+        <option value="$PROJECT_DIR$/Pipfile" />
+        <option value="$PROJECT_DIR$/busApp/settings.py" />
+        <option value="$PROJECT_DIR$/busRoute/forms.py" />
+        <option value="$PROJECT_DIR$/busRoute/static/css/style.css" />
+        <option value="$PROJECT_DIR$/busRoute/static/script/dbus.js" />
+        <option value="$PROJECT_DIR$/busRoute/templates/base.html" />
+        <option value="$PROJECT_DIR$/busRoute/templates/busRoute/index.html" />
+        <option value="$PROJECT_DIR$/busRoute/templates/busRoute/tourism.html" />
+        <option value="$PROJECT_DIR$/busRoute/urls.py" />
+        <option value="$PROJECT_DIR$/requirements.txt" />
       </list>
     </option>
   </component>
@@ -129,6 +189,11 @@
             <path>
               <item name="InnovationStation" type="b2602c69:ProjectViewProjectNode" />
               <item name="InnovationStation" type="462c0819:PsiDirectoryNode" />
+              <item name="busApp" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="InnovationStation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="InnovationStation" type="462c0819:PsiDirectoryNode" />
               <item name="busRoute" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -136,6 +201,13 @@
               <item name="InnovationStation" type="462c0819:PsiDirectoryNode" />
               <item name="busRoute" type="462c0819:PsiDirectoryNode" />
               <item name="static" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="InnovationStation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="InnovationStation" type="462c0819:PsiDirectoryNode" />
+              <item name="busRoute" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="css" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="InnovationStation" type="b2602c69:ProjectViewProjectNode" />
@@ -143,6 +215,26 @@
               <item name="busRoute" type="462c0819:PsiDirectoryNode" />
               <item name="static" type="462c0819:PsiDirectoryNode" />
               <item name="pickles" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="InnovationStation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="InnovationStation" type="462c0819:PsiDirectoryNode" />
+              <item name="busRoute" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="script" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="InnovationStation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="InnovationStation" type="462c0819:PsiDirectoryNode" />
+              <item name="busRoute" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="InnovationStation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="InnovationStation" type="462c0819:PsiDirectoryNode" />
+              <item name="busRoute" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="busRoute" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -267,14 +359,14 @@
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24963397" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24963397" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info active="true" anchor="bottom" id="Event Log" order="10" sideWeight="0.5021962" side_tool="true" visible="true" weight="0.3290938" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4978038" visible="true" weight="0.3290938" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50073206" side_tool="true" visible="true" weight="0.3290938" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4978038" weight="0.3290938" />
       <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.49707174" weight="0.3290938" />
       <window_info anchor="bottom" id="Python Console" order="7" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.3290938" />
+      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49926794" visible="true" weight="0.3290938" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -401,16 +493,6 @@
     <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/busRoute/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5916">
-          <caret line="348" lean-forward="true" selection-start-line="348" selection-end-line="348" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/busRoute/getPlannedTime.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="126">
@@ -423,11 +505,94 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/busRoute/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="803" lean-forward="true" selection-start-line="803" selection-end-line="803" />
+        <state relative-caret-position="9231">
+          <caret line="622" column="19" selection-start-line="622" selection-start-column="19" selection-end-line="622" selection-end-column="19" />
           <folding>
             <element signature="e#0#32#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pipfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="183">
+          <caret line="12" column="8" selection-start-line="12" selection-start-column="8" selection-end-line="12" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/busApp/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="24">
+          <caret line="74" column="13" selection-start-line="74" selection-start-column="13" selection-end-line="74" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/busRoute/forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-384">
+          <caret line="13" column="17" lean-forward="true" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/busRoute/static/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="251">
+          <caret line="227" lean-forward="true" selection-start-line="227" selection-end-line="227" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/busRoute/static/script/dbus.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="394" lean-forward="true" selection-start-line="394" selection-end-line="394" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/busRoute/templates/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="20">
+          <caret line="61" lean-forward="true" selection-start-line="61" selection-end-line="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/busRoute/templates/busRoute/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3822">
+          <caret line="186" lean-forward="true" selection-start-line="186" selection-end-line="186" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/busRoute/templates/busRoute/tourism.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="241">
+          <caret line="171" lean-forward="true" selection-start-line="171" selection-end-line="171" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/busRoute/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="143">
+          <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/busRoute/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1921">
+          <caret line="113" column="39" selection-start-line="113" selection-start-column="39" selection-end-line="113" selection-end-column="39" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/requirements.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
         </state>
       </provider>
     </entry>

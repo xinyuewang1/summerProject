@@ -111,7 +111,7 @@ def getFirstAndLastStops3(route, stop1, stop2):
     :return: first stop and last stop of the route, also the position of stop1 and stop2 on it.
     '''
     path = 'pickles/stopLists/'
-    for l in load_obj('pickles/sortedStopList'):
+    for l in load_obj('pickles/sortedIdList'):
         #print("l:", l)
         if l.split('_')[0] == route:
             stopList = load_obj(path + l)

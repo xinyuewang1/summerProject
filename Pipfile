@@ -11,11 +11,8 @@ brotlipy = "*"
 mysqlclient = "*"
 numpy = "*"
 rq = "*"
-<<<<<<< HEAD
 scikit-learn = "*"
 scipy = "*"
-=======
->>>>>>> WangBranch
 
 [requires]
 python_version = "3.5.2"

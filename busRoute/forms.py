@@ -33,7 +33,6 @@ class routeForm(f.Form):
         }
     ))
 
-<<<<<<< HEAD
     returnTime = f.CharField(required = False, widget=f.TextInput(
         attrs={
             'class': 'disable form-control form-control-sm',
@@ -49,20 +48,3 @@ class routeForm(f.Form):
             'disabled': True
         }
     ))
-=======
-    # returnTime = f.CharField(widget=f.TextInput(
-    #     attrs={
-    #         'class': 'disable form-control form-control-sm',
-    #         'placeholder': '--:--',
-    #         'disabled': True
-    #     }
-    # ))
-
-    # returnDate= f.CharField(widget=f.TextInput(
-    #     attrs={
-    #         'class': 'form-control form-control-sm',
-    #         'placeholder': 'mm/dd/yyyy',
-    #         'disabled': True
-    #     }
-    # ))
->>>>>>> WangBranch

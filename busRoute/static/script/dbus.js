@@ -148,48 +148,6 @@ function swapDirection() {
     }
 }
 
-<<<<<<< HEAD
-=======
-function timeEstimate() {
-
-    //Function for the actions taken by the 'Go!' button on the stops page
-    //it causes the url generation to get the information the user has chosen
-    //for the moment these simply display what the user has chosenbut later, they will cause queries to take place.
-
-    var jqxhr =  $.getJSON( '/'+document.getElementById("departTime").value+'/', function( deptTime ){
-
-        //this function displays the departure time chosen
-
-        document.getElementById("timeEst").innerHTML = deptTime;
-    }  
-    );
-
-    var jqxhr2 =  $.getJSON( 'return/'+document.getElementById("returnDepartTime").value+'/', function( returntime ){
-
-         //this function displays the departure return time chosen
-
-        document.getElementById("returnTimeEst").innerHTML = returntime;
-    }
-    )
-
-    var jqxhr3 =  $.getJSON( 'month/'+document.getElementById("departDate").value+'/', function( deptdate ){
-
-         //this function displays the departure departure date chosen
-
-        document.getElementById("monthChosen").innerHTML = deptdate;
-    }
-    )
-
-
-    var jqxhr4 =  $.getJSON( 'return/month/'+document.getElementById("returnDepartDate").value+'/', function( returndate ){
-
-         //this function displays the departure departure time chosen
-
-        document.getElementById("retmonthChosen").innerHTML = returndate;
-    }
-    )
-};
->>>>>>> WangBranch
 
 
 // ---------------- Jquery ----------------
@@ -230,11 +188,9 @@ $(document).ready(function(){
         if ($("#planner-toggle").text() == "Expand Route Planner"){			
             $("#planner-toggle").html("Hide Route Planner")
         }
-<<<<<<< HEAD
+
         else if ($("#planner-toggle").text() == "Hide Route Planner") {		
-=======
-        else {		
->>>>>>> WangBranch
+
             $("#planner-toggle").text("Expand Route Planner")
         }
         });
@@ -299,7 +255,7 @@ function swapSearch() {
     if (c != "black") {
         //Changes the colour of the tab and placeholder of the search form
         document.getElementById("stopSearch").style.backgroundColor = "black";
-<<<<<<< HEAD
+
         document.getElementById("addSearch").style.backgroundColor = "#00743F";
         document.getElementById('id_source').placeholder = 'Source Address..';
 
@@ -333,47 +289,12 @@ function swapSearch() {
           });
              
         } 
-=======
-        document.getElementById("addSearch").style.backgroundColor = "rgb(105,143,123)";
-        document.getElementById('id_source').placeholder = 'Source Address..';
 
-        //Changes the autocomplete in the source to address
-        $(function() {
-            $('input[name=source]').autocomplete({
-              source: "api/getAddressDestination/",
-              select: function (event, ui) { //item selected
-                AutoCompleteSelectHandler(event, ui)
-              },
-              minLength: 3,
-            });
-          });
-        
-            function AutoCompleteSelectHandler(event, ui){
-                var selectedObj = ui.item;
-            } 
-
-
-        //Changes the autocomplete in the destination to address
-        $(function() {
-            $("#id_destination").autocomplete({
-              source: "api/getAddressDestination/",
-              select: function (event, ui) { //item selected
-                AutoCompleteSelectHandler(event, ui)
-              },
-              minLength: 3,
-            });
-          });
-        
-            function AutoCompleteSelectHandler(event, ui){
-                var selectedObj = ui.item;
-            } 
-
->>>>>>> WangBranch
 
     } else {
         //Changes the colour of the tab and placeholder of the search form
         document.getElementById("addSearch").style.backgroundColor = "black";
-<<<<<<< HEAD
+
         document.getElementById("stopSearch").style.backgroundColor = "#00743F";
         document.getElementById('id_source').placeholder = 'Source Stop..';
 
@@ -471,46 +392,7 @@ $(document).ready(function() {
   });
      
 } 
-=======
-        document.getElementById("stopSearch").style.backgroundColor = "rgb(105,143,123)";
-        document.getElementById('id_source').placeholder = 'Source Stop..';
 
-        //Changes the autocomplete in the source to stops
-        $(function() {
-            $('input[name=source]').autocomplete({
-                source: "api/getSource/", 
-                select: function (event, ui) { //item selected
-                AutoCompleteSelectHandler(event, ui)
-              },
-              minLength: 1,
-            });
-          });
-         
-          function AutoCompleteSelectHandler(event, ui)
-          {
-            var selectedObj = ui.item;
-          }
-
-
-        //Changes the autocomplete in the destination to stops
-        $(function() {
-            $("#id_destination").autocomplete({
-            source: "api/getDesintation/",
-            select: function (event, ui) { //item selected
-                AutoCompleteSelectHandler(event, ui)
-            },
-            minLength: 1,
-            });
-        });
-        
-        function AutoCompleteSelectHandler(event, ui)
-        {
-            var selectedObj = ui.item;
-        }
-    }
-};
-
->>>>>>> WangBranch
 
 // References:
 // https://github.com/jonthornton/jquery-timepicker 
