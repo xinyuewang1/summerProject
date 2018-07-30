@@ -23,7 +23,7 @@ class homeView(generic.TemplateView):
         post: Renders the results page for a route plan
     '''
 
-    template_name = "busRoute/index.html"
+    template_name = "busRoute/index.html" 
 
     def get(self,request):
         form = routeForm()

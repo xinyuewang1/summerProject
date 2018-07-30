@@ -17,7 +17,7 @@ urlpatterns = [
     url(r'^result', views.resultView.as_view(), name='result'),
 
     url(r'^tourism', views.tourismView.as_view(), name='tourism'),
-
+    
     #These URL's contain the data necessary for Autocomplete functions. 
     url(r'^RouteInfo', views.GenBusData, name='RouteInfo'),
 

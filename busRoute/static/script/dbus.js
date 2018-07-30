@@ -159,38 +159,103 @@ function swapSearch() {
         //Changes the autocomplete in the source to address based on name
         //     $('input[name=source]').autocomplete({
 
-        $("#id_source").attr("autocomplete", "nope");
-
         //Autocomplete for general Address Input from Google in the Destination Input
         sourceAutocomplete = new google.maps.places.Autocomplete(document.getElementById(
             'id_source'))
-    
+
         destinationAutocomplete = new google.maps.places.Autocomplete(document.getElementById(
             'id_destination'))
-    
+
         sourceAutocomplete.setComponentRestrictions({
             'country': 'ie'
         });
-    
-    
+
+
         destinationAutocomplete.setComponentRestrictions({
             'country': 'ie'
         });
-    
+
         google.maps.event.addListener(sourceAutocomplete, 'place_changed', function () {
-        source = sourceAutocomplete.getPlace();
+            source = sourceAutocomplete.getPlace();
+
+            google.maps.event.addListener(destinationAutocomplete, 'place_changed', function () {
+                destination = destinationAutocomplete.getPlace();
+
+                sourceLat = source.geometry.location.lat();
+                sourceLong = source.geometry.location.lng();
+                destinationLat = destination.geometry.location.lat();
+                destinationLong = destination.geometry.location.lng();
+
+
+
+                var startLat = parseFloat(sourceLat);
+
+                var startLng = parseFloat(sourceLong);
+        
+                var finLat = parseFloat(destinationLat);
+                var finLng = parseFloat(destinationLong);
+        
+                var directionsService = new google.maps.DirectionsService();
+             
+        
+                var start = new google.maps.LatLng(startLat, startLng);
+                var end = new google.maps.LatLng(finLat, finLng);
+        
+        
+        
+                function calcRouteNum() {
+                    var request = {
+                        origin: start,
+                        destination: end,
+                        travelMode: 'TRANSIT',
+                        transitOptions: {
+        
+                            modes: ['BUS'],
+                            routingPreference: 'FEWER_TRANSFERS'
+                        },
+                    };
+                    directionsService.route(request, function (response, status) {
+        
+                        if (status == 'OK'){
+                    
+                        var x = response.routes[0].legs[0].steps;
+                        console.log(x)
+                       
+                        for (var i = 0; i < x.length; i++) {
+
+                           console.log(x[i].distance);
+
+                         
+                            if (x[i].transit) {
+
+                                console.log(x[i].transit.arrival_stop.location.lat());
+                                console.log(x[i].transit.arrival_stop.location.lng());
+                                console.log(x[i].transit.departure_stop.location.lat());
+                                console.log(x[i].transit.departure_stop.location.lng());
+                    
+                                
     
-        google.maps.event.addListener(destinationAutocomplete, 'place_changed', function () {
-        destination = destinationAutocomplete.getPlace();
-    
-                console.log(source.geometry.location.lat());
-                console.log(source.geometry.location.lng());
-                console.log(destination.geometry.location.lat());
-                console.log(destination.geometry.location.lng());
-    
+                                
+                            }
+                        }
+        
+                        }
+        
+                    })
+        
+        
+        
+                }
+        
+                calcRouteNum();
+
             })
-    
         })
+
+      
+
+  
+
 
     } else {
         //Changes the colour of the tab and placeholder of the search form
@@ -209,22 +274,22 @@ function swapSearch() {
 
 
             //Autocomplete for Stop Addresses in the Destination Input
-          
-                $.ajax({
-                    type: "GET",
-                    url: "RouteInfo",
-                    dataType: "json",
 
-                    success: function (data) {
-                        createArray(data);
-                    }
-                });
-           
+            $.ajax({
+                type: "GET",
+                url: "RouteInfo",
+                dataType: "json",
+
+                success: function (data) {
+                    createArray(data);
+                }
+            });
+
 
 
             function createArray(Data) {
 
-               results = [];
+                results = [];
                 for (var i = 0; i < Data.length; i++) {
                     results.push(Data[i].num);
                 }
@@ -238,10 +303,6 @@ function swapSearch() {
     }
 
 };
-
-
-
-
 
 
 //This piece of code allows the getStops function to be called when the user hits the enter key. s
