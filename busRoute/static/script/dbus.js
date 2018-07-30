@@ -426,8 +426,6 @@ function findRoute(){
             })
     }
 
-
-
     function routeSearch() {
         $(document).ready(function() {
             $.ajax({

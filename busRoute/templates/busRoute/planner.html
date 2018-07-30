@@ -30,44 +30,56 @@
                     <div id="map"></div>
                     <script>
                         //Rezises the map div to a smaller value for very short phone screens
-                        $(document).ready(function(){
-                            var width = $(window).width(); 
-                            var height = $(window).height(); 
-    
-                            if (height<=740) {
+                        $(document).ready(function () {
+                            var width = $(window).width();
+                            var height = $(window).height();
+
+                            if (height <= 740) {
                                 $('#map').css("height", "240px")
                             }
-                            
+
                         });
                     </script>
                     <!-- <div id = "RouteDiv"></div> -->
                 </div>
 
                 <div id="directionsPanel" style="background-color:white;float:right"></div>
-                
+
             </div>
 
 
             <div class="col-sm-4">
                 <div class="c1 col-sm-12 rounded shadow mt-4">
                     <h3>Route Planner</h3>
-                    <div class = "row">
-                        <div class = "col-6 text-center text-white border border-white border-top-0 border-left-0 border-bottom-0">
-                            <a href = "#" onclick = "findStop()"><span style = "color:white;">Find Stop</span></a>
+                    <div class="row">
+                        <div class="col-6 text-center text-white border border-white border-top-0 border-left-0 border-bottom-0">
+                            <a href="#" onclick="findStop()">
+                                <span style="color:white;">Find Stop</span>
+                            </a>
                         </div>
-                        <div class = "col-6 text-center text-white">
-                            <a href = "#" onclick = "findRoute()"><span style = "color:white;">Route Info</span></a>
+                        <div class="col-6 text-center text-white">
+                            <a href="#" onclick="findRoute()">
+                                <span style="color:white;">Route Info</span>
+                            </a>
                         </div>
                     </div>
-                    <div id = "stopSearchOptions" style = "display:none;border-top:1px solid white;"><p class = "text-white">Enter a location below to view the it's local stops</p><div><input id='genSearch' placeholder='Search Area' type='text'></input></div></div>
-                    <div id = "routeSearchOptions" style = "display:none;border-top:1px solid white;"><p class = "text-white">Enter a route number to view on map</p><input id = "routeSearch" placeholder="Search Routes"></div>
-                   
+                    <div id="stopSearchOptions" style="display:none;border-top:1px solid white;">
+                        <p class="text-white">Enter a location below to view the it's local stops</p>
+                        <div>
+                            <input  onfocus = "placeSearch()" id ='genSearch' placeholder='Search Area' type='text'></input>    
+                        </div>
+                    </div>
+                    <div id="routeSearchOptions" style="display:none;border-top:1px solid white;">
+                        <p class="text-white">Enter a route number to view on map</p>
+                        <input onfocus = "routeSearch()" id="routeSearch" placeholder="Search Routes">
+                    </div>
+
                 </div>
 
-                
+
                 <div class="c1 col-sm-12 rounded shadow mt-2">
-                    <div class = "row text-center text-white">
-                        <div class = "c1 col-6 nav-justified" id = "stopSearch" onclick="swapSearch()">
+                    <div class="row text-center text-white">
+                        <div class="c1 col-6 nav-justified" id="stopSearch" onclick="swapSearch()">
                             <strong>By Stop</strong>
                         </div>
                         <div class="col-6 text-center" style="background-color: black;" id="addSearch" onclick="swapSearch()">
@@ -101,6 +113,32 @@
 
 
                             <script>
+                                function routeSearch() {
+                                    $(document).ready(function () {
+                                        $.ajax({
+                                            type: "GET",
+                                            url: "dublinBusRoutes",
+                                            dataType: "json",
+
+                                            success: function (data) {
+                                                createArray(data);
+                                            }
+                                        });
+                                    });
+
+                                    function createArray(Data) {
+
+                                        var results = [];
+                                        for (var i = 0; i < Data.length; i++) {
+                                            results.push(Data[i].route);
+                                        }
+                                        $("#routeSearch").autocomplete({
+                                            source: results,
+                                            minLength: 1,
+                                        });
+                                    }
+
+                                }
                                 var d = new Date();
                                 var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
                                 document.getElementById("id_departDate").value = fullDate;
@@ -126,32 +164,12 @@
                         <div class="row">
                             <button type="submit" class="btn btn-block btn-primary m-2" name="go">GO!</button>
 
-                            <script>
-                                var d = new Date();
-                                var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
-                                document.getElementById("id_departDate").value = fullDate;
-                                $('#id_departTime').timepicker({
-                                    'forceRoundTime': true,
-                                    'scrollDefault': 'now',
-                                    timeFormat: "H:i"
-                                });
-                                $(function () {
-                                    $("#id_departDate").datepicker();
-                                });
-                                $('#id_returnTime').timepicker({
-                                    'forceRoundTime': true,
-                                    'scrollDefault': 'now',
-                                    timeFormat: "H:i"
-                                });
-                                $(function () {
-                                    $("#id_returnDate").datepicker({});
-                                });
-                            </script>
-
+                         
                         </div>
                         <div class="row">
-                            <button type="submit" class="btn btn-block btn-primary m-2" name="go" onclick="showRoute();">GO!</button>
+
                             <script>
+                                
                                 function placeSearch() {
 
 
@@ -316,23 +334,29 @@
 
         <div class="row" style="margin-top:20px;">
             <div class="col-sm-12">
-                <div class = "col-sm-12">
-                    <div class="c1 row shadow rounded" style = "margin-top:20px;">
+                <div class="col-sm-12">
+                    <div class="c1 row shadow rounded" style="margin-top:20px;">
                         <div class="col-sm-8">
                             <!-- <button onclick="googDirections()">Directions</button>
                             <button onclick = "busNumber()">route number</button> -->
-                            <div id ="busRouteNum"></div>
-                            <img src= "{% static 'images/bus.jpg' %}" alt = "Bus Picture" style = "width:100%;padding-top: 5px;">
-                            <div class = "img-centered"><h3>New to Dublin Bus?<br>Check Fares information</h3>
-                                <a href ="tourism.html"><button class = "img-button">Fares</button></a>
+                            <div id="busRouteNum"></div>
+                            <img src="{% static 'images/bus.jpg' %}" alt="Bus Picture" style="width:100%;padding-top: 5px;">
+                            <div class="img-centered">
+                                <h3>New to Dublin Bus?
+                                    <br>Check Fares information</h3>
+                                <a href="tourism.html">
+                                    <button class="img-button">Fares</button>
+                                </a>
                             </div>
                         </div>
                         <div class="col-sm-4">
-                            <div id = "twitterFeed">
-                                <a class="twitter-timeline" data-height="200" data-theme="light" data-link-color="#2B7BB9" href="https://twitter.com/dublinbusnews?ref_src=twsrc%5Etfw">Tweets by dublinbusnews</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                            <div id="twitterFeed">
+                                <a class="twitter-timeline" data-height="200" data-theme="light" data-link-color="#2B7BB9" href="https://twitter.com/dublinbusnews?ref_src=twsrc%5Etfw">Tweets by dublinbusnews</a>
+                                <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
                             </div>
-                            <div id = "twitterFeed">
-                                <a class="twitter-timeline" data-height="200" data-theme="light" data-link-color="#2B7BB9" href="https://twitter.com/aaroadwatch?ref_src=twsrc%5Etfw">Tweets by aaroadwatch</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                            <div id="twitterFeed">
+                                <a class="twitter-timeline" data-height="200" data-theme="light" data-link-color="#2B7BB9" href="https://twitter.com/aaroadwatch?ref_src=twsrc%5Etfw">Tweets by aaroadwatch</a>
+                                <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
                             </div>
                         </div>
                     </div>
@@ -345,7 +369,7 @@
             function googDirections() {
                 var x = document.getElementById("id_source").value;
                 var y = document.getElementById("id_destination").value;
-                
+
 
                 "{% if bus %}"
                 "{% for p in bus %}"
@@ -417,17 +441,14 @@
                         }
                         //var res = response.routes[0].legs[0].steps[0].transit.line.short_name;
                         console.log(buses[0]);
-                        
-                        var jqxhr = $.getJSON('/busNum/' + buses[0] + '/', function (daily) {
-                        document.getElementById("busRouteNum").innerHTML = daily;
-                        });
-                        }
-                    )};
-                    }
-                calcRouteNum()
-                
-            
 
+                        var jqxhr = $.getJSON('/busNum/' + buses[0] + '/', function (daily) {
+                            document.getElementById("busRouteNum").innerHTML = daily;
+                        });
+                    })
+                };
+            }
+            calcRouteNum()
         </script>
 
 
@@ -594,14 +615,14 @@
                     function (daily) {
 
 
-                       
-                            if (bikeMarkers == 0) {
 
-                                //this function displays the dublin bikes markers
-                            
-                    var markers = [];
-                    for (var i = 0; i < daily.length; i++) {
-                                
+                        if (bikeMarkers == 0) {
+
+                            //this function displays the dublin bikes markers
+
+                            var markers = [];
+                            for (var i = 0; i < daily.length; i++) {
+
 
                                 var lat = daily[i].lat;
                                 var long = daily[i].lng;
@@ -634,28 +655,28 @@
 
                             }
 
-                                var markerCluster = new MarkerClusterer(map, markers, {
-                                    imagePath: "{% static 'images/m' %}"
-                                });
+                            var markerCluster = new MarkerClusterer(map, markers, {
+                                imagePath: "{% static 'images/m' %}"
+                            });
 
-                                bikeMarkers++;
+                            bikeMarkers++;
 
-                                document.getElementById("bikesbutton").innerHTML = "Hide Bikes";
+                            document.getElementById("bikesbutton").innerHTML = "Hide Bikes";
                         } else {
 
 
-                                var mapProp = {
-                                    center: new google.maps.LatLng(53.347515, -6.265377),
-                                    zoom: 10,
-                                };
-                                map = new google.maps.Map(document.getElementById("map"), mapProp);
+                            var mapProp = {
+                                center: new google.maps.LatLng(53.347515, -6.265377),
+                                zoom: 10,
+                            };
+                            map = new google.maps.Map(document.getElementById("map"), mapProp);
 
-                                document.getElementById("bikesbutton").innerHTML = "Bikes";
-                                bikeMarkers--;
+                            document.getElementById("bikesbutton").innerHTML = "Bikes";
+                            bikeMarkers--;
 
-                            }
+                        }
 
-                        
+
                     });
 
             };
