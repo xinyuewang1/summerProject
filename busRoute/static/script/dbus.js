@@ -13,7 +13,7 @@ function myMap() {
         // Try HTML5 geolocation.
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(function(position) {
-             pos = {
+            pos = {
               lat: position.coords.latitude,
               lng: position.coords.longitude
             };
