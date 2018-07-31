@@ -93,12 +93,13 @@ class TestViews(unittest.TestCase):
 
         route = '39A'
         source = '768'
-        dest = '769'
+        dest = '7161'
         dateStr = datetime.datetime.now().strftime('%m/%d/%Y')
         timeStr = datetime.datetime.now().strftime('%H:%M')
         precipitation, temp = query_rain_weather(timeStr, dateStr)
         weekday = '3'
         est = Est39A(route, source, dest, precipitation, temp, timeStr, weekday, dateStr)
+       
         
     
         
