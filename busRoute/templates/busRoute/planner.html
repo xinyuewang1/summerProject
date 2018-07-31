@@ -411,8 +411,6 @@
                             }
                         }
                         //var res = response.routes[0].legs[0].steps[0].transit.line.short_name;
-
-
                         var jqxhr = $.getJSON('/busNum/' + buses[0] + '/', function (daily) {
                             document.getElementById("busRouteNum").innerHTML = daily;
                         });
