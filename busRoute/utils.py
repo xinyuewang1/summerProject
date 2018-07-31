@@ -107,7 +107,7 @@ def getFirstAndLastStops3(route, stop1, stop2):
     '''
     path = 'pickles/stopLists/'
     for l in load_obj('pickles/sortedStopList'):
-        #print("l:", l)
+        print("l:", l)
         if l.split('_')[0] == route:
             stopList = load_obj(path + l)
             print("stopList:", stopList)

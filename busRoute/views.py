@@ -96,6 +96,7 @@ class homeView(generic.TemplateView):
 
         #Finds the estimated travel time
         est = Est39A(busNum, int(source_address), int(destination_address), rain, temp, depart_time, day, depart_date)
+        est = int(est)
 
         #Calculates arrival time based on departure time and estimated length of trip
         arrival = arrivalTime(depart_time, est)
@@ -187,16 +188,21 @@ class plannerView(generic.TemplateView):
 
         #Finds the estimated travel time
         est = Est39A(busNum, int(source_address), int(destination_address), rain, temp, depart_time, day, depart_date)
+        est = int(est)
 
         #Calculates arrival time based on departure time and estimated length of trip
         arrival = arrivalTime(depart_time, est)
+        print("est is", est, "rain is", rain)
 
-        
+        if est < 50 and rain < 0.05:
+            alert = "<div class='alert alert-info'><strong>Info!</strong> Indicates a neutral informative change or action.</div>"
+        else: 
+            alert = ""
 
         args = {'form': form, 'bikes':bikes, 'bus': bus, 'busNum': busNum, 'source': source_address, 'source_name':source_name, 
         'destination': destination_address, 'destination_name': destination_name, 'depart_time': depart_time, 
         'depart_date': depart_date , 'arrival_time': arrival, 'startLat':startLat, 'startLng': startLng, 'finLat':finLat,
-        'finLng':finLng, 'est': est, 'weather': weather, 'header':header}
+        'finLng':finLng, 'est': est, 'weather': weather, 'header':header, 'alert': alert}
 
         return render(request, "busRoute/result.html", args)
 
@@ -279,7 +285,8 @@ class resultView(generic.TemplateView):
 
         #Finds the estimated travel time
         est = Est39A(busNum, int(source_address), int(destination_address), rain, temp, depart_time, day, depart_date)
-
+        est = int(est)
+        
         #Calculates arrival time based on departure time and estimated length of trip
         arrival = arrivalTime(depart_time, est)
 
@@ -354,8 +361,7 @@ class tourismView(generic.TemplateView):
                     source_address = i['num']
                 if destination_address == i['name']:
                     destination_address = i['num']
-            print("in the except with", source_address, destination_address)
-            print("oops")
+            
 
 
         #print(source_num, dest_num)
@@ -363,6 +369,7 @@ class tourismView(generic.TemplateView):
 
         #Finds the estimated travel time
         est = Est39A(busNum, int(source_address), int(destination_address), rain, temp, depart_time, day, depart_date)
+        est = int(est)
 
         #Calculates arrival time based on departure time and estimated length of trip
         arrival = arrivalTime(depart_time, est)
@@ -755,11 +762,13 @@ def googDir(origin, dest, date, t):
     v = int(time.mktime(dt_obj.timetuple()))
     
     try:
-        r = requests.get(f"https://maps.googleapis.com/maps/api/directions/json?origin={origin}&destination={dest}&mode=transit&departure_time={v}&transit_mode=bus&key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0")
+        r = requests.get(f"https://maps.googleapis.com/maps/api/directions/json?origin={origin}&destination={dest}&mode=transit&departure_time={v}&transit_mode=bus&transit_routing_preference=fewer_transfers&alternatives=true&key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0")
+        
     except:
         raise Exception("Could not find bus route for this journey")
 
     r = r.json()
+    print(r)
     response = r['routes'][0]['legs'][0]['steps']
     for i in response:
         try:

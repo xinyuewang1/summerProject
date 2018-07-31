@@ -31,7 +31,7 @@
                                 <a class="nav-link" id="trafficButton" onclick="toggleTraffic(this)" href="#">Traffic</a>
                             </div>
                             <div class="col-4 nav2 border border-white border-top-0 border-left-0 border-bottom-0">
-                                <a class="nav-link" href="#" onclick="displayBusMarkers()" id="markersbutton">Markers</a>
+                                <a class="nav-link" href="#" onclick="displayBusMarkers()" id="markersbutton">Stops</a>
                             </div>
                             <div class="col-4 nav2">
                                 <a class="nav-link" href="#" onclick="displayBikeMarkers()" id="bikesbutton">Bikes</a>
@@ -43,15 +43,15 @@
                     <div id="map"></div>
                     <script>
                         //Rezises the map div to a smaller value for very short phone screens
-                        $(document).ready(function(){
-                            var width = $(window).width(); 
-                            var height = $(window).height(); 
+                        // $(document).ready(function(){
+                        //     var width = $(window).width(); 
+                        //     var height = $(window).height(); 
     
-                            if (height<=740) {
-                                $('#map').css("height", "240px")
-                            }
+                        //     if (height<=650) {
+                        //         $('#map').css("height", "240px")
+                        //     }
                             
-                        });
+                        // });
                     </script>
 
                 </div>
@@ -277,11 +277,12 @@
                 $("#id_returnDate").datepicker({});
             });
         </script>
-
+        
         <div class="row" style="margin-top:20px;">
             <div class="col-sm-12" id = "results">
+                    {{ alert }}
                 <div class="c1 col-sm-12 rounded shadow">
-                    <div class="display-4 mb-3 border-bottom border-black" style = "font-size:50px;">{{header.day}} {{header.date}} {{header.month}} </div>
+                    <div class="display-4 mb-3 border-bottom border-black" style = "font-size:50px;">{{header.day}} {{header.date}} {{header.month}}</div>
 
                     <div class="row">
                         <div class="col-sm-3">
@@ -310,7 +311,7 @@
                     </div>
                     <div class = "row mt-2">
                         <div class = "col-sm-4 mb-1">
-                            <a href = "#homeCenter"><button class = "btn btn-block btn-success" onclick = "getValue();">Walk Me</button></a>
+                            <a href = "#homeCenter"><button class = "btn btn-block btn-success" onclick = "getValue();">Walk to stop</button></a>
                         </div>
                         <div class = "col-sm-4 mb-1">
                             <button id = "realtimebtn" class = "btn btn-block btn-danger" onclick="generateQuery()">Real-time</button>
@@ -488,7 +489,7 @@
                     google.maps.event.addListener(marker, 'mouseover', (function (markers) {
                         return function () {
                             infoBus.open(map, this);
-                            infoBus.setContent('{{ p.name }}' + '<br>' + '(' + '{{ p.id }}' + ')');
+                            infoBus.setContent('{{ p.name }}' + '<br>' + '(' + '{{ p.num }}' + ')');
                         }
                     })(markers));
 
@@ -508,7 +509,7 @@
                         imagePath: "{% static 'images/m' %}"
                     });
 
-                    document.getElementById("markersbutton").innerHTML = "Hide Markers";
+                    document.getElementById("markersbutton").innerHTML = "Hide Stops";
 
                     busMarkers++;
 
@@ -520,7 +521,7 @@
                     };
                     map = new google.maps.Map(document.getElementById("map"), mapProp);
 
-                    document.getElementById("markersbutton").innerHTML = "Markers";
+                    document.getElementById("markersbutton").innerHTML = "Stops";
                     busMarkers--;
 
                 };
