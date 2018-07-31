@@ -622,7 +622,6 @@ def Est39A(route, source, dest, precipitation, temp, timeStr, weekday, dateStr):
     return result_min
     
 
-
 def readTimeIn(time):
     '''
     Function to find the hour of a given time input from the front end

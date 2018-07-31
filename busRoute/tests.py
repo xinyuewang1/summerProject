@@ -89,16 +89,16 @@ class TestViews(unittest.TestCase):
         x = response.status_code
         self.assertTrue(x == 200)
 
-    # def test_Est39A_response(self):
+    def test_Est39A_response(self):
 
-    #     route = '39A'
-    #     source = '768'
-    #     dest = '769'
-    #     dateStr = datetime.datetime.now().strftime('%m/%d/%Y')
-    #     timeStr = datetime.datetime.now().strftime('%H:%M')
-    #     precipitation, temp = query_rain_weather(timeStr, dateStr)
-    #     weekday = '3'
-    #     est = Est39A(route, source, dest, precipitation, temp, timeStr, weekday, dateStr)
+        route = '39A'
+        source = '768'
+        dest = '769'
+        dateStr = datetime.datetime.now().strftime('%m/%d/%Y')
+        timeStr = datetime.datetime.now().strftime('%H:%M')
+        precipitation, temp = query_rain_weather(timeStr, dateStr)
+        weekday = '3'
+        est = Est39A(route, source, dest, precipitation, temp, timeStr, weekday, dateStr)
         
     
         
