@@ -9,6 +9,7 @@ from .views import Est39A #, AnnEst39A
 
 urlpatterns = [
 
+
     #URLs for the main pages
     url(r'^index', views.homeView.as_view(), name='index'),
 
@@ -36,6 +37,7 @@ urlpatterns = [
 
     path('busNum/<slug:bus>/', views.getRoute, name='busNum'),
  
+
     #Pickle
     url(r'Ett39A', Est39A, name="Ett39A"),
 

@@ -156,7 +156,10 @@ $(document).ready(function () {
 
         if ($("#planner-toggle").text() == "Expand Route Planner") {
             $("#planner-toggle").html("Hide Route Planner")
-        } else if ($("#planner-toggle").text() == "Hide Route Planner") {
+        }
+
+        else if ($("#planner-toggle").text() == "Hide Route Planner") {		
+
             $("#planner-toggle").text("Expand Route Planner")
         }
     });
@@ -172,6 +175,7 @@ function swapSearch() {
     if (c != "black") {
         //Changes the colour of the tab and placeholder of the search form
         document.getElementById("stopSearch").style.backgroundColor = "black";
+
         document.getElementById("addSearch").style.backgroundColor = "#00743F";
         document.getElementById('id_source').placeholder = 'Source Address..';
 
@@ -331,9 +335,11 @@ function swapSearch() {
             })
         })
 
+
     } else {
         //Changes the colour of the tab and placeholder of the search form
         document.getElementById("addSearch").style.backgroundColor = "black";
+
         document.getElementById("stopSearch").style.backgroundColor = "#00743F";
         document.getElementById('id_source').placeholder = 'Source Stop..';
 
@@ -583,6 +589,7 @@ function stopsNearMe() {
             }
         })
 }
+
 
 
 
