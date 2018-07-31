@@ -89,7 +89,9 @@ class TestViewResponses(unittest.TestCase):
     
     def test_query_rain_weather_Response(self):
 
-        '''Tests that the GenBusData function returns two variables'''
+        '''Tests that the GenBusData function returns two variables, 
+        it will only return two variables if rain is forecasted so it may fail if rain is 0, 
+        both a pass and a failure are expected depending on if rain is returned.'''
 
         date = datetime.datetime.now().strftime('%m/%d/%Y')
         time = datetime.datetime.now().strftime('%H:%M')
@@ -169,6 +171,8 @@ class TestViewResponses(unittest.TestCase):
         date = '7/31/2018'
         x = parseDayNumber(date)
         self.assertTrue(x == 1)
+
+
 
 
 
