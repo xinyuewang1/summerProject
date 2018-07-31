@@ -488,8 +488,7 @@ def DublinBus():
             
                 dbInfo = json.dumps(Info) 
                 loadedBikes = json.loads(dbInfo)
-                results.append(loadedBikes)
-    print(type(results))    
+                results.append(loadedBikes)   
     return results
 
 
@@ -781,7 +780,6 @@ def query_rain_weather(time, date):
     
 
 def getRoute(request, bus):
-    print(bus)
     return JsonResponse(bus, safe=False)
 
 def googDir(origin, dest, date, t):
@@ -832,10 +830,10 @@ def findLatLong(location):
     """
     try:
         stop_id = int(location)
-        print(stop_id)
+
     except:
         address = location
-        print(address)
+    
 
     buses = DublinBus()
     if 'stop_id' in locals():
