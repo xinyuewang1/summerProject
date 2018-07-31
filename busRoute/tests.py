@@ -3,11 +3,19 @@ from django.test import Client
 from django.conf import settings
 from busRoute.views import *
 import unittest
-import requests
 import datetime
+from .models import Testtrip, Busstops
+from .forms import routeForm
+from .utils import Ett39A
+import requests
+import json
+import datetime
+from datetime import date
+from django.urls import reverse
+from django.urls import resolve
 
 
-class TestViews(unittest.TestCase):
+class TestViewResponses(unittest.TestCase):
 
     '''This Test Class Tests all the Functions in Views.py'''
 
@@ -162,8 +170,56 @@ class TestViews(unittest.TestCase):
         x = parseDayNumber(date)
         self.assertTrue(x == 1)
 
+
+
+class TestPageUrls(unittest.TestCase):
+
+    '''This class tests that each URL is connected to the right View function by using Resolve'''
+
+    def test_index(self):
+
+        '''Testing the index.html URL'''
+
+        page = resolve('/index')
+        self.assertEqual(page.view_name, 'index')
+
+    def test_index_fail(self):
+
+        '''Testing the index.html URL'''
+
+        page = resolve('/index')
+        self.assertEqual(page.view_name, 'planner')
+
+    def test_planner(self):
+
+        '''Testing the planner.html URL'''
+
+        page = resolve('/planner')
+        self.assertEqual(page.view_name, 'planner')
+
+    def test_result(self):
+
+        '''Testing the result.html URL'''
+
+        page = resolve('/result')
+        self.assertEqual(page.view_name, 'result')
+
+    def test_tourism(self):
+
+        '''Testing the tourism.html URL'''
+
+        page = resolve('/tourism')
+        self.assertEqual(page.view_name, 'tourism')
+
+
+
+
+
     
 
 if __name__ == '__main__':
     unittest.main()
+
+
+#References: https://stackoverflow.com/questions/18987051/how-do-i-unit-test-django-urls
 
