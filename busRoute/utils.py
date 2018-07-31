@@ -5,6 +5,7 @@ from django.conf import settings
 import urllib.request, json, operator
 from busRoute import getPlannedTime
 from datetime import datetime
+import time
 
 
 # Original Code from https://stackoverflow.com/questions/20252669/get-files-from-directory-argument-sorting-by-size
@@ -56,6 +57,9 @@ def load_obj(name):
     with open(os.path.join(settings.STATIC_ROOT, name + '.pkl'), 'rb') as f:
         return pickle.load(f)
 
+#---------------------TEST-------------------
+#l = load_obj('static/pickles/sortedStopList')
+#print(l)
 
 def getFirstAndLastStops1(route, stop1, stop2):
     '''
@@ -88,6 +92,7 @@ def getFirstAndLastStops2(route, stop1, stop2):
     for d in os.listdir('static/pickles/stopDicts'):
         if d.startswith(route):
             stopD = load_obj('pickles/stopDicts/' + d)
+
             if stop1 in stopD and stop2 in stopD:
                 return (min(stopD.items(), key=operator.itemgetter(1))[0],
                         max(stopD.items(), key=operator.itemgetter(1))[0])
@@ -106,8 +111,8 @@ def getFirstAndLastStops3(route, stop1, stop2):
     :return: first stop and last stop of the route, also the position of stop1 and stop2 on it.
     '''
     path = 'pickles/stopLists/'
-    for l in load_obj('pickles/sortedStopList'):
-        print("l:", l)
+    for l in load_obj('pickles/sortedIdList'):
+        #print("l:", l)
         if l.split('_')[0] == route:
             stopList = load_obj(path + l)
             print("stopList:", stopList)
@@ -118,6 +123,7 @@ def getFirstAndLastStops3(route, stop1, stop2):
                 # index starts with 0, progrnumber starts with 1
                 if progrnumber1 < progrnumber2:
                      return stopList[0], stopList[-1], progrnumber1, progrnumber2
+
                 else:
                     raise Exception("Wrong input order: The bus run from "+str(progrnumber1)+" to "+str(progrnumber2))
 
@@ -169,11 +175,16 @@ class Ett39A:
         # print("The file path is", os.path.dirname(os.path.abspath(__file__)))
         identifier = getFirstAndLastStops3(self.route, self.source, self.dest)
         print("identifier:",identifier)
+
         if identifier:
-            model = load_obj(
-                modelDir + str(self.route) + '_' + str(identifier[0]) + '_' + str(identifier[1]) + '_model')
-            scaler = load_obj(
-                scalerDir + str(self.route) + '_' + str(identifier[0]) + '_' + str(identifier[1]) + '_scaler')
+            try:
+                model = load_obj(
+                    modelDir + str(self.route) + '_' + str(identifier[0]) + '_' + str(identifier[1]) + '_model')
+                scaler = load_obj(
+                    scalerDir + str(self.route) + '_' + str(identifier[0]) + '_' + str(identifier[1]) + '_scaler')
+            except FileNotFoundError:
+                print("Cannot find model for Route", self.route, "From", str(identifier[0]), "To", str(identifier[1]))
+                return -1
 
             '''
             routeDict = load_obj(open(os.path.join(settings.STATIC_ROOT, 'pickles/routeDict.pkl'), 'rb'))
@@ -194,17 +205,15 @@ class Ett39A:
             return model.predict(inputs).sum()
             '''
             # Get destination headsign and distance
-            headsign, dis1, dis2 = None, None, None
-            
+
+            #headsign, dis1, dis2 = None, None, None
+            dis1, dis2 = None, None
+
             filPath = os.path.join(settings.STATIC_ROOT, 'pickles/stopDicts')
             for d in os.listdir(filPath):
                 if d.startswith(str(self.route) + '_' + str(identifier[0]) + '_' + str(identifier[1])):
-                    
-                    headsign = d.split('_')[-1][:-4]
-                    #print("headsign",headsign)
-                    
+                    # headsign = d.split('_')[-1][:-4]
                     d = d.rsplit('.', 1)[0]
-                    #raise Exception("exception",str(identifier[0]), str(identifier[1]), d)
                     data = load_obj('pickles/stopDicts/' + d)
                     dis1 = data[self.source]
                     dis2 = data[self.dest]
@@ -214,7 +223,8 @@ class Ett39A:
             # periodList = self.timeValue()
             # print(periodList)
 
-            plannedTime = getPlannedTime.bus(self.timeStr, self.route, self.source, self.dest, self.weekday, headsign)
+            #plannedTime = getPlannedTime.bus(self.timeStr, self.route, self.source, self.dest, self.weekday, headsign)
+            plannedTime = getPlannedTime.bus(self.timeStr, self.route, self.source, self.dest, self.weekday)
 
             inputList1 = [identifier[2], plannedTime[0], self.precipitation, self.weekday, dis1]
             inputList1.extend(self.timeValue())
@@ -238,9 +248,8 @@ class Ett39A:
             pred = model.predict(inputArr)
             return pred[1] - pred[0]
 
-
         else:
-            raise Exception("Cannot find model for this route.")
+            raise Exception("Fail to map " + str(self.source) + " and " + str(self.dest) + "on the same route.")
 
     # def monthWeek(self):
     #     monthList = [0] * 5
@@ -264,8 +273,11 @@ class Ett39A:
 
 
 # -------------------------Test set---------------
-#ett = Ett39A('39A', 768, 7586, 0, 18, "16:37", 3, "7/26/2018")
+#route, source, dest, precipitation, temp, timeStr, weekday, dateStr
+#tic = time.time()
+#ett = Ett39A('67', 1444, 3913, 0, 18, "16:45", 3, "7/26/2018")
 #print(ett.estimatedTime())
+#print("Time:",time.time()-tic)
 
 # class Ann39A:
 
@@ -334,4 +346,5 @@ class Ett39A:
 #         else:
 #             modelInS = [self.sourceK, float(self.rain), int(self.day), self.distanceTravelled] + self.peakTimes() + [self.temp] + self.isWeekendOrTerm()
 #             modelInD = [self.destK, float(self.rain), int(self.day), self.distanceTravelled] + self.peakTimes() + [self.temp] + self.isWeekendOrTerm()
+
 #             return model.predict(modelInS) - model.predict(modelInD)
