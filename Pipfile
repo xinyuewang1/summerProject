@@ -11,6 +11,8 @@ brotlipy = "*"
 mysqlclient = "*"
 numpy = "*"
 rq = "*"
+scikit-learn = "*"
+scipy = "*"
 
 [requires]
 python_version = "3.5.2"

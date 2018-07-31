@@ -49,16 +49,17 @@ def save_obj(obj, name ):
 
 
 def load_obj(name):
+
+    #print("The file path is", os.path.dirname(os.path.abspath(__file__)))
     if name.endswith('.pkl'):
-        with open(name, 'rb') as f:
+        with open(os.path.join(settings.STATIC_ROOT, name), 'rb') as f:
             return pickle.load(f)
-    with open(name + '.pkl', 'rb') as f:
+    with open(os.path.join(settings.STATIC_ROOT, name + '.pkl'), 'rb') as f:
         return pickle.load(f)
 
 #---------------------TEST-------------------
 #l = load_obj('static/pickles/sortedStopList')
 #print(l)
-
 
 def getFirstAndLastStops1(route, stop1, stop2):
     '''
@@ -90,7 +91,8 @@ def getFirstAndLastStops2(route, stop1, stop2):
     '''
     for d in os.listdir('static/pickles/stopDicts'):
         if d.startswith(route):
-            stopD = load_obj('static/pickles/stopDicts/' + d)
+            stopD = load_obj('pickles/stopDicts/' + d)
+
             if stop1 in stopD and stop2 in stopD:
                 return (min(stopD.items(), key=operator.itemgetter(1))[0],
                         max(stopD.items(), key=operator.itemgetter(1))[0])
@@ -108,18 +110,20 @@ def getFirstAndLastStops3(route, stop1, stop2):
     :param stop2: stop2
     :return: first stop and last stop of the route, also the position of stop1 and stop2 on it.
     '''
-
-    #path = os.path.join(settings.STATIC_ROOT,'static/pickles/stopLists/')
-    path = 'static/pickles/stopLists/'
-    for l in load_obj('static/pickles/sortedIdList'):
+    path = 'pickles/stopLists/'
+    for l in load_obj('pickles/sortedIdList'):
+        #print("l:", l)
         if l.split('_')[0] == route:
             stopList = load_obj(path + l)
+            print("stopList:", stopList)
             if stop1 in stopList and stop2 in stopList:
                 progrnumber1 = stopList.index(stop1) + 1
                 progrnumber2 = stopList.index(stop2) + 1
+                print("prog numbers", progrnumber1, progrnumber1)
                 # index starts with 0, progrnumber starts with 1
                 if progrnumber1 < progrnumber2:
-                    return stopList[0], stopList[-1], progrnumber1, progrnumber2
+                     return stopList[0], stopList[-1], progrnumber1, progrnumber2
+
                 else:
                     raise Exception("Wrong input order: The bus run from "+str(progrnumber1)+" to "+str(progrnumber2))
 
@@ -166,11 +170,12 @@ class Ett39A:
             return 0
 
     def estimatedTime(self):
-        modelDir = 'static/pickles/models/'
-        scalerDir = 'static/pickles/scalers/'
+        modelDir = 'pickles/models/'
+        scalerDir = 'pickles/scalers/'
         # print("The file path is", os.path.dirname(os.path.abspath(__file__)))
         identifier = getFirstAndLastStops3(self.route, self.source, self.dest)
-        #print("identifier:",identifier)
+        print("identifier:",identifier)
+
         if identifier:
             try:
                 model = load_obj(
@@ -200,13 +205,16 @@ class Ett39A:
             return model.predict(inputs).sum()
             '''
             # Get destination headsign and distance
+
             #headsign, dis1, dis2 = None, None, None
             dis1, dis2 = None, None
 
-            for d in os.listdir('static/pickles/stopDicts'):
+            filPath = os.path.join(settings.STATIC_ROOT, 'pickles/stopDicts')
+            for d in os.listdir(filPath):
                 if d.startswith(str(self.route) + '_' + str(identifier[0]) + '_' + str(identifier[1])):
                     # headsign = d.split('_')[-1][:-4]
-                    data = load_obj('static/pickles/stopDicts/' + d)
+                    d = d.rsplit('.', 1)[0]
+                    data = load_obj('pickles/stopDicts/' + d)
                     dis1 = data[self.source]
                     dis2 = data[self.dest]
                     break
@@ -240,30 +248,28 @@ class Ett39A:
             pred = model.predict(inputArr)
             return pred[1] - pred[0]
 
-
-
         else:
-            raise Exception("Fail to map "+str(self.source)+" and "+str(self.dest)+"on the same route.")
+            raise Exception("Fail to map " + str(self.source) + " and " + str(self.dest) + "on the same route.")
 
-    def monthWeek(self):
-        monthList = [0] * 5
-        dayList = [0] * 6
-        months = ['Feb', 'Mar', 'Apr', 'May', 'Jun']
-        if self.month == 'Jan':
-            pass
-        else:
-            monthList[months.index(self.month)]
-        days = ['Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-        if self.day == 'Monday':
-            pass
-        else:
-            dayList[days.index(self.day)]
-        return monthList + dayList
+    # def monthWeek(self):
+    #     monthList = [0] * 5
+    #     dayList = [0] * 6
+    #     months = ['Feb', 'Mar', 'Apr', 'May', 'Jun']
+    #     if self.month == 'Jan':
+    #         pass
+    #     else:
+    #         monthList[months.index(self.month)]
+    #     days = ['Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    #     if self.day == 'Monday':
+    #         pass
+    #     else:
+    #         dayList[days.index(self.day)]
+    #     return monthList + dayList
 
-    def routeFind(self, current):
-        routeList = [0] * 71
-        routeList[current - 1] = 1
-        return routeList
+    # def routeFind(self, current):
+    #     routeList = [0] * 71
+    #     routeList[current - 1] = 1
+    #     return routeList
 
 
 # -------------------------Test set---------------
@@ -340,4 +346,5 @@ class Ett39A:
 #         else:
 #             modelInS = [self.sourceK, float(self.rain), int(self.day), self.distanceTravelled] + self.peakTimes() + [self.temp] + self.isWeekendOrTerm()
 #             modelInD = [self.destK, float(self.rain), int(self.day), self.distanceTravelled] + self.peakTimes() + [self.temp] + self.isWeekendOrTerm()
+
 #             return model.predict(modelInS) - model.predict(modelInD)
