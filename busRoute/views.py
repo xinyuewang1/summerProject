@@ -478,9 +478,8 @@ def DublinBus():
                 dbInfo = json.dumps(Info) 
                 loadedBikes = json.loads(dbInfo)
                 results.append(loadedBikes)
-        
+    print(type(results))    
     return results
-
 
 
 def get_route_data(request, route):

@@ -52,6 +52,25 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 }
 
 
+// function getLocation() {
+//     if (navigator.geolocation) {
+//         location = navigator.geolocation.watchPosition(update);
+//     } else {
+//         // Geolocation is not supported by this browser.
+//     }
+
+//     function update(pos) {
+//         var update = pos.coords;
+//         console.log('Your updated current position is:');
+//         console.log('Latitude', update.latitude);
+//         console.log('Longitude', update.longitude);
+//     }
+
+// }
+
+// getLocation();
+
+
 //autocomplete for general area
 
 // Function used for displaying/hiding the traffic information using a check variable 
@@ -312,11 +331,6 @@ function swapSearch() {
             })
         })
 
-
-
-
-
-
     } else {
         //Changes the colour of the tab and placeholder of the search form
         document.getElementById("addSearch").style.backgroundColor = "black";
@@ -567,9 +581,6 @@ function stopsNearMe() {
                 markers.push(marker);
 
             }
-
-
-
         })
 }
 
