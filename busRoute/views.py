@@ -499,7 +499,7 @@ def GenBusData(request):
 
     results = []
 
-    with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r') as f:
+    with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r', encoding='utf-8') as f:
 
         reader = csv.reader(f)
 

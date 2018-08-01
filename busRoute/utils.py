@@ -115,11 +115,11 @@ def getFirstAndLastStops3(route, stop1, stop2):
         #print("l:", l)
         if l.split('_')[0] == route:
             stopList = load_obj(path + l)
-            print("stopList:", stopList)
+            #print("stopList:", stopList)
             if stop1 in stopList and stop2 in stopList:
                 progrnumber1 = stopList.index(stop1) + 1
                 progrnumber2 = stopList.index(stop2) + 1
-                print("prog numbers", progrnumber1, progrnumber1)
+                #print("prog numbers", progrnumber1, progrnumber1)
                 # index starts with 0, progrnumber starts with 1
                 if progrnumber1 < progrnumber2:
                      return stopList[0], stopList[-1], progrnumber1, progrnumber2
@@ -174,7 +174,7 @@ class Ett39A:
         scalerDir = 'pickles/scalers/'
         # print("The file path is", os.path.dirname(os.path.abspath(__file__)))
         identifier = getFirstAndLastStops3(self.route, self.source, self.dest)
-        print("identifier:",identifier)
+        #print("identifier:",identifier)
 
         if identifier:
             try:
