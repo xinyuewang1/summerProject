@@ -577,9 +577,9 @@ def DublinBusRoutes(request):
 
     
 #used to get the Dublin bus stops nearest to the user. 
-def stopNearMe(request):
+def stopNearMe(request,lat, lng):
 
-    url = requests.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=53.3090972,-6.2237539&radius=500&type=bus_station&key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0")
+    url = requests.get(f"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={lat},{lng}&radius=500&type=bus_station&key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0")
     url = url.json()
 
     x = url['results']
@@ -848,4 +848,55 @@ def findLatLong(location):
                 return latLng_str
         
     raise Exception("Unable to find this stop number")
+
+
+
+def routeDirectionServices(request):
+
+    results = []
+
+    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r') as f:
+
+        reader = csv.reader(f)
+        
+
+        for i in reader:
+            Info= {
+                        'route': i[5]
+                    }
+            if Info in results:
+                pass
+            else:
+                dbInfo = json.dumps(Info) 
+                loadedBikes = json.loads(dbInfo)
+                results.append(loadedBikes)
+        
+    return JsonResponse(results, safe=False) 
+
+
+def getTheStops(request, route): 
+
+    results = []
+
+    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r') as f:
+
+        reader = csv.reader(f)
+        
+
+        for i in reader:
+            print(i)
+            Info= {
+                        'route': i[5]
+                    }
+            if Info in results:
+                pass
+            else:
+                dbInfo = json.dumps(Info) 
+                loadedBikes = json.loads(dbInfo)
+                results.append(loadedBikes)
+        
+    return JsonResponse(results, safe=False) 
+
+
+
 

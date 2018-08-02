@@ -1,14 +1,11 @@
-from django.test import TestCase
+from django.test import TestCase, SimpleTestCase
 from django.test import Client
 from django.conf import settings
 from busRoute.views import *
 import unittest
 import datetime
-from .models import Testtrip, Busstops
 from .forms import routeForm
 from .utils import Ett39A
-import requests
-import json
 import datetime
 from datetime import date
 from django.urls import reverse
@@ -174,6 +171,7 @@ class TestViewResponses(unittest.TestCase):
 
 
 
+# class TestViewDataTypes(unittest.TestCase):
 
 
 class TestPageUrls(unittest.TestCase):
@@ -216,10 +214,25 @@ class TestPageUrls(unittest.TestCase):
         self.assertEqual(page.view_name, 'tourism')
 
 
+class TestFormFields(unittest.TestCase):
+    c = routeForm()
+
+
+    # SimpleTestCase.assertFormsetError(response, formset, form_index, field, errors, msg_prefix=''
+
+#<tr><th><label for="id_source">Source:</label></th><td><input type="text" name="source" class="form-control form-control-sm" placeholder="Source Stop.." required id="id_source" /></td></tr>
+# <tr><th><label for="id_destination">Destination:</label></th><td><input type="text" name="destination" class="form-control form-control-sm" placeholder="Destination.." required id="id_destination" /></td></tr>
+# <tr><th><label for="id_departTime">Departtime:</label></th><td><input type="text" name="departTime" class="form-control form-control-sm" placeholder="--:--" required id="id_departTime" /></td></tr>
+# <tr><th><label for="id_departDate">Departdate:</label></th><td><input type="text" name="departDate" class="form-control form-control-sm" placeholder="mm/dd/yyyy" required id="id_departDate" /></td></tr>
+# <tr><th><label for="id_returnTime">Returntime:</label></th><td><input type="text" name="returnTime" class="disable form-control form-control-sm" placeholder="Return Time" disabled id="id_returnTime" /></td></tr>
+# <tr><th><label for="id_returnDate">Returndate:</label></th><td><input type="text" name="returnDate" class="form-control form-control-sm" placeholder="Return Date" disabled id="id_returnDate" /></td></tr>
 
 
 
-    
+
+
+
+
 
 if __name__ == '__main__':
     unittest.main()
