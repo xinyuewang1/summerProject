@@ -2,9 +2,9 @@
 
 <body>
     <script>
-        $(document).ready(function() {
-                myMap()
-            });
+        $(document).ready(function () {
+            myMap()
+        });
     </script>
     <!-- Link to main javaScript file -->
     <script src="{% static 'script/dbus.js' %}"></script>
@@ -71,7 +71,8 @@
                     <div id="stopSearchOptions" style="display:none;border-top:1px solid white;">
                         <p class="text-white">Enter a location below to view the it's local stops</p>
                         <div>
-                            <inputid='genSearch' placeholder='Search Area' type='text'></input>
+                            <inputid='genSearch' placeholder='Search Area' type='text'>
+                                </input>
                         </div>
                     </div>
                     <div id="routeSearchOptions" style="display:none;border-top:1px solid white;">
@@ -202,9 +203,11 @@
                                     }
                                 });
 
-                                var markers = [];
+
 
                                 function getStops() {
+
+                                    var markers = [];
 
                                     //this function is responsible for displaying the route information
                                     //It uses jQuery to intitialise and pass the value to the url and to grab the data that is returned by get_route_info
@@ -233,15 +236,9 @@
 
                                             for (var i = 0; i < daily.length; i++) {
 
-
-                                                var lat = daily[i].lat;
-                                                var long = daily[i].lng;
-                                                var name = daily[i].name;
-
-                                                var id = daily[i].id;
-
                                                 table += "<tr>";
-                                                table += "<td>" + daily[i].name + "(" + id + ")" + "</td>";
+                                                table += "<td>" + daily[i].name + "(" + daily[i].id +
+                                                    ")" + "</td>";
                                                 table += "</tr>";
 
 
@@ -249,11 +246,12 @@
                                                 infoBus = new google.maps.InfoWindow;
 
                                                 //this function displays the dublin bus markers
-                                                myLatLng = new google.maps.LatLng(lat, long)
+                                                myLatLng = new google.maps.LatLng(parseFloat(daily[i].lat),
+                                                    parseFloat(daily[i].lng))
                                                 marker = new google.maps.Marker({
                                                     position: myLatLng,
                                                     map: map,
-                                                    title: name
+                                                    title: daily[i].name
                                                 });
 
                                                 marker.addListener('mouseover', function () {
@@ -262,16 +260,14 @@
                                                 })
 
                                                 marker.addListener('click', function () {
-                                                    document.getElementById("id_source").value = this.title;
+                                                    document.getElementById("id_source").value = this.title; 
 
                                                 })
 
                                                 markers.push(marker);
-
-                                                // <!-- 
-                                                //                             var path = poly.getPath();
-                                                //                             path.push(myLatLng); -->
                                             }
+
+
 
                                             table += "</tbody></table>";
                                             document.getElementById("RouteDiv").innerHTML = table;
@@ -342,6 +338,50 @@
             <button onclick="stopsNearMe()">Stops Near Me</button>
         </div>
         <script>
+            function stopsNearMe() {
+
+                console.log(pos.lat);
+                console.log(pos.lng);
+
+                var jqxhr = $.getJSON('/nearestBus/' + pos.lat + '/' + pos.lng,
+                    document.getElementById("id_source").value + '&format=json',
+                    function (daily) {
+
+
+
+                        for (var i = 0; i < daily.length; i++) {
+
+                            var name = daily[i].name;
+                            var lat = parseFloat(daily[i].lat);
+                            var long = parseFloat(daily[i].long);
+
+                            infoWindow = new google.maps.InfoWindow;
+                            infoBus = new google.maps.InfoWindow;
+
+                            //this function displays the dublin bus markers
+                            myLatLng = new google.maps.LatLng(lat, long)
+                            marker = new google.maps.Marker({
+                                position: myLatLng,
+                                map: map,
+                                title: name
+                            });
+
+                            marker.addListener('mouseover', function () {
+                                infoBus.open(map, this);
+                                infoBus.setContent(this.title);
+                            })
+
+                            marker.addListener('click', function () {
+                                document.getElementById("id_source").value = this.title;
+
+                            })
+
+                            markers.push(marker);
+
+                        }
+                    })
+            }
+
             function googDirections() {
                 var x = document.getElementById("id_source").value;
                 var y = document.getElementById("id_destination").value;
@@ -416,8 +456,6 @@
                             }
                         }
                         //var res = response.routes[0].legs[0].steps[0].transit.line.short_name;
-
-
                         var jqxhr = $.getJSON('/busNum/' + buses[0] + '/', function (daily) {
                             document.getElementById("busRouteNum").innerHTML = daily;
                         });
@@ -674,8 +712,13 @@
                 function createArray(Data) {
 
                     var results = [];
+
                     for (var i = 0; i < Data.length; i++) {
+
                         results.push(Data[i].route);
+
+
+
                     }
                     $("#routeSearch").autocomplete({
                         source: results,

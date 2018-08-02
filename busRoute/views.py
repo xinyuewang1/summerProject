@@ -14,6 +14,7 @@ import os
 import csv
 import time
 from django.conf import settings
+import pandas as pd
     
 
 class homeView(generic.TemplateView):
@@ -372,7 +373,7 @@ class tourismView(generic.TemplateView):
         return render(request,"busRoute/result.html" , args)
     
 
-'''these are the more general queries called inside the above classes'''
+'''These are the more general queries called inside the above classes'''
 
 def query_weather():
     """
@@ -434,7 +435,8 @@ def bikes_query(request):
     return JsonResponse(results, safe=False)
 
 
-def DublinBus(request):
+def DublinBusInfo(request):
+    
     '''
     This function creates a dictionary from the dublin bus data located inside Routes.csv to be accessed on the page for the markers
     '''
@@ -442,7 +444,7 @@ def DublinBus(request):
 
     results = []
 
-    with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r') as f:
+    with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r', encoding="utf8") as f:
 
         reader = csv.reader(f)
 
@@ -471,7 +473,7 @@ def DublinBus():
 
     results = []
 
-    with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r', encoding="utf8") as f:
+    with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r') as f:
 
         reader = csv.reader(f)
 
@@ -487,37 +489,8 @@ def DublinBus():
             
                 dbInfo = json.dumps(Info) 
                 loadedBikes = json.loads(dbInfo)
-                results.append(loadedBikes)
-        
+                results.append(loadedBikes)   
     return results
-
-
-
-def get_route_data(request, route):
-
-
-    ''''This backend function takes an argument from a url (a route entered in the route info search option) and uses it to query the smart dublin api for its stops information '''
-
-    url = requests.get(f"http://data.dublinked.ie/cgi-bin/rtpi/routeinformation?routeid={route}&operator=bac&format=json")
-    url = url.json()
-
-    results = []
-    x = url['results'][1]['stops']
-  
-
-    for i in x: 
-    
-        Info= {'lat': i['latitude'],
-                        'lng':i['longitude'],
-                        'name': i['fullname'],
-                        'id': i['stopid']
-            }
-
-        dbInfo = json.dumps(Info) 
-        loadedBikes = json.loads(dbInfo)
-        results.append(loadedBikes)
-
-    return JsonResponse(results, safe=False)
 
 
 def GenBusData(request): 
@@ -578,9 +551,13 @@ def DublinBusRoutes(request):
 
     
 #used to get the Dublin bus stops nearest to the user. 
-def stopNearMe(request):
+def stopNearMe(request,lat, lng):
 
-    url = requests.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=53.3090972,-6.2237539&radius=500&type=bus_station&key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0")
+
+    '''this function is linked to a jQuery which takes the users current lat and long from the geolocation
+    This passes this into the google nearby search which returns a list of bus stops near the user. '''
+
+    url = requests.get(f"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={lat},{lng}&radius=500&type=bus_station&key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0")
     url = url.json()
 
     x = url['results']
@@ -632,7 +609,6 @@ def Est39A(route, source, dest, precipitation, temp, timeStr, weekday, dateStr):
 
     return result_min
     
-
 
 def readTimeIn(time):
     '''
@@ -782,7 +758,6 @@ def query_rain_weather(time, date):
     
 
 def getRoute(request, bus):
-    print(bus)
     return JsonResponse(bus, safe=False)
 
 def googDir(origin, dest, date, t):
@@ -833,10 +808,10 @@ def findLatLong(location):
     """
     try:
         stop_id = int(location)
-        print(stop_id)
+
     except:
         address = location
-        print(address)
+    
 
     buses = DublinBus()
     if 'stop_id' in locals():
@@ -851,4 +826,67 @@ def findLatLong(location):
                 return latLng_str
         
     raise Exception("Unable to find this stop number")
+
+
+def routeDirectionServices(request):
+
+
+    '''This accesses the routes and directions from a CSV and passs it to a URL that is connected to an AJAX autocomplete function for the Route Search'''
+
+    results = []
+  
+    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r') as f:
+
+        reader = csv.reader(f)
+        
+
+        for i in reader:
+            Info= {
+                        'route': i[5]
+                    }
+            if Info in results:
+                pass
+            else:
+                dbInfo = json.dumps(Info) 
+                loadedBikes = json.loads(dbInfo)
+                results.append(loadedBikes)
+        
+    return JsonResponse(results, safe=False) 
+
+
+def get_route_data(request, route):
+
+
+    ''''This backend function takes an argument from a url (a route entered in the route info search option) and uses it to query the smart dublin api for its stops information '''
+
+
+    results = []
+    
+
+    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r') as f:
+
+        reader = pd.read_csv(f)
+        x = reader.loc[reader['direction'] == route ]
+        
+        
+        for index, row in x.iterrows(): 
+            stop = row['stopid']
+            lat = row['stop_lat']
+            lng = row['stop_lon']
+            name = row['stop_name']
+
+            Info= {'lat': lat,
+                            'lng': lng,
+                            'name': name,
+                            'id': stop
+                }
+
+            dbInfo = json.dumps(Info) 
+            loadedBikes = json.loads(dbInfo)
+            results.append(loadedBikes)
+
+    return JsonResponse(results, safe=False)
+
+
+
 

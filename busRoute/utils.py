@@ -84,6 +84,7 @@ def getFirstAndLastStops3(route, stop1, stop2):
                 progrnumber1 = stopList.index(stop1) + 1
                 progrnumber2 = stopList.index(stop2) + 1
                 #print("prog numbers", progrnumber1, progrnumber1)
+
                 # index starts with 0, progrnumber starts with 1
                 if progrnumber1 < progrnumber2:
                     return stopList[0], stopList[-1], progrnumber1, progrnumber2
@@ -241,10 +242,10 @@ class Ett39A:
 
 # -------------------------Test set---------------
 #route, source, dest, precipitation, temp, timeStr, weekday, dateStr
-#tic = time.time()
-#ett = Ett39A('67', 1444, 3913, 0, 18, "16:45", 3, "7/26/2018")
-#print(ett.estimatedTime())
-#print("Time:",time.time()-tic)
+# tic = time.time()
+# ett = Ett39A('67', 1444, 3913, 0, 18, "16:45", 3, "7/26/2018")
+# print(ett.estimatedTime())
+# print("Time:",time.time()-tic)
 
 # class Ann39A:
 
