@@ -14,6 +14,7 @@ import os
 import csv
 import time
 from django.conf import settings
+import pandas as pd
     
 
 class homeView(generic.TemplateView):
@@ -492,33 +493,6 @@ def DublinBus():
     return results
 
 
-def get_route_data(request, route):
-
-
-    ''''This backend function takes an argument from a url (a route entered in the route info search option) and uses it to query the smart dublin api for its stops information '''
-
-    url = requests.get(f"http://data.dublinked.ie/cgi-bin/rtpi/routeinformation?routeid={route}&operator=bac&format=json")
-    url = url.json()
-
-    results = []
-    x = url['results'][1]['stops']
-  
-
-    for i in x: 
-    
-        Info= {'lat': i['latitude'],
-                        'lng':i['longitude'],
-                        'name': i['fullname'],
-                        'id': i['stopid']
-            }
-
-        dbInfo = json.dumps(Info) 
-        loadedBikes = json.loads(dbInfo)
-        results.append(loadedBikes)
-
-    return JsonResponse(results, safe=False)
-
-
 def GenBusData(request): 
     '''
     This renders the data to a URL that is used with the AJAX autocomplete function
@@ -854,7 +828,7 @@ def findLatLong(location):
 def routeDirectionServices(request):
 
     results = []
-
+  
     with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r') as f:
 
         reader = csv.reader(f)
@@ -896,6 +870,40 @@ def getTheStops(request, route):
                 results.append(loadedBikes)
         
     return JsonResponse(results, safe=False) 
+
+
+def get_route_data(request, route):
+
+
+    ''''This backend function takes an argument from a url (a route entered in the route info search option) and uses it to query the smart dublin api for its stops information '''
+
+
+    results = []
+    
+
+    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r') as f:
+
+        reader = pd.read_csv(f)
+        x = reader.loc[reader['direction'] == route ]
+        
+        
+        for index, row in x.iterrows(): 
+            stop = row['stopid']
+            lat = row['stop_lat']
+            lng = row['stop_lon']
+            name = row['stop_name']
+
+            Info= {'lat': lat,
+                            'lng': lng,
+                            'name': name,
+                            'id': stop
+                }
+
+            dbInfo = json.dumps(Info) 
+            loadedBikes = json.loads(dbInfo)
+            results.append(loadedBikes)
+
+    return JsonResponse(results, safe=False)
 
 
 

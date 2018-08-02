@@ -33,7 +33,9 @@ urlpatterns = [
     url(r'^nearestBus/(-?\d+(?:\.\d+)?)/(-?\d+(?:\.\d+)?)', views.stopNearMe, name='nearestBus'),
 
     #This URL passes the route to the get_route_data function in views.py
-    path('details/<slug:route>/', views.get_route_data, name='detail'),
+
+    #?P<route>[\w\ ]
+    url(r'^details/(?P<route>[\w\ ]+)', views.get_route_data, name='detail'),
 
     path('busNum/<slug:bus>/', views.getRoute, name='busNum'),
  
