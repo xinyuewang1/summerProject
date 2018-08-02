@@ -789,4 +789,100 @@ def findLatLong(location):
         
     raise Exception("Unable to find this stop number")
 
+#####Error Pages########
 
+def handler400(request):
+    response = render(request, '400.html', context={})
+    response.status_code = 400
+    return response
+
+def handler401(request):
+    response = render(request, '401.html', context={})
+    response.status_code = 401
+    return response
+
+def handler403(request):
+    response = render(request, '403.html', context={})
+    response.status_code = 403
+    return response
+
+def handler404(request):
+    response = render(request, '404.html', context={})
+    response.status_code = 404
+    return response
+
+def handler408(request):
+    response = render(request, '408.html', context={})
+    response.status_code = 408
+    return response
+
+def handler410(request):
+    response = render(request, '410.html', context={})
+    response.status_code = 410
+    return response
+
+def handler418(request):
+    response = render(request, '418.html', context={})
+    response.status_code = 418
+    return response
+
+def handler421(request):
+    response = render(request, '421.html', context={})
+    response.status_code = 421
+    return response
+
+def handler424(request):
+    response = render(request, '424.html', context={})
+    response.status_code = 424
+    return response
+
+def handler426(request):
+    response = render(request, '426.html', context={})
+    response.status_code = 426
+    return response
+
+def handler429(request):
+    response = render(request, '429.html', context={})
+    response.status_code = 429
+    return response
+
+
+def handler500(request):
+    response = render(request, '500.html', context={})
+    response.status_code = 500
+    return response
+    
+def handler501(request):
+    response = render(request, '501.html', context={})
+    response.status_code = 501
+    return response
+
+def handler502(request):
+    response = render(request, '502.html', context={})
+    response.status_code = 502
+    return response
+
+def handler503(request):
+    response = render(request, '503.html', context={})
+    response.status_code = 503
+    return response
+
+def handler504(request):
+    response = render(request, '504.html', context={})
+    response.status_code = 504
+    return response
+    
+def handler507(request):
+    response = render(request, '507.html', context={})
+    response.status_code = 507
+    return response
+
+def handler508(request):
+    response = render(request, '508.html', context={})
+    response.status_code = 508
+    return response
+
+def handler511(request):
+    response = render(request, '511.html', context={})
+    response.status_code = 511
+    return response
