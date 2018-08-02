@@ -2,55 +2,19 @@ import pickle
 import numpy as np
 import os
 from django.conf import settings
-import urllib.request, json, operator
+import urllib.request
+import json
+import operator
 from busRoute import getPlannedTime
 from datetime import datetime
-import time
-
-
-# Original Code from https://stackoverflow.com/questions/20252669/get-files-from-directory-argument-sorting-by-size
-# Slightly modified
-def get_files_by_file_size(dirname, reverse=False):
-    """ Return list of file paths in directory sorted by file size """
-
-    # Get list of files
-    filepaths = []
-    for basename in os.listdir(dirname):
-        filename = os.path.join(dirname, basename)
-        #print(filename)
-        #?static / pickles / stopLists / 9_7132_4392.pkl
-        if os.path.isfile(filename):
-            filepaths.append(basename)
-    #print(filepaths)
-
-    # Re-populate list with filename, size tuples
-    for i in range(len(filepaths)):
-        filepaths[i] = (filepaths[i], os.path.getsize(dirname+filepaths[i]))
-
-    #print(filepaths)
-    # Sort list by file size
-    # If reverse=True sort from largest to smallest
-    # If reverse=False sort from smallest to largest
-    filepaths.sort(key=lambda filename: filename[1], reverse=reverse)
-
-    # Re-populate list with just filenames
-    for i in range(len(filepaths)):
-        filepaths[i] = filepaths[i][0]
-
-    return filepaths
-
-
-def save_obj(obj, name ):
-    with open(name + '.pkl', 'wb') as f:
-        pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
-
-# --------Make a sorted list by size-------
-#save_obj(get_files_by_file_size('static/pickles/stopLists/', True),'sortedStopList')
 
 
 def load_obj(name):
-
-    #print("The file path is", os.path.dirname(os.path.abspath(__file__)))
+    '''
+    load a pkl object from name. Can take care of situation with pkl ends or not.
+    :param name: name of the file if in current directory, directory/name if not.
+    :return: loaded pkl file
+    '''
     if name.endswith('.pkl'):
         with open(os.path.join(settings.STATIC_ROOT, name), 'rb') as f:
             return pickle.load(f)
@@ -115,20 +79,23 @@ def getFirstAndLastStops3(route, stop1, stop2):
         #print("l:", l)
         if l.split('_')[0] == route:
             stopList = load_obj(path + l)
-            print("stopList:", stopList)
+            #print("stopList:", stopList)
             if stop1 in stopList and stop2 in stopList:
                 progrnumber1 = stopList.index(stop1) + 1
                 progrnumber2 = stopList.index(stop2) + 1
-                print("prog numbers", progrnumber1, progrnumber1)
+                #print("prog numbers", progrnumber1, progrnumber1)
                 # index starts with 0, progrnumber starts with 1
                 if progrnumber1 < progrnumber2:
-                     return stopList[0], stopList[-1], progrnumber1, progrnumber2
+                    return stopList[0], stopList[-1], progrnumber1, progrnumber2
 
                 else:
-                    raise Exception("Wrong input order: The bus run from "+str(progrnumber1)+" to "+str(progrnumber2))
-
+                    # raise Exception("Wrong input order: The bus run from "+str(progrnumber1)+" to "+str(progrnumber2))
+                    return stopList[0], stopList[-1], progrnumber2, progrnumber1
 
 class Ett39A:
+    '''
+    This class will create an instance of model and return the prediction result.
+    '''
 
     def __init__(self, route, source, dest, precipitation, temp, timeStr, weekday, dateStr):
         self.route = route
@@ -174,7 +141,7 @@ class Ett39A:
         scalerDir = 'pickles/scalers/'
         # print("The file path is", os.path.dirname(os.path.abspath(__file__)))
         identifier = getFirstAndLastStops3(self.route, self.source, self.dest)
-        print("identifier:",identifier)
+        #print("identifier:",identifier)
 
         if identifier:
             try:
@@ -227,7 +194,7 @@ class Ett39A:
             plannedTime = getPlannedTime.bus(self.timeStr, self.route, self.source, self.dest, self.weekday)
 
             inputList1 = [identifier[2], plannedTime[0], self.precipitation, self.weekday, dis1]
-            inputList1.extend(self.timeValue())
+            inputList1.extend(self.timeValue())  # timeValue return a list
             inputList1.append(self.temp)
             if self.weekday <= 4:
                 inputList1.extend([1, 0])
