@@ -2,8 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8f414dcb-d6b4-4a5b-82cf-cef4d25b8bfd" name="Default" comment="fixed picking wrong model issue.">
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/busRoute/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/busApp/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/busApp/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/busRoute/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/busRoute/static/script/dbus.js" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/static/script/dbus.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/busRoute/templates/busRoute/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/templates/busRoute/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/busRoute/templates/busRoute/planner.html" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/templates/busRoute/planner.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/busRoute/templates/busRoute/result.html" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/templates/busRoute/result.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/busRoute/templates/busRoute/stops.html" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/templates/busRoute/stops.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/busRoute/templates/busRoute/tourism.html" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/templates/busRoute/tourism.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/busRoute/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/busRoute/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -15,10 +23,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="utils.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/busRoute/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
+            <state>
               <caret line="13" column="81" selection-start-line="13" selection-start-column="81" selection-end-line="13" selection-end-column="81" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
@@ -27,11 +35,29 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="dbus.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/busRoute/static/script/dbus.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-68">
+              <caret line="140" column="73" selection-start-line="140" selection-start-column="73" selection-end-line="140" selection-end-column="73" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tourism.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/busRoute/templates/busRoute/tourism.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2890">
+              <caret line="170" column="14" selection-start-line="170" selection-start-column="14" selection-end-line="170" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/busRoute/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3638">
-              <caret line="280" column="58" selection-start-line="280" selection-start-column="55" selection-end-line="280" selection-end-column="58" />
+            <state relative-caret-position="3553">
+              <caret line="275" column="58" selection-start-line="275" selection-start-column="58" selection-end-line="275" selection-end-column="58" />
             </state>
           </provider>
         </entry>
@@ -69,15 +95,15 @@
         <option value="$PROJECT_DIR$/busApp/settings.py" />
         <option value="$PROJECT_DIR$/busRoute/forms.py" />
         <option value="$PROJECT_DIR$/busRoute/static/css/style.css" />
-        <option value="$PROJECT_DIR$/busRoute/static/script/dbus.js" />
         <option value="$PROJECT_DIR$/busRoute/templates/base.html" />
         <option value="$PROJECT_DIR$/busRoute/templates/busRoute/index.html" />
-        <option value="$PROJECT_DIR$/busRoute/templates/busRoute/tourism.html" />
         <option value="$PROJECT_DIR$/busRoute/urls.py" />
         <option value="$PROJECT_DIR$/requirements.txt" />
         <option value="$PROJECT_DIR$/busRoute/getPlannedTime.py" />
         <option value="$PROJECT_DIR$/busRoute/views.py" />
         <option value="$PROJECT_DIR$/busRoute/utils.py" />
+        <option value="$PROJECT_DIR$/busRoute/static/script/dbus.js" />
+        <option value="$PROJECT_DIR$/busRoute/templates/busRoute/tourism.html" />
       </list>
     </option>
   </component>
@@ -109,6 +135,26 @@
               <item name="InnovationStation" type="462c0819:PsiDirectoryNode" />
               <item name="busRoute" type="462c0819:PsiDirectoryNode" />
               <item name="static" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="InnovationStation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="InnovationStation" type="462c0819:PsiDirectoryNode" />
+              <item name="busRoute" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="script" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="InnovationStation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="InnovationStation" type="462c0819:PsiDirectoryNode" />
+              <item name="busRoute" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="InnovationStation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="InnovationStation" type="462c0819:PsiDirectoryNode" />
+              <item name="busRoute" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="busRoute" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -574,13 +620,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/busRoute/static/script/dbus.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="394" lean-forward="true" selection-start-line="394" selection-end-line="394" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/busRoute/templates/base.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="20">
@@ -592,13 +631,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-3822">
           <caret line="186" lean-forward="true" selection-start-line="186" selection-end-line="186" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/busRoute/templates/busRoute/tourism.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="241">
-          <caret line="171" lean-forward="true" selection-start-line="171" selection-end-line="171" />
         </state>
       </provider>
     </entry>
@@ -631,18 +663,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/busRoute/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3638">
-          <caret line="280" column="58" selection-start-line="280" selection-start-column="55" selection-end-line="280" selection-end-column="58" />
+        <state relative-caret-position="3553">
+          <caret line="275" column="58" selection-start-line="275" selection-start-column="58" selection-end-line="275" selection-end-column="58" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/busRoute/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
+        <state>
           <caret line="13" column="81" selection-start-line="13" selection-start-column="81" selection-end-line="13" selection-end-column="81" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/busRoute/static/script/dbus.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-68">
+          <caret line="140" column="73" selection-start-line="140" selection-start-column="73" selection-end-line="140" selection-end-column="73" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/busRoute/templates/busRoute/tourism.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2890">
+          <caret line="170" column="14" selection-start-line="170" selection-start-column="14" selection-end-line="170" selection-end-column="14" />
         </state>
       </provider>
     </entry>

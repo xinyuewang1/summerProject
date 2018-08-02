@@ -23,14 +23,13 @@ class homeView(generic.TemplateView):
         post: Renders the results page for a route plan
     '''
 
-    template_name = "busRoute/index.html"
+    template_name = "busRoute/index.html" 
 
     def get(self,request):
         form = routeForm()
         weather = query_weather()
-        bikes = bikes_query()
         bus = DublinBus()
-        context = {'weather': weather, 'bikes': bikes, 'bus': bus, 'form': form}
+        context = {'weather': weather, 'bus': bus, 'form': form}
         return render(request, self.template_name, context)
 
     
@@ -61,7 +60,7 @@ class homeView(generic.TemplateView):
         rain, temp = query_rain_weather(depart_time, depart_date)
         day = parseDayNumber(depart_date)
         bus = DublinBus()
-        bikes = bikes_query()
+      
 
         
         #Used to find the stop name using a given stop number
@@ -102,7 +101,7 @@ class homeView(generic.TemplateView):
 
         
 
-        args = {'form': form, 'bikes':bikes, 'bus': bus, 'busNum': busNum, 'source': source_address, 'source_name':source_name, 
+        args = {'form': form, 'bus': bus, 'busNum': busNum, 'source': source_address, 'source_name':source_name, 
         'destination': destination_address, 'destination_name': destination_name, 'depart_time': depart_time, 
         'depart_date': depart_date , 'arrival_time': arrival, 'startLat':startLat, 'startLng': startLng, 'finLat':finLat,
         'finLng':finLng, 'est': est, 'weather': weather, 'header':header}
@@ -121,10 +120,9 @@ class plannerView(generic.TemplateView):
     def get(self,request):
         form = routeForm()
         weather = query_weather()
-        bikes = bikes_query()
         bus = DublinBus()
         #print(googDir(findLatLong("768"),findLatLong("7161"), "07/28/2018", "11:50"))
-        context = {'weather': weather, 'bikes': bikes, 'bus': bus, 'form': form}
+        context = {'weather': weather,'bus': bus, 'form': form}
         return render(request, self.template_name, context)
     
     def post(self, request):
@@ -155,7 +153,6 @@ class plannerView(generic.TemplateView):
         rain, temp = query_rain_weather(depart_time, depart_date)
         day = parseDayNumber(depart_date)
         bus = DublinBus()
-        bikes = bikes_query()
 
         
         #Used to find the stop name using a given stop number
@@ -193,7 +190,7 @@ class plannerView(generic.TemplateView):
 
         
 
-        args = {'form': form, 'bikes':bikes, 'bus': bus, 'busNum': busNum, 'source': source_address, 'source_name':source_name, 
+        args = {'form': form, 'bus': bus, 'busNum': busNum, 'source': source_address, 'source_name':source_name, 
         'destination': destination_address, 'destination_name': destination_name, 'depart_time': depart_time, 
         'depart_date': depart_date , 'arrival_time': arrival, 'startLat':startLat, 'startLng': startLng, 'finLat':finLat,
         'finLng':finLng, 'est': est, 'weather': weather, 'header':header}
@@ -212,9 +209,8 @@ class resultView(generic.TemplateView):
     def get(self,request):
         form = routeForm()
         weather = query_weather()
-        bikes = bikes_query()
         bus = DublinBus()
-        context = {'weather': weather, 'bikes': bikes, 'bus':bus, 'form': form}
+        context = {'weather': weather,'bus':bus, 'form': form}
         return render(request, self.template_name, context)
     
     def post(self, request):
@@ -244,7 +240,6 @@ class resultView(generic.TemplateView):
         rain, temp = query_rain_weather(depart_time, depart_date)
         day = parseDayNumber(depart_date)
         bus = DublinBus()
-        bikes = bikes_query()
 
         dateChosen = datetime.datetime.strptime(depart_date, "%m/%d/%Y")
         #my_date = date.today()
@@ -285,7 +280,7 @@ class resultView(generic.TemplateView):
 
         
 
-        args = {'form': form, 'bikes':bikes, 'bus': bus, 'busNum': busNum, 'source': source_address, 'source_name':source_name, 
+        args = {'form': form,'bus': bus, 'busNum': busNum, 'source': source_address, 'source_name':source_name, 
         'destination': destination_address, 'destination_name': destination_name, 'depart_time': depart_time, 
         'depart_date': depart_date , 'arrival_time': arrival, 'startLat':startLat, 'startLng': startLng, 'finLat':finLat,
         'finLng':finLng, 'est': est, 'weather': weather, 'header':header} 
@@ -335,7 +330,6 @@ class tourismView(generic.TemplateView):
         rain, temp = query_rain_weather(depart_time, depart_date)
         day = parseDayNumber(depart_date)
         bus = DublinBus()
-        bikes = bikes_query()
 
         
         #Used to find the stop name using a given stop number
@@ -370,7 +364,7 @@ class tourismView(generic.TemplateView):
 
         
 
-        args = {'form': form, 'bikes':bikes, 'bus': bus, 'busNum': busNum, 'source': source_address, 'source_name':source_name, 
+        args = {'form': form,'bus': bus, 'busNum': busNum, 'source': source_address, 'source_name':source_name, 
         'destination': destination_address, 'destination_name': destination_name, 'depart_time': depart_time, 
         'depart_date': depart_date , 'arrival_time': arrival, 'startLat':startLat, 'startLng': startLng, 'finLat':finLat,
         'finLng':finLng, 'est': est, 'weather': weather} 
@@ -413,7 +407,7 @@ def query_weather():
 #     ett = Ann39A(source, dest, actualArr, rain, day)
 #     return ett.estimatedTime()
 
-def bikes_query():
+def bikes_query(request):
     """ 
     Connects to the JCDecaux API and returns the dublin bikes information 
     """
@@ -437,12 +431,43 @@ def bikes_query():
             loadedBikes = json.loads(dbInfo)
             results.append(loadedBikes)
 
-    return results
-          
+    return JsonResponse(results, safe=False)
+
+
+def DublinBus(request):
+    '''
+    This function creates a dictionary from the dublin bus data located inside Routes.csv to be accessed on the page for the markers
+    '''
+
+
+    results = []
+
+    with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r') as f:
+
+        reader = csv.reader(f)
+
+        for i in reader:
+               
+            
+                Info= {'lat': i[2],
+                        'lng':i[3],
+                        'name': i[1],
+                        'num': i[0]
+                    }
+
+            
+                dbInfo = json.dumps(Info) 
+                loadedBikes = json.loads(dbInfo)
+                results.append(loadedBikes)
+        
+    return JsonResponse(results, safe=False)
+
+
 def DublinBus():
     '''
     This function creates a dictionary from the dublin bus data located inside Routes.csv to be accessed on the page for the markers
     '''
+
 
     results = []
 
@@ -452,12 +477,14 @@ def DublinBus():
 
         for i in reader:
                
+            
                 Info= {'lat': i[2],
                         'lng':i[3],
                         'name': i[1],
                         'num': i[0]
                     }
 
+            
                 dbInfo = json.dumps(Info) 
                 loadedBikes = json.loads(dbInfo)
                 results.append(loadedBikes)
@@ -465,10 +492,11 @@ def DublinBus():
     return results
 
 
+
 def get_route_data(request, route):
-    ''''
-    This backend function takes an argument from a url (a route) and uses to query the smart dublin api for its route information 
-    '''
+
+
+    ''''This backend function takes an argument from a url (a route entered in the route info search option) and uses it to query the smart dublin api for its stops information '''
 
     url = requests.get(f"http://data.dublinked.ie/cgi-bin/rtpi/routeinformation?routeid={route}&operator=bac&format=json")
     url = url.json()
@@ -520,7 +548,7 @@ def GenBusData(request):
 
 def DublinBusRoutes(request):
     '''
-    This function connects to RTPI to get a list of the Routes on Dublin Bus
+    This function connects to RTPI to get a list of the Routes on Dublin Bus to use for the route search option
     '''
 
     url = requests.get("https://data.dublinked.ie/cgi-bin/rtpi/routelistinformation?operator=bac&format=json")
@@ -547,6 +575,31 @@ def DublinBusRoutes(request):
             results.append(loadedBikes)
 
     return JsonResponse(results, safe=False) 
+
+    
+#used to get the Dublin bus stops nearest to the user. 
+def stopNearMe(request):
+
+    url = requests.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=53.3090972,-6.2237539&radius=500&type=bus_station&key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0")
+    url = url.json()
+
+    x = url['results']
+    results = []
+    for i in x:
+
+        Info= {'name': i['name'],
+                'lat': i['geometry']['location']['lat'],
+                'long': i['geometry']['location']['lng']
+                    
+                }
+
+        dbInfo = json.dumps(Info) 
+        loadedBikes = json.loads(dbInfo)
+        results.append(loadedBikes)
+      
+       
+
+    return JsonResponse(results, safe=False)
 
 
 
@@ -664,7 +717,6 @@ def parseDayNumber(date):
     return day
 
 
-
 def parseTime():
     '''
     Can't remember why I made this function but I know it was important
@@ -678,10 +730,8 @@ def parseTime():
     d = datetime.datetime.combine(date.today(), c.time()) - datetime.datetime.combine(date.today(), n.time())
     d = d.__str__()
     return(ti, d)
-            
 
 
-    
 
 def query_rain_weather(time, date):
     """
