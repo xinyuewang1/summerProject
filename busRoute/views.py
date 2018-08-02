@@ -373,7 +373,7 @@ class tourismView(generic.TemplateView):
         return render(request,"busRoute/result.html" , args)
     
 
-'''these are the more general queries called inside the above classes'''
+'''These are the more general queries called inside the above classes'''
 
 def query_weather():
     """
@@ -552,6 +552,10 @@ def DublinBusRoutes(request):
     
 #used to get the Dublin bus stops nearest to the user. 
 def stopNearMe(request,lat, lng):
+
+
+    '''this function is linked to a jQuery which takes the users current lat and long from the geolocation
+    This passes this into the google nearby search which returns a list of bus stops near the user. '''
 
     url = requests.get(f"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={lat},{lng}&radius=500&type=bus_station&key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0")
     url = url.json()
@@ -824,8 +828,10 @@ def findLatLong(location):
     raise Exception("Unable to find this stop number")
 
 
-
 def routeDirectionServices(request):
+
+
+    '''This accesses the routes and directions from a CSV and passs it to a URL that is connected to an AJAX autocomplete function for the Route Search'''
 
     results = []
   
@@ -835,30 +841,6 @@ def routeDirectionServices(request):
         
 
         for i in reader:
-            Info= {
-                        'route': i[5]
-                    }
-            if Info in results:
-                pass
-            else:
-                dbInfo = json.dumps(Info) 
-                loadedBikes = json.loads(dbInfo)
-                results.append(loadedBikes)
-        
-    return JsonResponse(results, safe=False) 
-
-
-def getTheStops(request, route): 
-
-    results = []
-
-    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r') as f:
-
-        reader = csv.reader(f)
-        
-
-        for i in reader:
-            print(i)
             Info= {
                         'route': i[5]
                     }
