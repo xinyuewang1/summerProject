@@ -759,7 +759,7 @@ def googDir(origin, dest, date, t):
     v = int(time.mktime(dt_obj.timetuple()))
     
     try:
-        r = requests.get(f"https://maps.googleapis.com/maps/api/directions/json?origin={origin}&destination={dest}&mode=transit&departure_time={v}&transit_mode=bus&key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0")
+        r = requests.get("https://maps.googleapis.com/maps/api/directions/json?origin={origin}&destination={dest}&mode=transit&departure_time={v}&transit_mode=bus&key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0")
     except:
         raise Exception("Could not find bus route for this journey")
 
