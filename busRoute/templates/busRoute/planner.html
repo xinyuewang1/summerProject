@@ -204,10 +204,10 @@
                                 });
 
 
+                                markers = [];
 
                                 function getStops() {
 
-                                    var markers = [];
 
                                     //this function is responsible for displaying the route information
                                     //It uses jQuery to intitialise and pass the value to the url and to grab the data that is returned by get_route_info
@@ -260,7 +260,7 @@
                                                 })
 
                                                 marker.addListener('click', function () {
-                                                    document.getElementById("id_source").value = this.title; 
+                                                    document.getElementById("id_source").value = this.title;
 
                                                 })
 
@@ -347,8 +347,7 @@
                     document.getElementById("id_source").value + '&format=json',
                     function (daily) {
 
-
-
+                        
                         for (var i = 0; i < daily.length; i++) {
 
                             var name = daily[i].name;

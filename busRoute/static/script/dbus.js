@@ -156,9 +156,7 @@ $(document).ready(function () {
 
         if ($("#planner-toggle").text() == "Expand Route Planner") {
             $("#planner-toggle").html("Hide Route Planner")
-        }
-
-        else if ($("#planner-toggle").text() == "Hide Route Planner") {		
+        } else if ($("#planner-toggle").text() == "Hide Route Planner") {
 
             $("#planner-toggle").text("Expand Route Planner")
         }
@@ -247,7 +245,7 @@ function swapSearch() {
 
                             var buses = []
 
-                        
+
                             //iterating over the results 
                             for (var i = 0; i < x.length; i++) {
 
@@ -269,7 +267,7 @@ function swapSearch() {
 
                                     //access our bus data because we need to get the stop number for the model. 
 
-                                   
+
                                     $.ajax({
                                         type: "GET",
                                         url: "dublinBusInfo",
@@ -330,7 +328,7 @@ function swapSearch() {
 
                 }
 
-                 getStopId();
+                getStopId();
 
             })
         })
