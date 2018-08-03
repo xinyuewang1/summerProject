@@ -10,7 +10,6 @@ import datetime
 from datetime import date
 from django.urls import reverse
 from django.urls import resolve
-from busRoute.utils import *
 
 
 class TestViewResponses(unittest.TestCase):
@@ -255,20 +254,6 @@ class TestFormFields(unittest.TestCase):
 
         form = routeForm(data={'source': "768", 'destination': "7161", 'departTime': "18:00", 'departDate': ""})
         self.assertFalse(form.is_valid())
-
-
-class TestUtils(unittest.TestCase):
-
-    # Test load_obj
-    def test_load_obj(self):
-        # Normal situation 1: name ends with pkl
-        self.assertTrue(load_obj('static/pickles/39a1.pkl'))
-
-        # Normal situation 2: enter basename
-
-        # Abnormal 1: file doesn't exist
-
-        # Abnormal 2: directory doesn't exist
 
 
 if __name__ == '__main__':

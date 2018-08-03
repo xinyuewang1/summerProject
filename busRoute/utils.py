@@ -1,7 +1,8 @@
 import pickle
 import numpy as np
 import os
-from django.conf import settings
+# from django.conf import settings
+from busApp.settings import STATIC_ROOT
 import urllib.request
 import json
 import operator
@@ -16,9 +17,11 @@ def load_obj(name):
     :return: loaded pkl file
     '''
     if name.endswith('.pkl'):
-        with open(os.path.join(settings.STATIC_ROOT, name), 'rb') as f:
+        print(os.path.join(STATIC_ROOT, name))
+        with open(os.path.join(STATIC_ROOT, name), 'rb') as f:
+
             return pickle.load(f)
-    with open(os.path.join(settings.STATIC_ROOT, name + '.pkl'), 'rb') as f:
+    with open(os.path.join(STATIC_ROOT, name + '.pkl'), 'rb') as f:
         return pickle.load(f)
 
 #---------------------TEST-------------------
@@ -155,7 +158,7 @@ class Ett39A:
                 return -1
 
             '''
-            routeDict = load_obj(open(os.path.join(settings.STATIC_ROOT, 'pickles/routeDict.pkl'), 'rb'))
+            routeDict = load_obj(open(os.path.join(STATIC_ROOT, 'pickles/routeDict.pkl'), 'rb'))
             for key, route in routeDict.items():
                 if route == int(self.source):
                     source = key
@@ -177,7 +180,7 @@ class Ett39A:
             #headsign, dis1, dis2 = None, None, None
             dis1, dis2 = None, None
 
-            filPath = os.path.join(settings.STATIC_ROOT, 'pickles/stopDicts')
+            filPath = os.path.join(STATIC_ROOT, 'pickles/stopDicts')
             for d in os.listdir(filPath):
                 if d.startswith(str(self.route) + '_' + str(identifier[0]) + '_' + str(identifier[1])):
                     # headsign = d.split('_')[-1][:-4]
