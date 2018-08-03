@@ -2,7 +2,7 @@ from django.views import generic
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
-from .models import Testtrip, Busstops
+# from .models import Testtrip, Busstops
 from .forms import routeForm
 from .utils import Ett39A
 import requests
