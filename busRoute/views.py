@@ -738,7 +738,7 @@ def query_rain_weather(time, date):
 
     t = str(t)
   
-    r = requests.get('https://api.openweathermap.org/data/2.5/forecast?q=Dublin,IE&appid=26580fb5867fb2fb6af75662d670dd4c')
+    r = requests.get('https://api.openweathermap.org/data/2.5/forecast?q=Dublin,IE&appid='+ os.environ.get('appid'))
     r = r.json()
 
     for i in range(0, len(r['list'])):
