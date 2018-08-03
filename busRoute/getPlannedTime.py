@@ -43,21 +43,21 @@ def nextBus(t, route, stop, weekday):
         if result["startdayofweek"] == "Monday" and result["enddayofweek"] == "Sunday":
             nextTime = findNextTime(result["departures"], t)
             if nextTime:
-                nextTime.extend([result["startdayofweek"], result["enddayofweek"]])
+                nextTime.extend([result["startdayofweek"], result["enddayofweek"], result["destination"]])
                 nextBus.append(nextTime)
 
         if weekday <= 4 and (
                 result["startdayofweek"] == "Monday" and result["enddayofweek"] == "Friday"):  # weekday
             nextTime = findNextTime(result["departures"], t)
             if nextTime:
-                nextTime.extend([result["startdayofweek"], result["enddayofweek"]])
+                nextTime.extend([result["startdayofweek"], result["enddayofweek"], result["destination"]])
                 nextBus.append(nextTime)
 
         elif weekday == 5 and (
                 result["startdayofweek"] == "Saturday" and result["enddayofweek"] == "Saturday"):  # Sat
             nextTime = findNextTime(result["departures"], t)
             if nextTime:
-                nextTime.extend([result["startdayofweek"], result["enddayofweek"]])
+                nextTime.extend([result["startdayofweek"], result["enddayofweek"], result["destination"]])
                 nextBus.append(nextTime)
 
     t = datetime.strptime(t, '%H:%M')
@@ -91,8 +91,12 @@ def bus(time, route, start, end, weekday):
 
     data = getStopTime(route, end)
     for result in data["results"]:
-        #if result["destination"] == dest and result["startdayofweek"] == startStop[2] and result["enddayofweek"] == startStop[3]:
-        if result["startdayofweek"] == startStop[2] and result["enddayofweek"] == startStop[3]:
-            desPlannedTime = int((datetime.strptime(result["departures"][startStop[0]],"%H:%M:%S") -
+        if result["destination"] == startStop[4] and result["startdayofweek"] == startStop[2] and \
+                result["enddayofweek"] == startStop[3]:
+        #if result["startdayofweek"] == startStop[2] and result["enddayofweek"] == startStop[3]:
+            try:
+                desPlannedTime = int((datetime.strptime(result["departures"][startStop[0]],"%H:%M:%S") -
                                   datetime(1900,1,1,0,0)).total_seconds())
-    return startStop[1],desPlannedTime
+            except IndexError:
+                print("Start stop info:", startStop)
+    return startStop[1], desPlannedTime

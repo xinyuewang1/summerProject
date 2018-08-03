@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^tourism', views.tourismView.as_view(), name='tourism'),
 
 
+    url(r'dublinBusInfo', views.DublinBusInfo, name = 'DublinBusInfo'),
 
     #This URL is used for Autocomplete Information for the form
     url(r'^RouteInfo', views.GenBusData, name='RouteInfo'),

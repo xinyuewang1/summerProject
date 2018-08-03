@@ -249,7 +249,7 @@ class Ett39A:
             return pred[1] - pred[0]
 
         else:
-            raise Exception("Fail to map " + str(self.source) + " and " + str(self.dest) + "on the same route.")
+            raise Exception("Fail to map " + str(self.source) + " and " + str(self.dest) + " on the same route.")
 
     # def monthWeek(self):
     #     monthList = [0] * 5
