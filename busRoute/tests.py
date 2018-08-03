@@ -216,17 +216,45 @@ class TestPageUrls(unittest.TestCase):
 
 
 class TestFormFields(unittest.TestCase):
-    c = routeForm()
 
 
-    # SimpleTestCase.assertFormsetError(response, formset, form_index, field, errors, msg_prefix=''
+    '''This class tests that the form for the web application is only valid when it has all necessary inputs'''
+   
+    def test_routeForm_valid(self):
 
-#<tr><th><label for="id_source">Source:</label></th><td><input type="text" name="source" class="form-control form-control-sm" placeholder="Source Stop.." required id="id_source" /></td></tr>
-# <tr><th><label for="id_destination">Destination:</label></th><td><input type="text" name="destination" class="form-control form-control-sm" placeholder="Destination.." required id="id_destination" /></td></tr>
-# <tr><th><label for="id_departTime">Departtime:</label></th><td><input type="text" name="departTime" class="form-control form-control-sm" placeholder="--:--" required id="id_departTime" /></td></tr>
-# <tr><th><label for="id_departDate">Departdate:</label></th><td><input type="text" name="departDate" class="form-control form-control-sm" placeholder="mm/dd/yyyy" required id="id_departDate" /></td></tr>
-# <tr><th><label for="id_returnTime">Returntime:</label></th><td><input type="text" name="returnTime" class="disable form-control form-control-sm" placeholder="Return Time" disabled id="id_returnTime" /></td></tr>
-# <tr><th><label for="id_returnDate">Returndate:</label></th><td><input type="text" name="returnDate" class="form-control form-control-sm" placeholder="Return Date" disabled id="id_returnDate" /></td></tr>
+        '''tests the validity of the form'''
+
+        form = routeForm(data={'source': "768", 'destination': "7161", 'departTime': "18:00", 'departDate': "08/02/2018"})
+        self.assertTrue(form.is_valid())
+
+    def test_routeForm_Source_invalid(self):
+
+        '''tests that the form is invalid without the source input'''
+
+        form = routeForm(data={'source': "", 'destination': "7161", 'departTime': "18:00", 'departDate': "08/02/2018"})
+        self.assertFalse(form.is_valid())
+
+    
+    def test_routeForm_Destination_invalid(self):
+
+        '''tests that the form is invalid without the destination input'''
+
+        form = routeForm(data={'source': "768", 'destination': "", 'departTime': "18:00", 'departDate': "08/02/2018"})
+        self.assertFalse(form.is_valid())
+
+    def test_routeForm_departTime_invalid(self):
+
+        '''tests that the form is invalid without the departTime input'''
+
+        form = routeForm(data={'source': "768", 'destination': "7161", 'departTime': "", 'departDate': "08/02/2018"})
+        self.assertFalse(form.is_valid())
+    
+    def test_routeForm_departDate_invalid(self):
+
+        '''tests that the form is invalid without the departDate input'''
+
+        form = routeForm(data={'source': "768", 'destination': "7161", 'departTime': "18:00", 'departDate': ""})
+        self.assertFalse(form.is_valid())
 
 
 class TestUtils(unittest.TestCase):
@@ -243,15 +271,10 @@ class TestUtils(unittest.TestCase):
         # Abnormal 2: directory doesn't exist
 
 
-
-
-
-
-
-
 if __name__ == '__main__':
     unittest.main()
 
 
-#References: https://stackoverflow.com/questions/18987051/how-do-i-unit-test-django-urls
-
+#References: 
+# https://stackoverflow.com/questions/18987051/how-do-i-unit-test-django-urls
+# https://micropyramid.com/blog/django-unit-test-cases-with-forms-and-views/
