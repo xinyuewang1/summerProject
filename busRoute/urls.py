@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^RouteInfo', views.GenBusData, name='RouteInfo'),
 
     url(r'^dublinBusRoutes', views.routeDirectionServices, name='dublinBusRoutes'),
+    url(r'dublinBusInfo', views.DublinBusInfo, name = 'DublinBusInfo'),
 
     #contains the information for the bikes data 
     url(r'^dublinBikeInfo', views.bikes_query, name='dublinBikeInfo'),

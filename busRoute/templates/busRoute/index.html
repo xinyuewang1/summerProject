@@ -98,22 +98,22 @@
                         <div class = "container-fluid">
                             <div class="row">
                                 <div class="col-4 nav2 border border-white border-top-0 border-left-0 border-bottom-0"><a class = "nav-link" id = "trafficButton" onclick="toggleTraffic(this)" href = "#">Traffic</a></div>
-                                <div class="col-4 nav2 border border-white border-top-0 border-left-0 border-bottom-0"><a class = "nav-link" href = "#" onclick="displayBusMarkers()" id="markersbutton">Markers</a></div>
+                                <div class="col-4 nav2 border border-white border-top-0 border-left-0 border-bottom-0"><a class = "nav-link" href = "#" onclick="displayBusMarkers()" id="markersbutton">Stops</a></div>
                                 <div class="col-4 nav2"><a class = "nav-link" href = "#" onclick = "displayBikeMarkers()" id="bikesbutton">Bikes</a></div>
                             </div>
                         </div>
                         <div id = "map"></div>
                         <script>
                             //Rezises the map div to a smaller value for very short phone screens
-                            $(document).ready(function(){
-                                var width = $(window).width(); 
-                                var height = $(window).height(); 
+                            // $(document).ready(function(){
+                            //     var width = $(window).width(); 
+                            //     var height = $(window).height(); 
         
-                                if (height<=740) {
-                                    $('#map').css("height", "240px")
-                                }
+                            //     if (height<=740) {
+                            //         $('#map').css("height", "240px")
+                            //     }
                                 
-                            });
+                            // });
                         </script>
 
                     </div>
@@ -249,7 +249,7 @@
                 var markerCluster = new MarkerClusterer(map, markers,
                     {imagePath: "{% static 'images/m' %}"});
 
-                    document.getElementById("markersbutton").innerHTML = "Hide Markers";
+                    document.getElementById("markersbutton").innerHTML = "Hide Stops";
                             
                     busMarkers++; 
                     
@@ -264,7 +264,7 @@
                 };
                 map=new google.maps.Map(document.getElementById("map"),mapProp);
 
-                document.getElementById("markersbutton").innerHTML = "Markers";
+                document.getElementById("markersbutton").innerHTML = "Stops";
                 busMarkers--;
 
                 };

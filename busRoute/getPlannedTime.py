@@ -102,6 +102,3 @@ def bus(time, route, start, end, weekday):
             except IndexError:
                 print("Start stop info:", startStop)
     return startStop[1], desPlannedTime
-
-# -----------------TEST-----------
-#bus("11:30",'145',7574,768,1)

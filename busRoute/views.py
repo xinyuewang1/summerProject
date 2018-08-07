@@ -36,76 +36,7 @@ class homeView(generic.TemplateView):
     
     def post(self, request):
         form = routeForm(request.POST)
-
-        if form.is_valid():
-            source_address = form.cleaned_data['source']
-            destination_address = form.cleaned_data['destination']
-            depart_time = form.cleaned_data['departTime']
-            depart_date = form.cleaned_data['departDate']
-
-        
-        busNum = googDir(findLatLong(source_address),findLatLong(destination_address), depart_date, depart_time)[0]
-        busNum = busNum.upper()
-
-        stops_local = []
-        stops_local.extend(findLatLong(source_address).split(","))
-        stops_local.extend(findLatLong(destination_address).split(","))
-
-        startLat = stops_local[0]
-        startLng = stops_local[1]
-        finLat = stops_local[2]
-        finLng = stops_local[3]
-
-
-        weather = query_weather()
-        rain, temp = query_rain_weather(depart_time, depart_date)
-        day = parseDayNumber(depart_date)
-        bus = DublinBus()
-      
-
-        
-        #Used to find the stop name using a given stop number
-        for i in bus:
-            if source_address == i['num']:
-                source_name = i['name']
-            if destination_address == i['num']:
-                destination_name = i['name']
-
-        try:
-            source_address = int(source_address)
-            destination_address = int(destination_address)
-
-        except:
-            for i in bus:
-                if source_address == i['name']:
-                    source_address = i['num']
-                if destination_address == i['name']:
-                    destination_address = i['num']
-            print("in the except with", source_address, destination_address)
-            print("oops")
-
-        dateChosen = datetime.datetime.strptime(depart_date, "%m/%d/%Y")
-        #my_date = date.today()
-        header = {'day': calendar.day_name[dateChosen.weekday()],
-                     'date': dateChosen.strftime("%d"),
-                     'month': dateChosen.strftime("%B")}
-
-
-        #print(source_num, dest_num)
-        print("take the bus", busNum)
-
-        #Finds the estimated travel time
-        est = Est39A(busNum, int(source_address), int(destination_address), rain, temp, depart_time, day, depart_date)
-
-        #Calculates arrival time based on departure time and estimated length of trip
-        arrival = arrivalTime(depart_time, est)
-
-        
-
-        args = {'form': form, 'bus': bus, 'busNum': busNum, 'source': source_address, 'source_name':source_name, 
-        'destination': destination_address, 'destination_name': destination_name, 'depart_time': depart_time, 
-        'depart_date': depart_date , 'arrival_time': arrival, 'startLat':startLat, 'startLng': startLng, 'finLat':finLat,
-        'finLng':finLng, 'est': est, 'weather': weather, 'header':header}
+        args = postFunc(request, form)
 
         return render(request, "busRoute/result.html", args)
 
@@ -119,82 +50,18 @@ class plannerView(generic.TemplateView):
     template_name = "busRoute/planner.html"
 
     def get(self,request):
+
         form = routeForm()
         weather = query_weather()
         bus = DublinBus()
-        #print(googDir(findLatLong("768"),findLatLong("7161"), "07/28/2018", "11:50"))
         context = {'weather': weather,'bus': bus, 'form': form}
+        
         return render(request, self.template_name, context)
     
     def post(self, request):
 
         form = routeForm(request.POST)
-
-        if form.is_valid():
-            source_address = form.cleaned_data['source']
-            destination_address = form.cleaned_data['destination']
-            depart_time = form.cleaned_data['departTime']
-            depart_date = form.cleaned_data['departDate']
-
-        
-        busNum = googDir(findLatLong(source_address),findLatLong(destination_address), depart_date, depart_time)[0]
-        busNum = busNum.upper()
-
-        stops_local = []
-        stops_local.extend(findLatLong(source_address).split(","))
-        stops_local.extend(findLatLong(destination_address).split(","))
-
-        startLat = stops_local[0]
-        startLng = stops_local[1]
-        finLat = stops_local[2]
-        finLng = stops_local[3]
-
-
-        weather = query_weather()
-        rain, temp = query_rain_weather(depart_time, depart_date)
-        day = parseDayNumber(depart_date)
-        bus = DublinBus()
-
-        
-        #Used to find the stop name using a given stop number
-        for i in bus:
-            if source_address == i['num']:
-                source_name = i['name']
-            if destination_address == i['num']:
-                destination_name = i['name']
-
-        try:
-            source_address = int(source_address)
-            destination_address = int(destination_address)
-
-        except:
-            for i in bus:
-                if source_address == i['name']:
-                    source_address = i['num']
-                if destination_address == i['name']:
-                    destination_address = i['num']
-            
-
-        dateChosen = datetime.datetime.strptime(depart_date, "%m/%d/%Y")
-        header = {'day': calendar.day_name[dateChosen.weekday()],
-                     'date': dateChosen.strftime("%d"),
-                     'month': dateChosen.strftime("%B")}
-
-        #print(source_num, dest_num)
-        print("take the bus", busNum)
-
-        #Finds the estimated travel time
-        est = Est39A(busNum, int(source_address), int(destination_address), rain, temp, depart_time, day, depart_date)
-
-        #Calculates arrival time based on departure time and estimated length of trip
-        arrival = arrivalTime(depart_time, est)
-
-        
-
-        args = {'form': form, 'bus': bus, 'busNum': busNum, 'source': source_address, 'source_name':source_name, 
-        'destination': destination_address, 'destination_name': destination_name, 'depart_time': depart_time, 
-        'depart_date': depart_date , 'arrival_time': arrival, 'startLat':startLat, 'startLng': startLng, 'finLat':finLat,
-        'finLng':finLng, 'est': est, 'weather': weather, 'header':header}
+        args = postFunc(request, form)
 
         return render(request, "busRoute/result.html", args)
 
@@ -215,76 +82,10 @@ class resultView(generic.TemplateView):
         return render(request, self.template_name, context)
     
     def post(self, request):
+
         form = routeForm(request.POST)
+        args = postFunc(request, form)
 
-        if form.is_valid():
-            source_address = form.cleaned_data['source']
-            destination_address = form.cleaned_data['destination']
-            depart_time = form.cleaned_data['departTime']
-            depart_date = form.cleaned_data['departDate']
-
-        
-        busNum = googDir(findLatLong(source_address),findLatLong(destination_address), depart_date, depart_time)[0]
-        busNum = busNum.upper()
-
-        stops_local = []
-        stops_local.extend(findLatLong(source_address).split(","))
-        stops_local.extend(findLatLong(destination_address).split(","))
-
-        startLat = stops_local[0]
-        startLng = stops_local[1]
-        finLat = stops_local[2]
-        finLng = stops_local[3]
-
-
-        weather = query_weather()
-        rain, temp = query_rain_weather(depart_time, depart_date)
-        day = parseDayNumber(depart_date)
-        bus = DublinBus()
-
-        dateChosen = datetime.datetime.strptime(depart_date, "%m/%d/%Y")
-        #my_date = date.today()
-        header = {'day': calendar.day_name[dateChosen.weekday()],
-                     'date': dateChosen.strftime("%d"),
-                     'month': dateChosen.strftime("%B")}
-
-        
-        #Used to find the stop name using a given stop number
-        for i in bus:
-            if source_address == i['num']:
-                source_name = i['name']
-            if destination_address == i['num']:
-                destination_name = i['name']
-
-        try:
-            source_address = int(source_address)
-            destination_address = int(destination_address)
-
-        except:
-            for i in bus:
-                if source_address == i['name']:
-                    source_address = i['num']
-                if destination_address == i['name']:
-                    destination_address = i['num']
-            print("in the except with", source_address, destination_address)
-            print("oops")
-
-
-        #print(source_num, dest_num)
-        print("take the bus", busNum)
-
-        #Finds the estimated travel time
-        est = Est39A(busNum, int(source_address), int(destination_address), rain, temp, depart_time, day, depart_date)
-
-        #Calculates arrival time based on departure time and estimated length of trip
-        arrival = arrivalTime(depart_time, est)
-
-        
-
-        args = {'form': form,'bus': bus, 'busNum': busNum, 'source': source_address, 'source_name':source_name, 
-        'destination': destination_address, 'destination_name': destination_name, 'depart_time': depart_time, 
-        'depart_date': depart_date , 'arrival_time': arrival, 'startLat':startLat, 'startLng': startLng, 'finLat':finLat,
-        'finLng':finLng, 'est': est, 'weather': weather, 'header':header} 
         return render(request, self.template_name, args)
 
 class tourismView(generic.TemplateView):
@@ -305,76 +106,86 @@ class tourismView(generic.TemplateView):
         return render(request, self.template_name, context)
 
     def post(self, request):
+
         form = routeForm(request.POST)
-
-        if form.is_valid():
-            source_address = form.cleaned_data['source']
-            destination_address = form.cleaned_data['destination']
-            depart_time = form.cleaned_data['departTime']
-            depart_date = form.cleaned_data['departDate']
-
-        
-        busNum = googDir(findLatLong(source_address),findLatLong(destination_address), depart_date, depart_time)[0]
-        busNum = busNum.upper()
-
-        stops_local = []
-        stops_local.extend(findLatLong(source_address).split(","))
-        stops_local.extend(findLatLong(destination_address).split(","))
-
-        startLat = stops_local[0]
-        startLng = stops_local[1]
-        finLat = stops_local[2]
-        finLng = stops_local[3]
-
-
-        weather = query_weather()
-        rain, temp = query_rain_weather(depart_time, depart_date)
-        day = parseDayNumber(depart_date)
-        bus = DublinBus()
-
-        
-        #Used to find the stop name using a given stop number
-        for i in bus:
-            if source_address == i['num']:
-                source_name = i['name']
-            if destination_address == i['num']:
-                destination_name = i['name']
-
-        try:
-            source_address = int(source_address)
-            destination_address = int(destination_address)
-
-        except:
-            for i in bus:
-                if source_address == i['name']:
-                    source_address = i['num']
-                if destination_address == i['name']:
-                    destination_address = i['num']
-            print("in the except with", source_address, destination_address)
-            print("oops")
-
-
-        #print(source_num, dest_num)
-        print("take the bus", busNum)
-
-        #Finds the estimated travel time
-        est = Est39A(busNum, int(source_address), int(destination_address), rain, temp, depart_time, day, depart_date)
-
-        #Calculates arrival time based on departure time and estimated length of trip
-        arrival = arrivalTime(depart_time, est)
-
-        
-
-        args = {'form': form,'bus': bus, 'busNum': busNum, 'source': source_address, 'source_name':source_name, 
-        'destination': destination_address, 'destination_name': destination_name, 'depart_time': depart_time, 
-        'depart_date': depart_date , 'arrival_time': arrival, 'startLat':startLat, 'startLng': startLng, 'finLat':finLat,
-        'finLng':finLng, 'est': est, 'weather': weather} 
+        args = postFunc(request, form)
 
         return render(request,"busRoute/result.html" , args)
     
+def postFunc(request, form):
+
+    if form.is_valid():
+        source_address = form.cleaned_data['source']
+        destination_address = form.cleaned_data['destination']
+        depart_time = form.cleaned_data['departTime']
+        depart_date = form.cleaned_data['departDate']
+
+    
+    busNum, source_address, destination_address = googDir(source_address,destination_address, depart_date, depart_time)
+    busNum = busNum[0].upper()
+    print("actual", findLatLong("3918"))
+    print(findLatLong("6089"))
+
+    stops_local = []
+    stops_local.extend(findLatLong(source_address).split(","))
+    stops_local.extend(findLatLong(destination_address).split(","))
+
+    startLat = stops_local[0]
+    startLng = stops_local[1]
+    finLat = stops_local[2]
+    finLng = stops_local[3]
 
 
-'''These are the more general queries called inside the above classes'''
+    weather = query_weather()
+    rain, temp = query_rain_weather(depart_time, depart_date)
+    day = parseDayNumber(depart_date)
+    bus = DublinBus()
+
+
+    
+    #Used to find the stop name using a given stop number
+    for i in bus:
+        if source_address == i['num']:
+            source_name = i['name']
+        if destination_address == i['num']:
+            destination_name = i['name']
+
+    # try:
+    #     source_address = int(source_address)
+    #     destination_address = int(destination_address)
+
+    # except:
+    #     for i in bus:
+    #         if source_address == i['name']:
+    #             source_address = i['num']
+    #         if destination_address == i['name']:
+    #             destination_address = i['num']
+        
+
+    dateChosen = datetime.datetime.strptime(depart_date, "%m/%d/%Y")
+    header = {'day': calendar.day_name[dateChosen.weekday()],
+                    'date': dateChosen.strftime("%d"),
+                    'month': dateChosen.strftime("%B")}
+
+    #print(source_num, dest_num)
+    print("take the bus", busNum)
+
+    #Finds the estimated travel time
+    est = Est39A(busNum, int(source_address), int(destination_address), rain, temp, depart_time, day, depart_date)
+    est = int(est)
+
+    #Calculates arrival time based on departure time and estimated length of trip
+    arrival = arrivalTime(depart_time, est)
+
+
+
+    args = {'form': form, 'bus': bus, 'busNum': busNum, 'source': source_address, 'source_name':source_name, 
+    'destination': destination_address, 'destination_name': destination_name, 'depart_time': depart_time, 
+    'depart_date': depart_date , 'arrival_time': arrival, 'startLat':startLat, 'startLng': startLng, 'finLat':finLat,
+    'finLng':finLng, 'est': est, 'weather': weather, 'header':header}
+
+    return args
+'''these are the more general queries called inside the above classes'''
 
 def query_weather():
     """
@@ -433,11 +244,38 @@ def bikes_query(request):
             loadedBikes = json.loads(dbInfo)
             results.append(loadedBikes)
 
-    return JsonResponse(results, safe=False)
-
+    return results
 
 def DublinBusInfo(request):
     
+    '''
+    This function creates a dictionary from the dublin bus data located inside Routes.csv to be accessed on the page for the markers
+    '''
+
+
+    results = []
+
+    with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r', encoding="utf8") as f:
+
+        reader = csv.reader(f)
+
+        for i in reader:
+               
+            
+                Info= {'lat': i[2],
+                        'lng':i[3],
+                        'name': i[1],
+                        'num': i[0]
+                    }
+
+            
+                dbInfo = json.dumps(Info) 
+                loadedBikes = json.loads(dbInfo)
+                results.append(loadedBikes)
+        
+    return JsonResponse(results, safe=False)
+          
+def DublinBus():
     '''
     This function creates a dictionary from the dublin bus data located inside Routes.csv to be accessed on the page for the markers
     '''
@@ -463,35 +301,6 @@ def DublinBusInfo(request):
                 results.append(loadedBikes)
         
     return JsonResponse(results, safe=False)
-
-
-def DublinBus():
-    '''
-    This function creates a dictionary from the dublin bus data located inside Routes.csv to be accessed on the page for the markers
-    '''
-
-
-    results = []
-
-    with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r') as f:
-
-        reader = csv.reader(f)
-
-        for i in reader:
-               
-            
-                Info= {'lat': i[2],
-                        'lng':i[3],
-                        'name': i[1],
-                        'num': i[0]
-                    }
-
-            
-                dbInfo = json.dumps(Info) 
-                loadedBikes = json.loads(dbInfo)
-                results.append(loadedBikes)   
-    return results
-
 
 def GenBusData(request): 
     '''
@@ -754,7 +563,9 @@ def query_rain_weather(time, date):
 
     if len(date) == 10:
         day = int(date[3:5])
-
+    
+    elif len(date) == 8:
+        day = int(date[2:3])
     else:
         day = int(date[2:4])
     
@@ -791,6 +602,8 @@ def query_rain_weather(time, date):
 def getRoute(request, bus):
     return JsonResponse(bus, safe=False)
 
+
+
 def googDir(origin, dest, date, t):
     """
     Uses googles' direction API to return the bus routes needed for a certain trip
@@ -803,7 +616,26 @@ def googDir(origin, dest, date, t):
 
     #origin = '53.381131,-6.592682'
     #dest = "53.298665 -6.302196"
+    #start = "Bray,CountyWicklow,Ireland"
+    #end = "Maynooth,CountyKildare,Ireland"
     #tim = "1532785345"
+    
+    origin = str(origin)
+
+    try:
+        origin = int(origin)
+        dest = int(dest)
+        start = findLatLong(str(origin))
+        end = findLatLong(str(dest))
+        source_stop = str(origin)
+        dest_stop = str(dest)
+        inputType = "stop" 
+    except:
+        start = origin.replace(" ", "")
+        end = dest.replace(" ", "")
+        inputType = "address"
+        
+
     if len(date) == 9:
         date = "0" + date
 
@@ -813,23 +645,79 @@ def googDir(origin, dest, date, t):
     date_str = date + " " + t
     dt_obj = datetime.datetime.strptime(date_str, "%m/%d/%Y %H:%M")
     v = int(time.mktime(dt_obj.timetuple()))
-    
+
     try:
-        r = requests.get(f"https://maps.googleapis.com/maps/api/directions/json?origin={origin}&destination={dest}&mode=transit&departure_time={v}&transit_mode=bus&key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0")
+        b = "&alternatives=true"
+        r = requests.get(f"https://maps.googleapis.com/maps/api/directions/json?origin={start}&destination={end}&mode=transit&departure_time={v}&transit_mode=bus&transit_routing_preference=fewer_transfers&key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0")
+
     except:
         raise Exception("Could not find bus route for this journey")
 
     r = r.json()
+    #print(r['routes'])
     response = r['routes'][0]['legs'][0]['steps']
-    for i in response:
-        try:
-            buses.append(i['transit_details']['line']['short_name'])
-        except:
-            pass
+    print(response)
+    
+    if inputType == "address":
+        
+        for i in response:
+
+            #company = i['transit_details']['line']['agencies'][0]['name']
+            
+            if i['travel_mode'] == "TRANSIT":
+                buses.append(i['transit_details']['line']['short_name'])
+
+                print("goog start", i['start_location']['lat'], ",", i['start_location']['lng'])
+                print("goog end", i['end_location']['lat'], ",", i['end_location']['lng'])
+
+                sLat = float("{0:.4f}".format(i['start_location']['lat']))
+                sLng = float("{0:.4f}".format(i['start_location']['lng']))
+
+                fLat = float("{0:.4f}".format(i['end_location']['lat']))
+                fLng = float("{0:.4f}".format(i['end_location']['lng']))
+
+                startName = i['transit_details']['departure_stop']['name']  
+                endName = i['transit_details']['arrival_stop']['name']
+                print()
+                print("GOOGLE JOURNEY DETAILS")
+                print("----------------------")
+                print("Start:", startName, "-- Lat:", sLat, "Long:", sLng)
+                print()
+                print("End:", endName, "-- Lat:", fLat, "Long:", fLng)
+                print()
+                print()
+
+                bus = DublinBus()
+            
+                for k in range(1,len(bus)):
+                    h = bus[k]['lat'][:7]
+                    y = bus[k]['lng'][:7]
+                    u = bus[k]['name']
+                    
+                    #if (str(sLat) == h or str(sLng) == y) and startName.startswith(u):
+                    if startName.startswith(u):
+                        source_stop = bus[k]['num']
+                        print("Found 1:", bus[k]['name'])
+
+                       
+                    #elif (str(fLat) == h or str(fLng) == y) and endName.startswith(u):
+                    elif endName.startswith(u):
+                        dest_stop = bus[k]['num']
+                        #print(u)
+                        print("Found 2:", bus[k]['name'])
+                    #print("blah", w, p)
+    else:
+        for i in response:
+            
+            if i['travel_mode'] == "TRANSIT":
+                buses.append(i['transit_details']['line']['short_name'])
+
     if not buses:
         raise Exception("No buses available")
+    
     else:
-        return buses 
+        print("Bus Numbers:", buses)
+        return buses, source_stop, dest_stop
 
 def findLatLong(location):
     """
@@ -857,9 +745,6 @@ def findLatLong(location):
                 return latLng_str
         
     raise Exception("Unable to find this stop number")
-
-
-
 
 
 

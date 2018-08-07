@@ -199,7 +199,7 @@ function swapSearch() {
         //implementing the autocompletes for the different input fields - source and destination. 
         google.maps.event.addListener(sourceAutocomplete, 'place_changed', function () {
             source = sourceAutocomplete.getPlace();
-
+            
             google.maps.event.addListener(destinationAutocomplete, 'place_changed', function () {
                 destination = destinationAutocomplete.getPlace();
 
@@ -208,7 +208,7 @@ function swapSearch() {
                 sourceLong = source.geometry.location.lng();
                 destinationLat = destination.geometry.location.lat();
                 destinationLong = destination.geometry.location.lng();
-
+                
 
                 //parsing them to create floats. 
 
@@ -245,7 +245,7 @@ function swapSearch() {
 
                             var buses = []
 
-
+                        
                             //iterating over the results 
                             for (var i = 0; i < x.length; i++) {
 
@@ -267,7 +267,7 @@ function swapSearch() {
 
                                     //access our bus data because we need to get the stop number for the model. 
 
-
+                                   
                                     $.ajax({
                                         type: "GET",
                                         url: "dublinBusInfo",
@@ -328,7 +328,7 @@ function swapSearch() {
 
                 }
 
-                getStopId();
+                 getStopId();
 
             })
         })
