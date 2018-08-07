@@ -1,7 +1,6 @@
 import pickle
 import numpy as np
 import os
-# from django.conf import settings
 from busApp.settings import STATIC_ROOT
 import urllib.request
 import json
@@ -16,58 +15,57 @@ def load_obj(name):
     :param name: name of the file if in current directory, directory/name if not.
     :return: loaded pkl file
     '''
-    if name.endswith('.pkl'):
-        print(os.path.join(STATIC_ROOT, name))
-        with open(os.path.join(STATIC_ROOT, name), 'rb') as f:
-
+    try:
+        path = os.path.join(STATIC_ROOT, name).replace('\\', '/')
+        if name.endswith('.pkl'):
+            with open(path, 'rb') as f:
+                return pickle.load(f)
+        with open(path + '.pkl', 'rb') as f:
             return pickle.load(f)
-    with open(os.path.join(STATIC_ROOT, name + '.pkl'), 'rb') as f:
-        return pickle.load(f)
-
-#---------------------TEST-------------------
-#l = load_obj('static/pickles/sortedStopList')
-#print(l)
-
-def getFirstAndLastStops1(route, stop1, stop2):
-    '''
-    Take route and two stops on it, return the first and last stop of this route as identifier.
-    Using API.
-    :param stop1: input stop 1
-    :param stop2: input stop 2
-    :return: first and last stop
-    '''
-    with urllib.request.urlopen(
-            "https://data.dublinked.ie/cgi-bin/rtpi/routeinformation?routeid=" + str(
-                route) + "&operator=bac&format=json") as url:
-        data = json.loads(url.read().decode())
-        for result in data['results']:
-            for stop in result['stops']:
-                if stop['stopid'] == stop1:
-                    continue
-                if stop['stopid'] == stop2:
-                    return result['stops'][0]['stopid'], result['stops'][-1]['stopid']
+    except FileNotFoundError:
+        print("\""+name+"\" not found")
 
 
-def getFirstAndLastStops2(route, stop1, stop2):
-    '''
-    Using routeDict flavor
-    :param route: bus line, e.g.:39A (Haven't consider case sensitive yet)
-    :param stop1: stop1 on route
-    :param stop2: stop2 on route
-    :return: first and last stop on this route
-    '''
-    for d in os.listdir('static/pickles/stopDicts'):
-        if d.startswith(route):
-            stopD = load_obj('pickles/stopDicts/' + d)
-
-            if stop1 in stopD and stop2 in stopD:
-                return (min(stopD.items(), key=operator.itemgetter(1))[0],
-                        max(stopD.items(), key=operator.itemgetter(1))[0])
-
-
-# This function is working, but one problem is that it will return the first route that matches, but meanwhile, it could
-# not be the longest or most frequently used one.
-# print(getFirstAndLastStops2('39A',769,793))
+# def getFirstAndLastStops1(route, stop1, stop2):
+#     '''
+#     Take route and two stops on it, return the first and last stop of this route as identifier.
+#     Using API.
+#     :param stop1: input stop 1
+#     :param stop2: input stop 2
+#     :return: first and last stop
+#     '''
+#     with urllib.request.urlopen(
+#             "https://data.dublinked.ie/cgi-bin/rtpi/routeinformation?routeid=" + str(
+#                 route) + "&operator=bac&format=json") as url:
+#         data = json.loads(url.read().decode())
+#         for result in data['results']:
+#             for stop in result['stops']:
+#                 if stop['stopid'] == stop1:
+#                     continue
+#                 if stop['stopid'] == stop2:
+#                     return result['stops'][0]['stopid'], result['stops'][-1]['stopid']
+#
+#
+# def getFirstAndLastStops2(route, stop1, stop2):
+#     '''
+#     Using routeDict flavor
+#     :param route: bus line, e.g.:39A (Haven't consider case sensitive yet)
+#     :param stop1: stop1 on route
+#     :param stop2: stop2 on route
+#     :return: first and last stop on this route
+#     '''
+#     for d in os.listdir('static/pickles/stopDicts'):
+#         if d.startswith(route):
+#             stopD = load_obj('pickles/stopDicts/' + d)
+#
+#             if stop1 in stopD and stop2 in stopD:
+#                 return (min(stopD.items(), key=operator.itemgetter(1))[0],
+#                         max(stopD.items(), key=operator.itemgetter(1))[0])
+#
+#
+# # This function is working, but one problem is that it will return the first route that matches, but meanwhile, it could
+# # not be the longest or most frequently used one.
+# # print(getFirstAndLastStops2('39A',769,793))
 
 def getFirstAndLastStops3(route, stop1, stop2):
     '''
@@ -79,14 +77,14 @@ def getFirstAndLastStops3(route, stop1, stop2):
     '''
     path = 'pickles/stopLists/'
     for l in load_obj('pickles/sortedIdList'):
-        #print("l:", l)
+        # print("l:", l)
         if l.split('_')[0] == route:
             stopList = load_obj(path + l)
-            #print("stopList:", stopList)
+            # print("stopList:", stopList)
             if stop1 in stopList and stop2 in stopList:
                 progrnumber1 = stopList.index(stop1) + 1
                 progrnumber2 = stopList.index(stop2) + 1
-                #print("prog numbers", progrnumber1, progrnumber1)
+                # print("prog numbers", progrnumber1, progrnumber1)
 
                 # index starts with 0, progrnumber starts with 1
                 if progrnumber1 < progrnumber2:
