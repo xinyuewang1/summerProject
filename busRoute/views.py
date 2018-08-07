@@ -125,6 +125,8 @@ def postFunc(request, form):
     
     busNum, source_address, destination_address = googDir(source_address,destination_address, depart_date, depart_time)
     busNum = busNum[0].upper()
+    print("actual", findLatLong("3918"))
+    print(findLatLong("6089"))
 
     stops_local = []
     stops_local.extend(findLatLong(source_address).split(","))
@@ -533,7 +535,9 @@ def query_rain_weather(time, date):
 
     if len(date) == 10:
         day = int(date[3:5])
-
+    
+    elif len(date) == 8:
+        day = int(date[2:3])
     else:
         day = int(date[2:4])
     
@@ -617,7 +621,8 @@ def googDir(origin, dest, date, t):
     
     
     try:
-        r = requests.get(f"https://maps.googleapis.com/maps/api/directions/json?origin={start}&destination={end}&mode=transit&departure_time={v}&transit_mode=bus&transit_routing_preference=fewer_transfers&alternatives=true&key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0")
+        b = "&alternatives=true"
+        r = requests.get(f"https://maps.googleapis.com/maps/api/directions/json?origin={start}&destination={end}&mode=transit&departure_time={v}&transit_mode=bus&transit_routing_preference=fewer_transfers&key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0")
 
     except:
         raise Exception("Could not find bus route for this journey")
@@ -626,13 +631,18 @@ def googDir(origin, dest, date, t):
     #print(r['routes'])
     response = r['routes'][0]['legs'][0]['steps']
     print(response)
-
+    
     if inputType == "address":
         
         for i in response:
+
+            #company = i['transit_details']['line']['agencies'][0]['name']
             
             if i['travel_mode'] == "TRANSIT":
                 buses.append(i['transit_details']['line']['short_name'])
+
+                print("goog start", i['start_location']['lat'], ",", i['start_location']['lng'])
+                print("goog end", i['end_location']['lat'], ",", i['end_location']['lng'])
 
                 sLat = float("{0:.4f}".format(i['start_location']['lat']))
                 sLng = float("{0:.4f}".format(i['start_location']['lng']))
@@ -642,9 +652,15 @@ def googDir(origin, dest, date, t):
 
                 startName = i['transit_details']['departure_stop']['name']  
                 endName = i['transit_details']['arrival_stop']['name']
-                print("start", startName, "end", endName)
+                print()
+                print("GOOGLE JOURNEY DETAILS")
+                print("----------------------")
+                print("Start:", startName, "-- Lat:", sLat, "Long:", sLng)
+                print()
+                print("End:", endName, "-- Lat:", fLat, "Long:", fLng)
+                print()
+                print()
 
-                print("lat", sLat, "lng", sLng)
                 bus = DublinBus()
             
                 for k in range(1,len(bus)):
@@ -655,29 +671,25 @@ def googDir(origin, dest, date, t):
                     
                     
                     
-                    if (str(sLat) == h or str(sLng) == y) and startName.startswith(u):
+                    #if (str(sLat) == h or str(sLng) == y) and startName.startswith(u):
+                    if startName.startswith(u):
                         source_stop = bus[k]['num']
-                        print("yay", bus[k]['name'])
-                        print(u)
-                        
-                       
+                        print("Found 1:", bus[k]['name'])
 
-                    elif (str(fLat) == h or str(fLng) == y) and endName.startswith(u):
+                       
+                    #elif (str(fLat) == h or str(fLng) == y) and endName.startswith(u):
+                    elif endName.startswith(u):
                         dest_stop = bus[k]['num']
-                        print(u)
-                        print("yaaaa", bus[k]['name'])
+                        #print(u)
+                        print("Found 2:", bus[k]['name'])
                     #print("blah", w, p)
 
 
-    for i in response:
-        try:
-            buses.append(i['transit_details']['line']['short_name'])
-
-        except:
-            pass
     if not buses:
         raise Exception("No buses available")
+    
     else:
+        print("Bus Numbers:", buses)
         return buses, source_stop, dest_stop
 
 def findLatLong(location):
