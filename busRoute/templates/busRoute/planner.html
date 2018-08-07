@@ -38,11 +38,11 @@
                         // $(document).ready(function(){
                         //     var width = $(window).width(); 
                         //     var height = $(window).height(); 
-    
+
                         //     if (height<=740) {
                         //         $('#map').css("height", "240px")
                         //     }
-                            
+
                         // });
                     </script>
                     <!-- <div id = "RouteDiv"></div> -->
@@ -75,9 +75,17 @@
                                 </input>
                         </div>
                     </div>
-                    <div id = "stopSearchOptions" style = "display:none;border-top:1px solid white;"><p class = "text-white">Enter a location below to view the it's local stops</p><div><input id='genSearch' placeholder='Search Area' type='text'></input></div></div>
-                    <div id = "routeSearchOptions" style = "display:none;border-top:1px solid white;"><p class = "text-white">Enter a route number to view on map</p><input id = "routeSearch" onfocus = "routeSearch()" placeholder="Search Routes"></div>
-                   
+                    <div id="stopSearchOptions" style="display:none;border-top:1px solid white;">
+                        <p class="text-white">Enter a location below to view the it's local stops</p>
+                        <div>
+                            <input id='genSearch' placeholder='Search Area' type='text'></input>
+                        </div>
+                    </div>
+                    <div id="routeSearchOptions" style="display:none;border-top:1px solid white;">
+                        <p class="text-white">Enter a route number to view on map</p>
+                        <input id="routeSearch" onfocus="routeSearch()" placeholder="Search Routes">
+                    </div>
+
                 </div>
 
 
@@ -345,7 +353,7 @@
                     document.getElementById("id_source").value + '&format=json',
                     function (daily) {
 
-                        
+
                         for (var i = 0; i < daily.length; i++) {
 
                             var name = daily[i].name;
@@ -535,6 +543,8 @@
 
             var busMarkers = 0;
 
+            var markBus = []
+
             function displayBusMarkers() {
 
 
@@ -542,9 +552,6 @@
                 infoBus = new google.maps.InfoWindow;
 
                 if (busMarkers == 0) {
-
-
-                    var markers = []
 
 
                     //this function displays the dublin bus markers
@@ -570,28 +577,28 @@
 
                     });
 
-                    markers.push(marker);
+                    markBus.push(marker);
 
-                    google.maps.event.addListener(marker, 'mouseover', (function (markers) {
+                    google.maps.event.addListener(marker, 'mouseover', (function (markBus) {
                         return function () {
                             infoBus.open(map, this);
                             infoBus.setContent('{{ p.name }}' + '<br>' + '(' + '{{ p.num }}' + ')');
                         }
-                    })(markers));
+                    })(markBus));
 
-                    google.maps.event.addListener(marker, 'click', (function (markers) {
+                    google.maps.event.addListener(marker, 'click', (function (markBus) {
                         return function () {
 
                             document.getElementById("id_source").value = '{{ p.num }}';
                         }
-                    })(markers));
+                    })(markBus));
 
 
                     "{% endfor %}"
                     "{% endif %}"
 
 
-                    var markerCluster = new MarkerClusterer(map, markers, {
+                    markerCluster = new MarkerClusterer(map, markBus, {
                         imagePath: "{% static 'images/m' %}"
                     });
 
@@ -601,12 +608,8 @@
 
                 } else {
 
-                    var mapProp = {
-                        center: new google.maps.LatLng(53.347515, -6.265377),
-                        zoom: 10,
-                    };
-                    map = new google.maps.Map(document.getElementById("map"), mapProp);
-
+                    markerCluster.clearMarkers();
+                    markBus = []
                     document.getElementById("markersbutton").innerHTML = "Stops";
                     busMarkers--;
 
@@ -616,11 +619,11 @@
             var bikeMarkers = 0;
 
 
+            var markBikes = []
             infoWindow = new google.maps.InfoWindow;
             infoBikes = new google.maps.InfoWindow;
 
             function displayBikeMarkers() {
-
 
                 var jqxhr = $.getJSON('http://localhost:8000/dublinBikeInfo',
                     function (daily) {
@@ -629,9 +632,9 @@
 
                         if (bikeMarkers == 0) {
 
+
                             //this function displays the dublin bikes markers
 
-                            var markers = [];
                             for (var i = 0; i < daily.length; i++) {
 
 
@@ -653,19 +656,19 @@
                                     title: name
                                 });
 
-                                markers.push(marker);
+                                markBikes.push(marker);
 
 
-                                google.maps.event.addListener(marker, 'click', (function (markers) {
+                                google.maps.event.addListener(marker, 'click', (function (markBikes) {
                                     return function () {
                                         infoBikes.open(map, this);
                                         infoBikes.setContent(name);
                                     }
-                                })(markers));
+                                })(markBikes));
 
                             }
 
-                            var markerCluster = new MarkerClusterer(map, markers, {
+                            markerCluster1 = new MarkerClusterer(map, markBikes, {
                                 imagePath: "{% static 'images/m' %}"
                             });
 
@@ -674,15 +677,14 @@
                             document.getElementById("bikesbutton").innerHTML = "Hide Bikes";
                         } else {
 
-
-                            var mapProp = {
-                                center: new google.maps.LatLng(53.347515, -6.265377),
-                                zoom: 10,
-                            };
-                            map = new google.maps.Map(document.getElementById("map"), mapProp);
+                            //this checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
+                            markerCluster1.clearMarkers();
+                            markBikes = []
 
                             document.getElementById("bikesbutton").innerHTML = "Bikes";
                             bikeMarkers--;
+
+
 
                         }
 

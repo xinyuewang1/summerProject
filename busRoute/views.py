@@ -244,7 +244,7 @@ def bikes_query(request):
             loadedBikes = json.loads(dbInfo)
             results.append(loadedBikes)
 
-    return results
+    return JsonResponse(results, safe=False)
 
 def DublinBusInfo(request):
     
