@@ -373,6 +373,7 @@ class tourismView(generic.TemplateView):
         return render(request,"busRoute/result.html" , args)
     
 
+
 '''These are the more general queries called inside the above classes'''
 
 def query_weather():
@@ -440,7 +441,6 @@ def DublinBusInfo(request):
     '''
     This function creates a dictionary from the dublin bus data located inside Routes.csv to be accessed on the page for the markers
     '''
-
 
     results = []
 
@@ -519,38 +519,6 @@ def GenBusData(request):
     return JsonResponse(results, safe=False) 
 
 
-def DublinBusRoutes(request):
-    '''
-    This function connects to RTPI to get a list of the Routes on Dublin Bus to use for the route search option
-    '''
-
-    url = requests.get("https://data.dublinked.ie/cgi-bin/rtpi/routelistinformation?operator=bac&format=json")
-    url = url.json()
-    results = []
-    x = url['results']
-    count = 0
-  
-    for i in x: 
-        count += 1
-
-        if count == 352:
-
-            #there was some weird things happening with the api with things called BAC. Will need to find alternative. 
-            break
-
-        else:   
-            Info= {'route': i['route']
-                    
-                    }
-
-            dbInfo = json.dumps(Info) 
-            loadedBikes = json.loads(dbInfo)
-            results.append(loadedBikes)
-
-    return JsonResponse(results, safe=False) 
-
-    
-#used to get the Dublin bus stops nearest to the user. 
 def stopNearMe(request,lat, lng):
 
 
@@ -574,7 +542,66 @@ def stopNearMe(request,lat, lng):
         loadedBikes = json.loads(dbInfo)
         results.append(loadedBikes)
       
-       
+
+    return JsonResponse(results, safe=False)
+
+
+def routeDirectionServices(request):
+
+
+    '''This accesses the routes and directions from a CSV and passs it to a URL that is connected to an AJAX autocomplete function for the Route Search'''
+
+    results = []
+  
+    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r') as f:
+
+        reader = csv.reader(f)
+        
+
+        for i in reader:
+            Info= {
+                        'route': i[5]
+                    }
+            if Info in results:
+                pass
+            else:
+                dbInfo = json.dumps(Info) 
+                loadedBikes = json.loads(dbInfo)
+                results.append(loadedBikes)
+        
+    return JsonResponse(results, safe=False) 
+
+
+def get_route_data(request, route):
+
+
+    ''''This backend function takes an argument from a url (a route entered in the route info search option) and uses it to access the stops on that route using pandas'''
+
+
+    results = []
+    
+
+    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r') as f:
+
+        reader = pd.read_csv(f)
+        x = reader.loc[reader['direction'] == route ]
+        
+        
+        for index, row in x.iterrows(): 
+            stop = row['stopid']
+            lat = row['stop_lat']
+            lng = row['stop_lon']
+            name = row['stop_name']
+
+            Info= {'lat': lat,
+                            'lng': lng,
+                            'name': name,
+                            'id': stop
+                }
+
+            dbInfo = json.dumps(Info) 
+            loadedBikes = json.loads(dbInfo)
+            results.append(loadedBikes)
 
     return JsonResponse(results, safe=False)
 
@@ -590,6 +617,10 @@ def stopNearMe(request,lat, lng):
 #     result_min = float("{0:.2f}".format(result/60))
 
 #     return result_min
+
+
+'''These functions are specific to the form and are essential to the model'''
+
 
 def Est39A(route, source, dest, precipitation, temp, timeStr, weekday, dateStr):
     '''
@@ -828,64 +859,6 @@ def findLatLong(location):
     raise Exception("Unable to find this stop number")
 
 
-def routeDirectionServices(request):
-
-
-    '''This accesses the routes and directions from a CSV and passs it to a URL that is connected to an AJAX autocomplete function for the Route Search'''
-
-    results = []
-  
-    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r') as f:
-
-        reader = csv.reader(f)
-        
-
-        for i in reader:
-            Info= {
-                        'route': i[5]
-                    }
-            if Info in results:
-                pass
-            else:
-                dbInfo = json.dumps(Info) 
-                loadedBikes = json.loads(dbInfo)
-                results.append(loadedBikes)
-        
-    return JsonResponse(results, safe=False) 
-
-
-def get_route_data(request, route):
-
-
-    ''''This backend function takes an argument from a url (a route entered in the route info search option) and uses it to query the smart dublin api for its stops information '''
-
-
-    results = []
-    
-
-    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r') as f:
-
-        reader = pd.read_csv(f)
-        x = reader.loc[reader['direction'] == route ]
-        
-        
-        for index, row in x.iterrows(): 
-            stop = row['stopid']
-            lat = row['stop_lat']
-            lng = row['stop_lon']
-            name = row['stop_name']
-
-            Info= {'lat': lat,
-                            'lng': lng,
-                            'name': name,
-                            'id': stop
-                }
-
-            dbInfo = json.dumps(Info) 
-            loadedBikes = json.loads(dbInfo)
-            results.append(loadedBikes)
-
-    return JsonResponse(results, safe=False)
 
 
 

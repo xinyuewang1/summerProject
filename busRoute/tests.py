@@ -169,10 +169,7 @@ class TestViewResponses(unittest.TestCase):
         x = parseDayNumber(date)
         self.assertTrue(x == 1)
 
-
-
 # class TestViewDataTypes(unittest.TestCase):
-
 
 class TestPageUrls(unittest.TestCase):
 

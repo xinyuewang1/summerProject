@@ -524,7 +524,6 @@ function realTimeInfo() {
 };
 
 
-
 //Functions to display/hide the stop search and route search
 function findStop() {
     if (document.getElementById("stopSearchOptions").style.display == "none") {
