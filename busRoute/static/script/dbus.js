@@ -1,4 +1,9 @@
+$(document).ready(function () {
+    myMap()
+});
+
 function myMap() {
+
     // Function to display the google map on startup
     var mapProp = {
         center: new google.maps.LatLng(53.347515, -6.265377),
@@ -51,7 +56,6 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.open(map);
 }
 
-
 // function getLocation() {
 //     if (navigator.geolocation) {
 //         location = navigator.geolocation.watchPosition(update);
@@ -85,18 +89,16 @@ function toggleTraffic(btn) {
             center: new google.maps.LatLng(53.347515, -6.265377),
             zoom: 12,
         };
-        var map = new google.maps.Map(document.getElementById("map"), mapProp);
-        var trafficLayer = new google.maps.TrafficLayer();
+        
+        map = new google.maps.Map(document.getElementById("map"), mapProp);
+        trafficLayer = new google.maps.TrafficLayer();
         trafficLayer.setMap(map);
         document.getElementById("trafficButton").innerHTML = "Hide Traffic";
         trafficCheck++;
 
     } else {
-        var mapProp = {
-            center: new google.maps.LatLng(53.347515, -6.265377),
-            zoom: 12,
-        };
-        var map = new google.maps.Map(document.getElementById("map"), mapProp);
+
+        trafficLayer.setMap(null);
         document.getElementById("trafficButton").innerHTML = "Traffic";
         trafficCheck--;
     }
@@ -469,6 +471,7 @@ function getStops() {
         })
 };
 
+
 function realTimeInfo() {
 
     //this function gets real time information for the stop that is selected.
@@ -542,11 +545,6 @@ function findRoute() {
         document.getElementById("routeSearchOptions").style.display = "none";
     }
 }
-
-
-
-
-
 
 
 // References:

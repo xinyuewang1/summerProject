@@ -1,6 +1,5 @@
 {%extends 'base.html' %}
 {% load staticfiles %}
-
 {% block body %}
 <body>
     <!-- Link to main javaScript file -->
@@ -129,6 +128,84 @@
                         <div class = "row">
                             <button type ="submit" class = "btn btn-block btn-primary m-2" name = "go">GO!</button>
                             <script>
+
+
+                                var bikeMarkers = 0;
+
+
+var markBikes = []
+
+function displayBikeMarkers() {
+
+    var jqxhr = $.getJSON('http://localhost:8000/dublinBikeInfo',
+        function (daily) {
+             var infoWindow = new google.maps.InfoWindow;
+             var infoBikes = new google.maps.InfoWindow;
+
+
+
+            if (bikeMarkers == 0) {
+
+
+                //this function displays the dublin bikes markers
+
+                for (var i = 0; i < daily.length; i++) {
+
+
+                    var lat = daily[i].lat;
+                    var long = daily[i].lng;
+                    var name = daily[i].name;
+
+
+                    var busicon = {
+                        url: "{% static 'images/dublinBikes.png' %}", // url
+                        scaledSize: new google.maps.Size(40, 40), // scaled size            
+                    };
+
+
+                    var latlng = new google.maps.LatLng(lat, long);
+                    var marker = new google.maps.Marker({
+                        position: latlng,
+                        icon: busicon,
+                        title: name
+                    });
+
+                    markBikes.push(marker);
+
+
+                    google.maps.event.addListener(marker, 'click', (function (markBikes) {
+                        return function () {
+                            infoBikes.open(map, this);
+                            infoBikes.setContent(name);
+                        }
+                    })(markBikes));
+
+                }
+
+                markerCluster1 = new MarkerClusterer(map, markBikes, {
+                    imagePath: "{% static 'images/m' %}"
+                });
+
+                bikeMarkers++;
+
+                document.getElementById("bikesbutton").innerHTML = "Hide Bikes";
+            } else {
+
+                //this checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
+                markerCluster1.clearMarkers();
+                markBikes = []
+
+                document.getElementById("bikesbutton").innerHTML = "Bikes";
+                bikeMarkers--;
+
+
+
+            }
+
+
+        });
+
+};
                                 var onEnter = document.getElementById("routeSearch");
                                     onEnter.addEventListener("keydown", function (value) {
                                         if (value.keyCode === 13) {
@@ -407,114 +484,95 @@
             };
             initialize();
             var busMarkers = 0;
-            function displayBusMarkers() {
-                infoWindow = new google.maps.InfoWindow;
-                infoBus = new google.maps.InfoWindow;
-                if (busMarkers == 0) {
-                    var markers = []
-                    //this function displays the dublin bus markers
-                    "{% if bus %}"
-                    "{% for p in bus %}"
-                    var data = "{{ p }}"
-                    var lat = "{{ p.lat }}"
-                    var long = "{{ p.lng }}"
-                    var name = "{{ p.name }}"
-                    var id = "{{ p.id }}";
-                    var lat = parseFloat(lat);
-                    var long = parseFloat(long);
-                    var latlng = new google.maps.LatLng(lat, long);
-                    var marker = new google.maps.Marker({
-                        position: latlng,
-                        title: name
-                    });
-                    markers.push(marker);
-                    google.maps.event.addListener(marker, 'mouseover', (function (markers) {
-                        return function () {
-                            infoBus.open(map, this);
-                            infoBus.setContent('{{ p.name }}' + '<br>' + '(' + '{{ p.num }}' + ')');
-                        }
-                    })(markers));
-                    google.maps.event.addListener(marker, 'click', (function (markers) {
-                        return function () {
-                            document.getElementById("autocomplete").value = '{{ p.id }}';
-                        }
-                    })(markers));
-                    "{% endfor %}"
-                    "{% endif %}"
-                    var markerCluster = new MarkerClusterer(map, markers, {
-                        imagePath: "{% static 'images/m' %}"
-                    });
-                    document.getElementById("markersbutton").innerHTML = "Hide Stops";
-                    busMarkers++;
-                } else {
-                    var mapProp = {
-                        center: new google.maps.LatLng(53.347515, -6.265377),
-                        zoom: 10,
-                    };
-                    map = new google.maps.Map(document.getElementById("map"), mapProp);
-                    document.getElementById("markersbutton").innerHTML = "Stops";
-                    busMarkers--;
-                };
+            var busMarkers = 0;
+
+var markBus = []
+
+function displayBusMarkers() {
+
+
+    infoWindow = new google.maps.InfoWindow;
+    infoBus = new google.maps.InfoWindow;
+
+    if (busMarkers == 0) {
+
+
+        //this function displays the dublin bus markers
+
+        "{% if bus %}"
+        "{% for p in bus %}"
+
+        var data = "{{ p }}"
+        var lat = "{{ p.lat }}"
+        var long = "{{ p.lng }}"
+        var name = "{{ p.name }}"
+        var id = "{{ p.num }}";
+
+        var lat = parseFloat(lat);
+        var long = parseFloat(long);
+
+
+
+        var latlng = new google.maps.LatLng(lat, long);
+        var marker = new google.maps.Marker({
+            position: latlng,
+            title: name
+
+        });
+
+        markBus.push(marker);
+
+        google.maps.event.addListener(marker, 'mouseover', (function (markBus) {
+            return function () {
+                infoBus.open(map, this);
+                infoBus.setContent('{{ p.name }}' + '<br>' + '(' + '{{ p.num }}' + ')');
             }
-            var bikeMarkers = 0;
-            infoWindow = new google.maps.InfoWindow;
-            infoBikes = new google.maps.InfoWindow;
-            function displayBikeMarkers() {
-                if (bikeMarkers == 0) {
-                    //this function displays the dublin bikes markers
-                    var markers = [];
-                    "{% if bikes %}"
-                    "{% for i in bikes %}"
-                    var data = "{{ i }}"
-                    var lat = "{{ i.lat }}"
-                    var long = "{{ i.lng }}"
-                    var name = " {{ i.name }}"
-                    var busicon = {
-                        url: "{% static 'images/dublinBikes.png' %}", // url
-                        scaledSize: new google.maps.Size(40, 40), // scaled size            
-                    };
-                    var latlng = new google.maps.LatLng(lat, long);
-                    var marker = new google.maps.Marker({
-                        position: latlng,
-                        icon: busicon,
-                        title: name
-                    });
-                    markers.push(marker);
-                    google.maps.event.addListener(marker, 'click', (function (markers) {
-                        return function () {
-                            infoBikes.open(map, this);
-                            infoBikes.setContent('{{ i.name }}');
-                        }
-                    })(markers));
-                    "{% endfor %}"
-                    "{% endif %}"
-                    var markerCluster = new MarkerClusterer(map, markers, {
-                        imagePath: "{% static 'images/m' %}"
-                    });
-                    bikeMarkers++;
-                    document.getElementById("bikesbutton").innerHTML = "Hide Bikes";
-                } else {
-                    var mapProp = {
-                        center: new google.maps.LatLng(53.347515, -6.265377),
-                        zoom: 10,
-                    };
-                    map = new google.maps.Map(document.getElementById("map"), mapProp);
-                    document.getElementById("bikesbutton").innerHTML = "Bikes";
-                    bikeMarkers--;
+        })(markBus));
+
+        google.maps.event.addListener(marker, 'click', (function (markBus) {
+            return function () {
+
+
+                var c = document.getElementById("stopSearch").style.backgroundColor;
+
+                //checks the background color and adds the address if address is selected or adds number if number is selected. 
+
+                if (c == "black") { document.getElementById("id_source").value = '{{ p.name }}';}
+                
+                else{
+
+                    document.getElementById("id_source").value = '{{ p.num}}'
+
                 }
-            };
-            $(function () {
-                $("#id_destination").autocomplete({
-                    source: "api/getDesintation/",
-                    select: function (event, ui) { //item selected
-                        AutoCompleteSelectHandler(event, ui)
-                    },
-                    minLength: 1,
-                });
-            });
-            function AutoCompleteSelectHandler(event, ui) {
-                var selectedObj = ui.item;
             }
+
+
+
+        })(markBus));
+
+
+        "{% endfor %}"
+        "{% endif %}"
+
+
+        markerCluster = new MarkerClusterer(map, markBus, {
+            imagePath: "{% static 'images/m' %}"
+        });
+
+        document.getElementById("markersbutton").innerHTML = "Hide Stops";
+
+        busMarkers++;
+
+    } else {
+
+        markerCluster.clearMarkers();
+        markBus = []
+        document.getElementById("markersbutton").innerHTML = "Stops";
+        busMarkers--;
+
+    };
+}
+
         </script>
 
 

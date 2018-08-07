@@ -1,10 +1,9 @@
-{%extends 'base.html' %} {% load staticfiles %} {% block body %}
+{%extends 'base.html' %} {% load staticfiles %}{% block body %}
 
 <body>
     <script>
-        $(document).ready(function () {
-            myMap()
-        });
+        //this accesses the data that is rendered in and creates a variable that can be accessed in the external DB.JS file. 
+        var bus = "{{ bus| length }}"
     </script>
     <!-- Link to main javaScript file -->
     <script src="{% static 'script/dbus.js' %}"></script>
@@ -72,7 +71,7 @@
                         <p class="text-white">Enter a location below to view the it's local stops</p>
                         <div>
                             <input id='genSearch' placeholder='Search Area' type='text' onclick="placeSearch()">
-                                </input>
+                            </input>
                         </div>
                     </div>
                     <div id="stopSearchOptions" style="display:none;border-top:1px solid white;">
@@ -155,6 +154,80 @@
                         <div class="row">
 
                             <script>
+                                var bikeMarkers = 0;
+                                var markBikes = []
+
+                                function displayBikeMarkers() {
+
+                                    var jqxhr = $.getJSON('http://localhost:8000/dublinBikeInfo',
+                                        function (daily) {
+                                            var infoWindow = new google.maps.InfoWindow;
+                                            var infoBikes = new google.maps.InfoWindow;
+
+
+
+                                            if (bikeMarkers == 0) {
+
+                                                //this function displays the dublin bikes markers
+
+                                                for (var i = 0; i < daily.length; i++) {
+
+
+                                                    var lat = daily[i].lat;
+                                                    var long = daily[i].lng;
+                                                    var name = daily[i].name;
+
+
+                                                    var busicon = {
+                                                        url: "{% static 'images/dublinBikes.png' %}", // url
+                                                        scaledSize: new google.maps.Size(40, 40), // scaled size            
+                                                    };
+
+                                                    var latlng = new google.maps.LatLng(lat, long);
+                                                    var marker = new google.maps.Marker({
+                                                        position: latlng,
+                                                        icon: busicon,
+                                                        title: name
+                                                    });
+
+                                                    markBikes.push(marker);
+
+
+                                                    google.maps.event.addListener(marker, 'click', (function (
+                                                        markBikes) {
+                                                        return function () {
+                                                            infoBikes.open(map, this);
+                                                            infoBikes.setContent(name);
+                                                        }
+                                                    })(markBikes));
+
+                                                }
+
+                                                markerCluster1 = new MarkerClusterer(map, markBikes, {
+                                                    imagePath: "{% static 'images/m' %}"
+                                                });
+
+
+
+                                                document.getElementById("bikesbutton").innerHTML = "Hide Bikes";
+                                                bikeMarkers++;
+
+                                            } else {
+
+                                                //this checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
+                                                markerCluster1.clearMarkers();
+                                                markBikes = []
+
+                                                document.getElementById("bikesbutton").innerHTML = "Bikes";
+                                                bikeMarkers--;
+
+                                            }
+
+
+                                        });
+
+                                };
+
                                 function placeSearch() {
 
 
@@ -541,6 +614,7 @@
 
             }
 
+
             var busMarkers = 0;
 
             var markBus = []
@@ -589,8 +663,22 @@
                     google.maps.event.addListener(marker, 'click', (function (markBus) {
                         return function () {
 
-                            document.getElementById("id_source").value = '{{ p.num }}';
+
+                            var c = document.getElementById("stopSearch").style.backgroundColor;
+
+                            //checks the background color and adds the address if address is selected or adds number if number is selected. 
+
+                            if (c == "black") { document.getElementById("id_source").value = '{{ p.name }}';}
+                            
+                            else{
+
+                                document.getElementById("id_source").value = '{{ p.num}}'
+
+                            }
                         }
+
+
+
                     })(markBus));
 
 
@@ -616,82 +704,6 @@
                 };
             }
 
-            var bikeMarkers = 0;
-
-
-            var markBikes = []
-            infoWindow = new google.maps.InfoWindow;
-            infoBikes = new google.maps.InfoWindow;
-
-            function displayBikeMarkers() {
-
-                var jqxhr = $.getJSON('http://localhost:8000/dublinBikeInfo',
-                    function (daily) {
-
-
-
-                        if (bikeMarkers == 0) {
-
-
-                            //this function displays the dublin bikes markers
-
-                            for (var i = 0; i < daily.length; i++) {
-
-
-                                var lat = daily[i].lat;
-                                var long = daily[i].lng;
-                                var name = daily[i].name;
-
-
-                                var busicon = {
-                                    url: "{% static 'images/dublinBikes.png' %}", // url
-                                    scaledSize: new google.maps.Size(40, 40), // scaled size            
-                                };
-
-
-                                var latlng = new google.maps.LatLng(lat, long);
-                                var marker = new google.maps.Marker({
-                                    position: latlng,
-                                    icon: busicon,
-                                    title: name
-                                });
-
-                                markBikes.push(marker);
-
-
-                                google.maps.event.addListener(marker, 'click', (function (markBikes) {
-                                    return function () {
-                                        infoBikes.open(map, this);
-                                        infoBikes.setContent(name);
-                                    }
-                                })(markBikes));
-
-                            }
-
-                            markerCluster1 = new MarkerClusterer(map, markBikes, {
-                                imagePath: "{% static 'images/m' %}"
-                            });
-
-                            bikeMarkers++;
-
-                            document.getElementById("bikesbutton").innerHTML = "Hide Bikes";
-                        } else {
-
-                            //this checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
-                            markerCluster1.clearMarkers();
-                            markBikes = []
-
-                            document.getElementById("bikesbutton").innerHTML = "Bikes";
-                            bikeMarkers--;
-
-
-
-                        }
-
-
-                    });
-
-            };
 
             //Autocomplete for Route Search this is paired with an onfocus function to watch for a user click into the box. 
             function routeSearch() {
