@@ -199,7 +199,7 @@
                                         function (daily) {
                                             var now = new Date();
                                             var temp = new Date();
-                                            console.log(daily);
+                                            
                                             var table = "";
                                                     table = "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped' style = 'overflow-x:scroll;'>";
                                                     table += "<tr><thead>";
@@ -294,11 +294,15 @@
                             </div>
                         </div>
                         <div class="col-sm-6 text-center">
-                            <strong>---------</strong>
+                            <!-- <strong>---------</strong>
                             <img class="animated bounce infinite" src="{% static 'images/dbuscartoon.png' %}">
-                            <strong>---------</strong>
-                            <h4 class="ml-2 mt-2 text-white">Travel Time {{ est }} mins</h4>
+                            <strong>---------</strong> -->
+                            <img class="img-fluid" src="{% static 'images/busanimation.gif' %}">
+                            <h4 class="ml-2 mt-2 text-white">Travel Time: {{ est }} mins</h4>
                             <p class = "text-white m-0" style = "font-size:18px;">Bus Number: {{ busNum }}</p>
+                            {% if return > 0 %}
+                                <p class = "text-white m-0" style = "font-size:18px;">Return Time: {{ return }} mins</p>
+                            {% endif %}
                         </div>
                         <div class="col-sm-3">
                             <div class="col-sm-12 rounded shadow" style="background-color:white;">
