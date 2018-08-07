@@ -150,16 +150,16 @@ def postFunc(request, form):
         if destination_address == i['num']:
             destination_name = i['name']
 
-    # try:
-    #     source_address = int(source_address)
-    #     destination_address = int(destination_address)
+    try:
+        source_address = int(source_address)
+        destination_address = int(destination_address)
 
-    # except:
-    #     for i in bus:
-    #         if source_address == i['name']:
-    #             source_address = i['num']
-    #         if destination_address == i['name']:
-    #             destination_address = i['num']
+    except:
+        for i in bus:
+            if source_address == i['name']:
+                source_address = i['num']
+            if destination_address == i['name']:
+                destination_address = i['num']
         
 
     dateChosen = datetime.datetime.strptime(depart_date, "%m/%d/%Y")
@@ -300,7 +300,7 @@ def DublinBus():
                 loadedBikes = json.loads(dbInfo)
                 results.append(loadedBikes)
         
-    return JsonResponse(results, safe=False)
+    return results
 
 def GenBusData(request): 
     '''
@@ -621,7 +621,7 @@ def googDir(origin, dest, date, t):
     #tim = "1532785345"
     
     origin = str(origin)
-
+    
     try:
         origin = int(origin)
         dest = int(dest)
@@ -630,6 +630,7 @@ def googDir(origin, dest, date, t):
         source_stop = str(origin)
         dest_stop = str(dest)
         inputType = "stop" 
+
     except:
         start = origin.replace(" ", "")
         end = dest.replace(" ", "")
@@ -640,7 +641,6 @@ def googDir(origin, dest, date, t):
         date = "0" + date
 
     buses = []
-
     #date_str = "07/28/2018 11:50"
     date_str = date + " " + t
     dt_obj = datetime.datetime.strptime(date_str, "%m/%d/%Y %H:%M")
@@ -706,12 +706,7 @@ def googDir(origin, dest, date, t):
                         #print(u)
                         print("Found 2:", bus[k]['name'])
                     #print("blah", w, p)
-    else:
-        for i in response:
-            
-            if i['travel_mode'] == "TRANSIT":
-                buses.append(i['transit_details']['line']['short_name'])
-
+  
     if not buses:
         raise Exception("No buses available")
     

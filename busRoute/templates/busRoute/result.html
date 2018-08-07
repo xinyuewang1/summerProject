@@ -309,7 +309,7 @@
                     </div>
                     <div class = "row mt-2">
                         <div class = "col-sm-4 mb-1">
-                            <a href = "#homeCenter"><button class = "btn btn-block btn-success" onclick = "getValue();">Walk to stop</button></a>
+                            <a href = "#homeCenter"><button class = "btn btn-block btn-success" onclick = "walkMe();">Walk to stop</button></a>
                         </div>
                         <div class = "col-sm-4 mb-1">
                             <button id = "realtimebtn" class = "btn btn-block btn-danger" onclick="generateQuery()">Real-time</button>
@@ -328,14 +328,14 @@
        
 
         <script>
-            function getValue() {
+            function walkMe() {
                 //this function is responsible for the directions service. 
                 //it takes the source destintion input value to find its long/lat through an if statament
                 //and the users current location 
                 //and it will display the results on the map and the actual written directions below!
                 var curLat = pos.lat;
                 var curLng = pos.lng;
-                var x = document.getElementById("id_source").value;
+                var x = "{{ source }}"
                 
                 "{% if bus %}"
                 "{% for p in bus %}"
