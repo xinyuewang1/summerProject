@@ -122,6 +122,78 @@
                                 </div>
                             </div>
 
+                            <script>
+                                $(document).on("change", "#id_departTime", function () {
+                                    $("#id_departTime").css('background-color', 'white');
+                                    var startTime = "06:30"
+                                    var endTime = "23:30"
+                                    var time1 = new Date("HH:MM")
+                                    var time2 = new Date("HH:MM")
+                                    var time1 = "06:30"
+                                    var time2 = "23:30"
+                                    console.log(time1, time2)
+
+                                    var x = new Date(("HH:MM"))
+                                    var x = document.getElementById("id_departTime").value;
+
+                                    if (x < time1 || x > time2) {
+
+                                        $modal = $('#exampleModalCenter');
+                                        $modal.modal('show');
+                                        $("#id_departTime").css('background-color', 'red');
+                                    }
+                                })
+                            </script>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLongTitle">Time Selection Error</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Unfortuntaley there are no buses available at the time you have selected
+                                                <p>
+                                                    <p>Buses will resume at approximately 06:30.</p>
+                                                    <p>However, timetables are subject to change depending on routes</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                             <!-- Modal -->
+                             <div class="modal fade" id="routeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">Route Selection Error</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Unfortunately there was an error returning the stops for that route</p>
+
+                                                <p>You might need to be a little more specific.</p>
+
+                                                <p>Did you provide a direction?</p>
+
+                                                <p>Use the Autocomplete function for guidance.</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
 
                             <script>
                                 var d = new Date();
@@ -271,7 +343,7 @@
                                     });
                                 };
 
-                                //This piece of code allows the getStops function to be called when the user hits the enter key. 
+                                //This piece of code allows the ops function to be called when the user hits the enter key. 
 
                                 var onEnter = document.getElementById("routeSearch");
 
@@ -305,7 +377,13 @@
                                         '/',
                                         function (daily) {
 
+                                            if (daily == "fail"){
+                                                $modal = $('#routeModal');
+                                                $modal.modal('show');
+                                                $("#routeSearch").css('background-color', 'red');
+                                            }
 
+                                            else {
                                             var table = "";
                                             table =
                                                 "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped overflow-y: hidden'>";
@@ -350,7 +428,9 @@
 
                                             table += "</tbody></table>";
                                             document.getElementById("RouteDiv").innerHTML = table;
-                                        })
+                                         }})
+
+                                        
                                 };
                             </script>
                         </div>
@@ -668,9 +748,9 @@
 
                             //checks the background color and adds the address if address is selected or adds number if number is selected. 
 
-                            if (c == "black") { document.getElementById("id_source").value = '{{ p.name }}';}
-                            
-                            else{
+                            if (c == "black") {
+                                document.getElementById("id_source").value = '{{ p.name }}';
+                            } else {
 
                                 document.getElementById("id_source").value = '{{ p.num}}'
 

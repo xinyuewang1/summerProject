@@ -2,6 +2,7 @@ $(document).ready(function () {
     myMap()
 });
 
+
 function myMap() {
 
     // Function to display the google map on startup
@@ -170,9 +171,9 @@ $(document).ready(function () {
 function swapSearch() {
 
     //Checks which option is selected between searching by stops or addresses
-    var c = document.getElementById("stopSearch").style.backgroundColor;
+        var c = document.getElementById("stopSearch").style.backgroundColor;
 
-    if (c != "black") {
+        if (c != "black") {
         //Changes the colour of the tab and placeholder of the search form
         document.getElementById("stopSearch").style.backgroundColor = "black";
 

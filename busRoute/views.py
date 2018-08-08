@@ -395,24 +395,28 @@ def get_route_data(request, route):
         reader = pd.read_csv(f)
         x = reader.loc[reader['direction'] == route ]
         
-        
-        for index, row in x.iterrows(): 
-            stop = row['stopid']
-            lat = row['stop_lat']
-            lng = row['stop_lon']
-            name = row['stop_name']
+        if not x.empty: 
+            for index, row in x.iterrows(): 
+                stop = row['stopid']
+                lat = row['stop_lat']
+                lng = row['stop_lon']
+                name = row['stop_name']
 
-            Info= {'lat': lat,
-                            'lng': lng,
-                            'name': name,
-                            'id': stop
-                }
+                Info= {'lat': lat,
+                                'lng': lng,
+                                'name': name,
+                                'id': stop
+                    }
 
-            dbInfo = json.dumps(Info) 
-            loadedBikes = json.loads(dbInfo)
-            results.append(loadedBikes)
+                dbInfo = json.dumps(Info) 
+                loadedBikes = json.loads(dbInfo)
+                results.append(loadedBikes)
+        else: 
 
-    return JsonResponse(results, safe=False)
+            results = 'fail'
+            print(results)
+
+        return JsonResponse(results, safe=False)
 
 
 
