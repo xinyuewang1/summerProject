@@ -82,7 +82,7 @@
                     </div>
                     <div id="routeSearchOptions" style="display:none;border-top:1px solid white;">
                         <p class="text-white">Enter a route number to view on map</p>
-                        <input id="routeSearch" onfocus="routeSearch()" placeholder="Search Routes">
+                        <input id="routeSearch" onfocus="routeSearch(),changeBackGroundColor();" placeholder="Search Routes">
                     </div>
 
                 </div>
@@ -123,6 +123,12 @@
                             </div>
 
                             <script>
+
+
+                                function changeBackGroundColor(){
+
+                                     $("#routeSearch").css('background-color', 'white');
+                                }
                                 $(document).on("change", "#id_departTime", function () {
                                     $("#id_departTime").css('background-color', 'white');
                                     var startTime = "06:30"
@@ -145,7 +151,7 @@
                                 })
                             </script>
 
-                            <!-- Modal -->
+                            <!-- Time Error Modal -->
                             <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
@@ -168,7 +174,7 @@
                                 </div>
                             </div>
 
-                             <!-- Modal -->
+                             <!-- Route Search Modal -->
                              <div class="modal fade" id="routeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                         <div class="modal-content">
@@ -193,8 +199,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                             <script>
                                 var d = new Date();
                                 var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
@@ -220,8 +224,6 @@
                         </div>
                         <div class="row">
                             <button type="submit" class="btn btn-block btn-primary m-2" name="go">GO!</button>
-
-
                         </div>
                         <div class="row">
 
@@ -535,7 +537,6 @@
                             })
 
                             markers.push(marker);
-
                         }
                     })
             }

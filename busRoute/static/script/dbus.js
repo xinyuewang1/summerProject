@@ -17,6 +17,8 @@ function myMap() {
     //this code is reponsible for finding and displaing the users current location. 
     //This came from https://developers.google.com/maps/documentation/javascript/examples/map-geolocation
     if (navigator.geolocation) {
+
+        result = "ok"
         navigator.geolocation.getCurrentPosition(function (position) {
             pos = {
                 lat: position.coords.latitude,
@@ -51,10 +53,12 @@ function myMap() {
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.setPosition(pos);
+   
     infoWindow.setContent(browserHasGeolocation ?
-        'Error: The Geolocation service failed.' :
+        'Geolocation is Disabled':
         'Error: Your browser doesn\'t support geolocation.');
     infoWindow.open(map);
+    result = "fail";
 }
 
 // function getLocation() {
