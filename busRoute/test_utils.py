@@ -28,5 +28,5 @@ class TestUtils(TestCase):
         # Abnormal 2: directory doesn't exist
         self.assertRaises(FileNotFoundError, load_obj('some/thing'))
 
-    def test_getFirstAndLastStop3(self):
+    # def test_getFirstAndLastStop3(self):
         #
