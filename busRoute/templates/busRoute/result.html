@@ -170,9 +170,7 @@
                         <div class="row">
                             <button type="submit" class="btn btn-block btn-primary m-2" name="go">GO!</button>
                             <script>
-                                var bikeMarkers = 0;
-
-
+                                 var bikeMarkers = 0;
                                 var markBikes = []
 
                                 function displayBikeMarkers() {
@@ -186,7 +184,6 @@
 
                                             if (bikeMarkers == 0) {
 
-
                                                 //this function displays the dublin bikes markers
 
                                                 for (var i = 0; i < daily.length; i++) {
@@ -194,7 +191,7 @@
 
                                                     var lat = daily[i].lat;
                                                     var long = daily[i].lng;
-                                                    var name = daily[i].name;
+
 
 
                                                     var busicon = {
@@ -202,34 +199,33 @@
                                                         scaledSize: new google.maps.Size(40, 40), // scaled size            
                                                     };
 
-
-                                                    var latlng = new google.maps.LatLng(lat, long);
+                                                
+                                                    latlng = new google.maps.LatLng(lat, long);
                                                     var marker = new google.maps.Marker({
                                                         position: latlng,
                                                         icon: busicon,
-                                                        title: name
+                                                        title: daily[i].name
                                                     });
 
-                                                    markBikes.push(marker);
+                                                   
+                                                    marker.addListener('mouseover', function () {
 
+                                                        infoBikes.open(map, this);
+                                                        infoBikes.setContent(this.title);
+                                                    })
 
-                                                    google.maps.event.addListener(marker, 'click', (function (
-                                                        markBikes) {
-                                                        return function () {
-                                                            infoBikes.open(map, this);
-                                                            infoBikes.setContent(name);
-                                                        }
-                                                    })(markBikes));
-
+                                                     markBikes.push(marker);
                                                 }
 
                                                 markerCluster1 = new MarkerClusterer(map, markBikes, {
                                                     imagePath: "{% static 'images/m' %}"
                                                 });
 
-                                                bikeMarkers++;
+
 
                                                 document.getElementById("bikesbutton").innerHTML = "Hide Bikes";
+                                                bikeMarkers++;
+
                                             } else {
 
                                                 //this checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
@@ -238,8 +234,6 @@
 
                                                 document.getElementById("bikesbutton").innerHTML = "Bikes";
                                                 bikeMarkers--;
-
-
 
                                             }
 
@@ -314,7 +308,7 @@
                                     //this function gets real time information for the stop that is selected.
                                     var jqxhr = $.getJSON(
                                         'https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?stopid=' +
-                                        document.getElementById("id_source").value + '&format=json',
+                                        "{{ source}}" + '&format=json',
                                         function (daily) {
                                             var now = new Date();
                                             var temp = new Date();

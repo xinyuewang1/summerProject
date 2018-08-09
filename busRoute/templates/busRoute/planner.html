@@ -123,11 +123,9 @@
                             </div>
 
                             <script>
+                                function changeBackGroundColor() {
 
-
-                                function changeBackGroundColor(){
-
-                                     $("#routeSearch").css('background-color', 'white');
+                                    $("#routeSearch").css('background-color', 'white');
                                 }
                                 $(document).on("change", "#id_departTime", function () {
                                     $("#id_departTime").css('background-color', 'white');
@@ -174,31 +172,31 @@
                                 </div>
                             </div>
 
-                             <!-- Route Search Modal -->
-                             <div class="modal fade" id="routeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLongTitle">Route Selection Error</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p>Unfortunately there was an error returning the stops for that route</p>
+                            <!-- Route Search Modal -->
+                            <div class="modal fade" id="routeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLongTitle">Route Selection Error</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Unfortunately there was an error returning the stops for that route</p>
 
-                                                <p>You might need to be a little more specific.</p>
+                                            <p>You might need to be a little more specific.</p>
 
-                                                <p>Did you provide a direction?</p>
+                                            <p>Did you provide a direction?</p>
 
-                                                <p>Use the Autocomplete function for guidance.</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            </div>
+                                            <p>Use the Autocomplete function for guidance.</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
                             <script>
                                 var d = new Date();
                                 var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
@@ -249,7 +247,7 @@
 
                                                     var lat = daily[i].lat;
                                                     var long = daily[i].lng;
-                                                    var name = daily[i].name;
+
 
 
                                                     var busicon = {
@@ -257,24 +255,22 @@
                                                         scaledSize: new google.maps.Size(40, 40), // scaled size            
                                                     };
 
-                                                    var latlng = new google.maps.LatLng(lat, long);
+                                                
+                                                    latlng = new google.maps.LatLng(lat, long);
                                                     var marker = new google.maps.Marker({
                                                         position: latlng,
                                                         icon: busicon,
-                                                        title: name
+                                                        title: daily[i].name
                                                     });
 
-                                                    markBikes.push(marker);
+                                                   
+                                                    marker.addListener('mouseover', function () {
 
+                                                        infoBikes.open(map, this);
+                                                        infoBikes.setContent(this.title);
+                                                    })
 
-                                                    google.maps.event.addListener(marker, 'click', (function (
-                                                        markBikes) {
-                                                        return function () {
-                                                            infoBikes.open(map, this);
-                                                            infoBikes.setContent(name);
-                                                        }
-                                                    })(markBikes));
-
+                                                     markBikes.push(marker);
                                                 }
 
                                                 markerCluster1 = new MarkerClusterer(map, markBikes, {
@@ -366,7 +362,6 @@
                                     //It uses jQuery to intitialise and pass the value to the url and to grab the data that is returned by get_route_info
 
                                     if (markers)
-
                                         //this checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
                                         for (var i = 0; i < markers.length; i++) {
 
@@ -374,65 +369,58 @@
 
                                         }
 
-
                                     var jqxhr = $.getJSON('/details/' + document.getElementById("routeSearch").value +
                                         '/',
                                         function (daily) {
 
-                                            if (daily == "fail"){
+                                            if (daily == "fail") {
                                                 $modal = $('#routeModal');
                                                 $modal.modal('show');
                                                 $("#routeSearch").css('background-color', 'red');
+                                            } else {
+                                                var table = "";
+                                                table =
+                                                    "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped overflow-y: hidden'>";
+                                                table += "<tr><thead>";
+                                                table += "<th>Stop</th>";
+                                                table += "</tr></thead><tbody>";
+
+                                                for (var i = 0; i < daily.length; i++) {
+
+                                                    table += "<tr>";
+                                                    table += "<td>" + daily[i].name + "(" + daily[i].id +
+                                                        ")" + "</td>";
+                                                    table += "</tr>";
+
+
+                                                    infoWindow = new google.maps.InfoWindow;
+                                                    infoBus = new google.maps.InfoWindow;
+
+                                                    //this function displays the dublin bus markers
+                                                    myLatLng = new google.maps.LatLng(parseFloat(daily[i].lat),
+                                                        parseFloat(daily[i].lng))
+                                                    marker = new google.maps.Marker({
+                                                        position: myLatLng,
+                                                        map: map,
+                                                        title: daily[i].name + " " + "(" + daily[i].id +
+                                                            ")"
+                                                    });
+
+                                                    marker.addListener('mouseover', function () {
+                                                        infoBus.open(map, this);
+                                                        infoBus.setContent(this.title);
+                                                    })
+
+                                                    markers.push(marker);
+                                                }
+
+
+
+                                                table += "</tbody></table>";
+                                                document.getElementById("RouteDiv").innerHTML = table;
+
                                             }
-
-                                            else {
-                                            var table = "";
-                                            table =
-                                                "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped overflow-y: hidden'>";
-                                            table += "<tr><thead>";
-                                            table += "<th>Stop</th>";
-                                            table += "</tr></thead><tbody>";
-
-                                            for (var i = 0; i < daily.length; i++) {
-
-                                                table += "<tr>";
-                                                table += "<td>" + daily[i].name + "(" + daily[i].id +
-                                                    ")" + "</td>";
-                                                table += "</tr>";
-
-
-                                                infoWindow = new google.maps.InfoWindow;
-                                                infoBus = new google.maps.InfoWindow;
-
-                                                //this function displays the dublin bus markers
-                                                myLatLng = new google.maps.LatLng(parseFloat(daily[i].lat),
-                                                    parseFloat(daily[i].lng))
-                                                marker = new google.maps.Marker({
-                                                    position: myLatLng,
-                                                    map: map,
-                                                    title: daily[i].name
-                                                });
-
-                                                marker.addListener('mouseover', function () {
-                                                    infoBus.open(map, this);
-                                                    infoBus.setContent(this.title);
-                                                })
-
-                                                marker.addListener('click', function () {
-                                                    document.getElementById("id_source").value = this.title;
-
-                                                })
-
-                                                markers.push(marker);
-                                            }
-
-
-
-                                            table += "</tbody></table>";
-                                            document.getElementById("RouteDiv").innerHTML = table;
-                                         }})
-
-                                        
+                                        })
                                 };
                             </script>
                         </div>
