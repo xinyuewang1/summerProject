@@ -39,7 +39,8 @@ urlpatterns = [
     url(r'^details/(?P<route>[\w\ ]+)', views.get_route_data, name='detail'),
 
     path('busNum/<slug:bus>/', views.getRoute, name='busNum'),
- 
+
+    # url(r'^markerInformation/(?P<name>[\w,\ ]+)/(?P<num>[\w,\ ]+)', views.markerInformation, name='busNum'),
 
     #Pickle
     url(r'Ett39A', Est39A, name="Ett39A"),

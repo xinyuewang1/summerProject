@@ -746,4 +746,26 @@ def findLatLong(location):
     raise Exception("Unable to find this stop number")
 
 
+# def markerInformation(request, name, num ):
+
+#         results = []
+
+#         Info= {'name': name,
+
+#                 'num': num
+                               
+#                     }
+
+
+#         dbInfo = json.dumps(Info) 
+#         loadedBikes = json.loads(dbInfo)
+        
+        
+#         return JsonResponse(loadedBikes, safe=False)
+
+
+                
+
+
+
 
