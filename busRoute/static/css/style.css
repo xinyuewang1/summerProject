@@ -230,7 +230,7 @@ input[type=text], select {
     width:100%;
     height: 1600px;
     z-index: 10;
-    background: url('../images/dbBoppng.gif');
+    background-image: url('../images/dbBoppng.gif');
 }
 
 #load_screen > #loading{
