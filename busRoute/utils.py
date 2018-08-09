@@ -2,9 +2,6 @@ import pickle
 import numpy as np
 import os
 from busApp.settings import STATIC_ROOT
-import urllib.request
-import json
-import operator
 from busRoute import getPlannedTime
 from datetime import datetime
 
@@ -24,7 +21,7 @@ def load_obj(name):
             return pickle.load(f)
     except FileNotFoundError:
         print("\""+name+"\" not found")
-
+        # raise FileNotFoundError("\"%s\" not found" %(name))
 
 # def getFirstAndLastStops1(route, stop1, stop2):
 #     '''
@@ -75,6 +72,7 @@ def getFirstAndLastStops3(route, stop1, stop2):
     :param stop2: stop2
     :return: first stop and last stop of the route, also the position of stop1 and stop2 on it.
     '''
+    route = route.upper()
     path = 'pickles/stopLists/'
     for l in load_obj('pickles/sortedIdList'):
         # print("l:", l)
@@ -93,6 +91,8 @@ def getFirstAndLastStops3(route, stop1, stop2):
                 else:
                     # raise Exception("Wrong input order: The bus run from "+str(progrnumber1)+" to "+str(progrnumber2))
                     return stopList[0], stopList[-1], progrnumber2, progrnumber1
+    # print("Make here.")
+    raise FileNotFoundError("Can't match %d and %d on %s" % (stop1, stop2, route))
 
 class Ett39A:
     '''
@@ -122,14 +122,6 @@ class Ett39A:
             else:
                 mark += 1
 
-        '''
-        if self.time//3 == 0:
-            pass
-        elif self.time//3 == 8 or self.time == 00:
-            timeList[6] = 1
-        else:
-            timeList[(self.time//4)-1] = 1
-            '''
         return timeList
 
     def ucdTerm(self):
@@ -143,7 +135,7 @@ class Ett39A:
         scalerDir = 'pickles/scalers/'
         # print("The file path is", os.path.dirname(os.path.abspath(__file__)))
         identifier = getFirstAndLastStops3(self.route, self.source, self.dest)
-        #print("identifier:",identifier)
+        # print("identifier:",identifier)
 
         if identifier:
             try:

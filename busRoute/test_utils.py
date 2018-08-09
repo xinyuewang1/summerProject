@@ -28,5 +28,38 @@ class TestUtils(TestCase):
         # Abnormal 2: directory doesn't exist
         self.assertRaises(FileNotFoundError, load_obj('some/thing'))
 
-    # def test_getFirstAndLastStop3(self):
-        #
+    # Test getFirstAndLastStop3
+    def test_getFirstAndLastStop3(self):
+
+        # Normal 1: 39a, 770, 793, lower case
+        # should return 767, 7162, 4, 20
+        self.assertEqual(getFirstAndLastStops3('39a', 770, 793), (767, 7162, 4, 20))
+
+        # Normal 1: 39A, 770, 793, upper case
+        self.assertEqual(getFirstAndLastStops3('39A', 770, 793), (767, 7162, 4, 20))
+
+        # Abnormal 1, wrong order
+        self.assertEqual(getFirstAndLastStops3('39a', 793, 770), (767, 7162, 4, 20))
+
+        # Abnormal 2, not on the same path
+        with self.assertRaises(FileNotFoundError):
+            getFirstAndLastStops3('39a', 770, 766)
+
+        # Abnormal 3, stops not on route
+        with self.assertRaises(FileNotFoundError):
+            getFirstAndLastStops3('someroute', 770, 793)
+
+    # Test for class Ett39A
+    def test_Ett39A(self):
+        # test set
+        ett = Ett39A('67', 1444, 3913, 0, 18, "16:45", 3, "7/26/2018")
+
+        self.assertEqual(ett.timeInSec, 60300)
+
+        # 16:45, afternoon peak
+        self.assertEqual(ett.timeValue(), [0, 0, 0, 0, 1, 0, 0])
+
+        # estimatedTime
+
+
+
