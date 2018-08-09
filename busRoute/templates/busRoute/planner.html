@@ -15,6 +15,10 @@
         async defer></script>
     <script src="{% static 'script/jquery.timepicker.min.js' %}"></script>
 
+    
+
+    <div id = "load_screen" style = "display: none;"><div id = "loading" style = "background-image: url('{% static "images/dbBoppng.gif"%}');"><h3>Loading Result..</h3></div></div>
+
 
     <div id="homeCenter" class="container">
         <div class="row">
@@ -82,7 +86,7 @@
                             <strong>By Address</strong>
                         </div>
                     </div>
-                    <form id = "routePlanner" role = "form" method="POST">
+                    <form name = "routes" id = "routePlanner" role = "form" method="POST">
                         {% csrf_token %}
                         <div class = "row mt-2">
                             
@@ -121,7 +125,7 @@
                             
                         </div>   
                         <div class = "row">
-                            <button type ="submit" class = "btn btn-block btn-primary m-2" name = "go">GO!</button>
+                            <button type ="submit" class = "btn btn-block btn-primary m-2" name = "go" onclick = "showLoadGif()">GO!</button>
                             <script>
                             var onEnter = document.getElementById("routeSearch");
                                 onEnter.addEventListener("keydown", function (value) {

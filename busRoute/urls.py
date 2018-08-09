@@ -17,6 +17,7 @@ urlpatterns = [
 
     url(r'^tourism', views.tourismView.as_view(), name='tourism'),
 
+    url(r'^problem', views.problemView.as_view(), name='problem'),
 
     url(r'dublinBusInfo', views.DublinBusInfo, name = 'DublinBusInfo'),
 

@@ -21,19 +21,7 @@
     });
     </script>
 
-    <script>
-        window.addEventListener("load", function(){
-            var load_screen = document.getElementById("load_screen");
-            document.body.removeChild(load_screen);
-        });
-    </script>
-
-    <div id = "load_screen" style = "display: none;"><div id = "loading" style = "background-image: url('{% static "images/dbBoppng.gif"%}');"><h3>Loading Result..</h3></div></div>
-
-    
     <div id="homeCenter" class="container">
-        
-
         <div class="row">
             <div class="col-sm-8">
                 <div class="c1 col-sm-12 shadow rounded mt-4" style="padding:3px;">
@@ -53,19 +41,7 @@
                     </div>
 
                     <div id="map"></div>
-                    <script>
-                        //Rezises the map div to a smaller value for very short phone screens
-                        // $(document).ready(function(){
-                        //     var width = $(window).width(); 
-                        //     var height = $(window).height(); 
-    
-                        //     if (height<=650) {
-                        //         $('#map').css("height", "240px")
-                        //     }
-                            
-                        // });
-                    </script>
-
+                    
                 </div>
 
                 <div id="directionsPanel" class = "m-2" style="background-color:white;float:right"></div>
@@ -100,7 +76,7 @@
                             <strong>By Address</strong>
                         </div>
                     </div>
-                    <form name = "routes" id = "routePlanner" role = "form" method="POST">
+                    <form id = "routePlanner" role = "form" method="POST">
                         {% csrf_token %}
                         <div class = "row mt-2">
                             
@@ -139,7 +115,7 @@
                             
                         </div>   
                         <div class = "row">
-                            <button type ="submit" class = "btn btn-block btn-primary m-2" name = "go" onclick="showLoadGif()">GO!</button>
+                            <button type ="submit" class = "btn btn-block btn-primary m-2" name = "go">GO!</button>
                             <script>
                                 var onEnter = document.getElementById("routeSearch");
                                     onEnter.addEventListener("keydown", function (value) {
@@ -294,51 +270,17 @@
             <div class="col-sm-12" id = "results">
                     
                 <div class="c1 col-sm-12 rounded shadow">
-                    <div class="display-4 mb-3 border-bottom border-black" style = "font-size:50px;">{{header.day}} {{header.date}} {{header.month}}</div>
+                    <div class="display-4 mb-3" style = "font-size:50px;">{{header.day}} {{header.date}} {{header.month}}</div>
 
                     <div class="row">
-                        <div class="col-sm-3">
-                            <div class="col-sm-12 rounded shadow mb-3" style="background-color:white;">
-                                <h1 class="c1_font display-4">{{ depart_time }}</h1>
-                                <h2 class="ml-2 font-weight-bold text-uppercase" style = "font-size:17px;"><b>{{ source_name }}</b></h2>
-                                <h2 class="ml-2">Stop {{ source }}</h2>
-                                <br>
-                            </div>
+                        
+                        <img style = "width:150px;height:150px;" src = '{% static "images/brokenbus.gif" %}' alt = "Broken bus">
+                        
+                        <div class="col-sm-8">
+                            <span class = "m-3" style = "color:white;font-size: 25px;"><strong>Error: </strong>{{ error }} </span>
                         </div>
-                        <div class="col-sm-6 text-center">
-                            <!-- <strong>---------</strong>
-                            <img class="animated bounce infinite" src="{% static 'images/dbuscartoon.png' %}">
-                            <strong>---------</strong> -->
-                            <img class="img-fluid" src="{% static 'images/busanimation.gif' %}">
-                            <h4 class="ml-2 mt-2 text-white">Travel Time: {{ est }} mins</h4>
-                            <p class = "text-white m-0" style = "font-size:18px;">Bus Number: {{ busNum }}</p>
-                            {% if return > 0 %}
-                                <p class = "text-white m-0" style = "font-size:18px;">Return Time: {{ return }} mins</p>
-                            {% endif %}
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="col-sm-12 rounded shadow" style="background-color:white;">
-                                <h1 class="c1_font display-4">{{ arrival_time }}</h1>
-                                <h2 class='ml-2 font-weight-bold text-uppercase' style = "font-size:17px;"><b>{{ destination_name }}</b></h2>
-                                <h2 class="ml-2">Stop {{ destination }}</h2>
-                                <br>
-                            </div>
-                        </div>
+                        
                     </div>
-                    <div class = "row mt-2">
-                        <div class = "col-sm-4 mb-1">
-                            <a href = "#homeCenter"><button class = "btn btn-block btn-success" onclick = "getValue();">Walk to stop</button></a>
-                        </div>
-                        <div class = "col-sm-4 mb-1">
-                            <button id = "realtimebtn" class = "btn btn-block btn-danger" onclick="generateQuery()">Real-time</button>
-                        </div>
-                        <div class = "col-sm-4 mb-1">
-                            <button class = "btn btn-block btn-warning text-white">Timetable</button>
-                        </div>
-                    </div>
-                    <br>
-                    <div class = "container mb-3" style = "background-color: aliceblue;overflow-x:scroll;" id = "realtimeTable"></div>
-                    
                 </div>
             </div>
         </div>
@@ -635,57 +577,5 @@
             }
         </script>
 
-
-
-    <script>
-        function googDirections(sLat, sLng, fLat, fLng){
-            //Function to plot the bus route on a map after a post request is submitted
-
-            var startLat = parseFloat(sLat);
-            var startLng = parseFloat(sLng);
-            
-            var finLat = parseFloat(fLat);
-            var finLng = parseFloat(fLng);
-
-            var directionsService = new google.maps.DirectionsService();
-            var directionsDisplay = new google.maps.DirectionsRenderer();
-
-            var start = new google.maps.LatLng(startLat, startLng);
-            var end = new google.maps.LatLng(finLat, finLng);
-
-        
-            var mapOptions = {
-                zoom: 14,
-                center: start
-            }
-            var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-            directionsDisplay.setMap(map); 
-        
-
-        function calcRouteNum() {
-            var request = {
-                origin: start,
-                destination: end,
-                travelMode: 'TRANSIT',
-                transitOptions: {
-                //departureTime: new Date(1337675679473),
-                modes: ['BUS'],
-                routingPreference: 'FEWER_TRANSFERS'
-            },
-            };
-            directionsService.route(request, function(response, status) {
-                if (status == 'OK') {
-                directionsDisplay.setDirections(response);
-                
-                }
-            });
-            }
-
-            calcRouteNum()
-            };
-            
-            googDirections("{{ startLat }}", "{{ startLng }}", "{{ finLat }}", "{{ finLng }}")
-            
-        </script>
     </body>
 {% endblock %}

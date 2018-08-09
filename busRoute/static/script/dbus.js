@@ -532,6 +532,16 @@ $(document).ready(function() {
      
 } 
 
+//Shows the loading gif when the submit button is initally pressed
+function showLoadGif(){
+    var x = document.forms["routes"]["source"].value;
+    var y = document.forms["routes"]["destination"].value;
+    var z = document.forms["routes"]["departTime"].value;
+    
+    if (x != "" && y != "" && z != "") {
+        document.getElementById("load_screen").style.display = "block"
+    }
+}
 
 // References:
 // https://github.com/jonthornton/jquery-timepicker 

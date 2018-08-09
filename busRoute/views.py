@@ -15,7 +15,16 @@ import csv
 import time
 from django.conf import settings
     
+def problemRend(message):
+    form = routeForm()
+    bikes = bikes_query()
+    bus = DublinBus()
 
+    context = {'bikes': bikes, 'bus': bus, 'form': form}
+    context['error'] = message
+
+    return context
+    
 class homeView(generic.TemplateView):
 
     '''Class to render index.html. Includes functions:
@@ -63,6 +72,11 @@ class plannerView(generic.TemplateView):
 
         form = routeForm(request.POST)
         args = postFunc(request, form)
+        
+        if 'problem' in args:
+            prob = args['problem']
+            b = problemRend(prob)
+            return render(request, "busRoute/problem.html", b)
 
         return render(request, "busRoute/result.html", args)
 
@@ -89,6 +103,23 @@ class resultView(generic.TemplateView):
         args = postFunc(request, form)
 
         return render(request, self.template_name, args)
+
+class problemView(generic.TemplateView):
+    '''Class to render template for problems with the form input, with functions:
+        get: Loads the page
+        post: Renders the results page for a route plan
+    '''
+
+    template_name = "busRoute/problem.html"
+
+    def get(self,request):
+        form = routeForm()
+        weather = query_weather()
+        bikes = bikes_query()
+        bus = DublinBus()
+        context = {'weather': weather, 'bikes': bikes, 'bus':bus, 'form': form}
+        return render(request, self.template_name, context)
+    
 
 class tourismView(generic.TemplateView):
 
@@ -122,19 +153,45 @@ def postFunc(request, form):
         depart_time = form.cleaned_data['departTime']
         depart_date = form.cleaned_data['departDate']
 
+
+        #Check for valid time inputs for times that have not already passed and are within a week of current time
+        timeChosen = datetime.datetime.strptime(depart_date + " " + depart_time, "%m/%d/%Y %H:%M")
+        now = datetime.datetime.now()
+        diff = (timeChosen - now).total_seconds() - 3600
+
+        if diff < 0:
+            problem = {'problem': "Cannot make a prediction for a past date"}
+            return problem
+            
+        elif diff > 604800:
+            problem = {'problem': "Predictions can only be made within a week from today. Please pick a valid date."}
+            return problem
+    
+
+        #Checking if return values have been given
         try:
             return_time = form.cleaned_data['returnTime']
             return_date = form.cleaned_data['returnDate']
-            print(return_time)
-            print(return_date)
         except:
             pass
 
     
-    
+    #Get travel information from google: Bus and stop numbers
     busNum, legs, source_address1, destination_address1 = googDir(source_address,destination_address, depart_date, depart_time)
-    #busNum = busNum[0].upper()
+    if busNum == -1:
+        problem = {'problem': "Error retrieve journey information from Google"}
+        return problem
 
+    elif busNum == -2:
+        problem = {'problem': "Could not find route for this journey"}
+        return problem
+
+    elif busNum == -3:
+        problem = {'problem': "Could not find dublin bus route for this journey"}
+        return problem
+    
+
+    #Get start and end location of full journey by lat lng to plot on the map
     stops_locat = []
     stops_locat.extend(findLatLong(legs[0][1]).split(","))
     stops_locat.extend(findLatLong(legs[len(legs)-1][2]).split(","))
@@ -145,6 +202,7 @@ def postFunc(request, form):
     finLng = stops_locat[3]
 
 
+    #Other context data: weather, rain, temperature, day (by number), bus and bike markers
     weather = query_weather()
     rain, temp = query_rain_weather(depart_time, depart_date)
     day = parseDayNumber(depart_date)
@@ -160,21 +218,27 @@ def postFunc(request, form):
             destination_name = i['name']
         
 
+    #Gets date information to be displayed on the prediction result
     dateChosen = datetime.datetime.strptime(depart_date, "%m/%d/%Y")
     header = {'day': calendar.day_name[dateChosen.weekday()],
                     'date': dateChosen.strftime("%d"),
                     'month': dateChosen.strftime("%B")}
 
-    #print(source_num, dest_num)
-    print("take the bus", busNum)
 
-    #Finds the estimated travel time
+    #Finds the estimated travel time for each leg in the journey
     est = 0
     busNum = ""
+
     for i in legs:
-        print("OVer here", i[0], int(i[1]), int(i[2]))
-        ett = int(Est39A(i[0], int(i[1]), int(i[2]), rain, temp, depart_time, day, depart_date))
-        print("Estimated 1: bus -", i[0], " Time -", ett)
+
+        ett = Est39A(i[0], int(i[1]), int(i[2]), rain, temp, depart_time, day, depart_date)
+        try:
+            ett = int(ett)
+        except:
+            problem = {'problem': ett}
+            return problem
+
+        #print("ESTimated ", ett)
         est += ett
         busNum += str(i[0] + " ")
     
@@ -182,9 +246,11 @@ def postFunc(request, form):
     #Calculates arrival time based on departure time and estimated length of trip
     arrival = arrivalTime(depart_time, est)
 
+    #Checks for return time and calculates return journey based on the return input information
     if not return_time:
         ert = 0
         pass
+
     else:
         busNum2, legs2, source_return, destination_return = googDir(destination_address,source_address, return_date, return_time)
         rDay = parseDayNumber(return_date)
@@ -194,13 +260,16 @@ def postFunc(request, form):
             ert = int(Est39A(legs2[0][0], int(legs[0][1]), int(legs[0][2]), rRain, rTemp, return_time, day, return_date))
         print("return Time", ert)
 
+
+    #Return arguments for front end result prediction
     args = {'form': form, 'bikes':bikes, 'bus': bus, 'busNum': busNum, 'source': source_address1, 'source_name':source_name, 
     'destination': destination_address1, 'destination_name': destination_name, 'depart_time': depart_time, 
     'depart_date': depart_date , 'arrival_time': arrival, 'startLat':startLat, 'startLng': startLng, 'finLat':finLat,
     'finLng':finLng, 'est': est, 'weather': weather, 'header':header, 'return': ert}
 
     return args
-'''these are the more general queries called inside the above classes'''
+
+    
 
 def query_weather():
     """
@@ -393,17 +462,6 @@ def DublinBusRoutes(request):
 
 
 
-# def Est39A(source, dest, weather, time, month, day):
-#     '''
-#     Function to find and format the estimated travel travel time
-#     '''
-
-#     ett = Ett39A(source, dest, weather, time, month, day)
-#     result = ett.estimatedTime()
-#     result_min = float("{0:.2f}".format(result/60))
-
-#     return result_min
-
 def Est39A(route, source, dest, precipitation, temp, timeStr, weekday, dateStr):
     '''
     :param route: route number
@@ -417,10 +475,15 @@ def Est39A(route, source, dest, precipitation, temp, timeStr, weekday, dateStr):
     :return: Estimated travel time
     '''
     ett = Ett39A(route, source, dest, precipitation, temp, timeStr, weekday, dateStr)
-    result = ett.estimatedTime()
-    result_min = float("{0:.2f}".format(result / 60))
+    result, error_code = ett.estimatedTime()
 
-    return result_min
+    if error_code == -1:
+        return result
+    else:
+        result_min = float("{0:.2f}".format(result / 60))
+        return result_min
+    
+   
     
 
 
@@ -551,7 +614,8 @@ def query_rain_weather(time, date):
     
     if t//3 != 0: 
         t= t + (3-(t%3))
-
+    elif t < 3:
+        t = 3
     if t > 21:
         t = 21
     
@@ -632,12 +696,18 @@ def googDir(origin, dest, date, t):
         r = requests.get(f"https://maps.googleapis.com/maps/api/directions/json?origin={start}&destination={end}&mode=transit&departure_time={v}&transit_mode=bus&transit_routing_preference=fewer_transfers&key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0")
 
     except:
-        raise Exception("Could not find bus route for this journey")
+        #raise Exception("Could not find bus route for this journey")
+        return -1,-1,-1,-1
 
     r = r.json()
-    #print(r['routes'])
-    
-    response = r['routes'][0]['legs'][0]['steps']
+
+
+    try:
+        response = r['routes'][0]['legs'][0]['steps']
+
+    except:
+        return -2,-2,-2,-2
+
     #print(response)
     
     if inputType == "address":
@@ -660,14 +730,14 @@ def googDir(origin, dest, date, t):
 
                 startName = i['transit_details']['departure_stop']['name']  
                 endName = i['transit_details']['arrival_stop']['name']
-                print()
-                print("GOOGLE JOURNEY DETAILS")
-                print("----------------------")
-                print("Start:", startName, "-- Lat:", sLat, "Long:", sLng)
-                print()
-                print("End:", endName, "-- Lat:", fLat, "Long:", fLng)
-                print()
-                print()
+                # print()
+                # print("GOOGLE JOURNEY DETAILS")
+                # print("----------------------")
+                # print("Start:", startName, "-- Lat:", sLat, "Long:", sLng)
+                # print()
+                # print("End:", endName, "-- Lat:", fLat, "Long:", fLng)
+                # print()
+                # print()
 
                 bus = DublinBus()
             
@@ -707,7 +777,8 @@ def googDir(origin, dest, date, t):
 
 
     if not buses:
-        raise Exception("No buses available")
+        #raise Exception("No buses available")
+        return -3, -3, -3, -3
     
     else:
         print("Bus Numbers:", buses)

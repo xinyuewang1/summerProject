@@ -7,6 +7,11 @@
 <script src = "{% static 'script/jquery.timepicker.min.js' %}"> </script>
 
 <div id="homeCenter" class="container">
+    <div id = "load_screen" style = "display: none;">
+        <div id = "loading" style = "background-image: url('{% static "images/dbBoppng.gif"%}');">
+            <h3>Loading Result..</h3>
+        </div>
+    </div>
     <div class="row">
         <div class = "col-sm-12">
             <div class="planner-toggle col-sm-12 shadow text-center text-white mt-2" style = "background-color:rgb(255, 113, 19);">
@@ -34,7 +39,7 @@
                             </div>
                         </div>   
                         <div class = "row">
-                            <button type ="submit" class = "btn btn-block btn-primary m-2" type = "button" name = "go" onclick="timeEstimate()">GO!</button>
+                            <button type ="submit" class = "btn btn-block btn-primary m-2" type = "button" name = "go" onclick="showLoadGif()">GO!</button>
                         </div>
                     </form>
                 </div>
