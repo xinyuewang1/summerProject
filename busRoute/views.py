@@ -472,8 +472,8 @@ def DublinBus():
 
 
     results = []
-
-    with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r', encoding='utf-8') as f:
+    path = os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv').replace('\\','/')
+    with open(path, 'r', encoding='utf-8') as f:
 
         reader = csv.reader(f)
 

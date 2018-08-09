@@ -140,21 +140,29 @@ class DjangoSession(models.Model):
         managed = False
         db_table = 'django_session'
 
+
 class Testtrip(models.Model):
     datasource = models.CharField(max_length=5, blank=True, null=True)
-    dayofservice = models.CharField(primary_key=True, max_length=20)
+    # dayofservice = models.CharField(primary_key=True, max_length=20)
+    dayofservice = models.CharField(max_length=20)
     tripid = models.CharField(max_length=10, primary_key = True)
     lineid = models.CharField(max_length=10, blank=True, null=True)
     routeid = models.CharField(max_length=10, blank=True, null=True)
     direction = models.IntegerField(blank=True, null=True)
-    plannedtimearr = models.CharField(db_column='plannedtimeArr', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    plannedtimedep = models.CharField(db_column='plannedtimeDep', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    actualtimearr = models.CharField(db_column='actualtimeArr', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    actualtimedep = models.CharField(db_column='actualtimeDep', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    plannedtimearr = models.CharField(db_column='plannedtimeArr', max_length=10, blank=True, null=True)
+    # Field name made lowercase.
+    plannedtimedep = models.CharField(db_column='plannedtimeDep', max_length=10, blank=True, null=True)
+    # Field name made lowercase.
+    actualtimearr = models.CharField(db_column='actualtimeArr', max_length=10, blank=True, null=True)
+    # Field name made lowercase.
+    actualtimedep = models.CharField(db_column='actualtimeDep', max_length=10, blank=True, null=True)
+    # Field name made lowercase.
     basin = models.CharField(max_length=7, blank=True, null=True)
-    tenderlot = models.CharField(db_column='tenderLot', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    tenderlot = models.CharField(db_column='tenderLot', max_length=10, blank=True, null=True)
+    # Field name made lowercase.
     supressed = models.CharField(max_length=10, blank=True, null=True)
-    justificationid = models.CharField(db_column='justificationId', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    justificationid = models.CharField(db_column='justificationId', max_length=10, blank=True, null=True)
+    # Field name made lowercase.
     lastupdate = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
