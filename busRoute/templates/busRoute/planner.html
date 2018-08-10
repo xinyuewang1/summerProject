@@ -12,6 +12,10 @@
         async defer></script>
     <script src="{% static 'script/jquery.timepicker.min.js' %}"></script>
 
+    
+
+    <div id = "load_screen" style = "display: none;"><div id = "loading"><h3>Loading Result..</h3></div></div>
+
 
     <div id="homeCenter" class="container">
         <div class="row">
@@ -97,9 +101,7 @@
                             <strong>By Address</strong>
                         </div>
                     </div>
-
-
-                    <form id="routePlanner" role="form" method="POST">
+                    <form name = "routes" id = "routePlanner" role = "form" method="POST">
                         {% csrf_token %}
                         <div class="row mt-2">
 
@@ -341,10 +343,13 @@
                                     });
                                 };
 
-                                //This piece of code allows the ops function to be called when the user hits the enter key. 
-
-                                var onEnter = document.getElementById("routeSearch");
-
+                                </script>
+                            
+                        </div>   
+                        <div class = "row">
+                            <button type ="submit" class = "btn btn-block btn-primary m-2" name = "go" onclick = "showLoadGif()">GO!</button>
+                            <script>
+                            var onEnter = document.getElementById("routeSearch");
                                 onEnter.addEventListener("keydown", function (value) {
                                     if (value.keyCode === 13) {
 
@@ -734,7 +739,6 @@
                             markerName = '{{ p.name }}'
                             markerNum = '{{ p.num }}'
                             $(".modal-body #markerName").text(markerName + " " + markerNum);
-
                             $modal = $('#MarkersModal');
                             $modal.modal('show');
 
@@ -845,7 +849,8 @@
                     } else {
                         document.getElementById("id_source").value = num;
                     }
-                } else 
+                } else if (document.getElementById("second").checked)
+
                 var c = document.getElementById("stopSearch").style.backgroundColor;
                 {
                     if (c == "black") {

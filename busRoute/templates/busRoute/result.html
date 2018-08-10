@@ -19,7 +19,19 @@
         });
     </script>
 
+    <script>
+        window.addEventListener("load", function(){
+            var load_screen = document.getElementById("load_screen");
+            document.body.removeChild(load_screen);
+        });
+    </script>
+
+    <div id = "load_screen" style = "display: none;"><div id = "loading"><h3>Loading Result..</h3></div></div>
+
+    
     <div id="homeCenter" class="container">
+        
+
         <div class="row">
             <div class="col-sm-8">
                 <div class="c1 col-sm-12 shadow rounded mt-4" style="padding:3px;">
@@ -161,7 +173,7 @@
                             <strong>By Address</strong>
                         </div>
                     </div>
-                    <form id="routePlanner" role="form" method="POST">
+                    <form name = "routes" id = "routePlanner" role = "form" method="POST">
                         {% csrf_token %}
                         <div class="row mt-2">
 
@@ -183,9 +195,26 @@
                                     <div class="col-6 planner">{{ form.returnDate }}</div>
                                 </div>
                             </div>
-
-
-                            <script>
+                            
+                            
+                                <script>
+                                    var d = new Date();
+                                    var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
+                                    document.getElementById("id_departDate").value = fullDate;
+                                    $('#id_departTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now', timeFormat: "H:i" });
+                                    $( function() {
+                                    $( "#id_departDate" ).datepicker();
+                                    });
+                                    $('#id_returnTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now',timeFormat: "H:i" });
+                                    $( function() {
+                                    $( "#id_returnDate" ).datepicker({});
+                                    });
+                                </script>
+                            
+                        </div>   
+                        <div class = "row">
+                            <button type ="submit" class = "btn btn-block btn-primary m-2" name = "go" onclick="showLoadGif()">GO!</button>
+                            <!-- <script>
                                 var d = new Date();
                                 var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
                                 document.getElementById("id_departDate").value = fullDate;
@@ -205,7 +234,7 @@
                                 $(function () {
                                     $("#id_returnDate").datepicker({});
                                 });
-                            </script>
+                            </script> -->
 
                         </div>
                         <div class="row">
@@ -353,7 +382,7 @@
                                         function (daily) {
                                             var now = new Date();
                                             var temp = new Date();
-                                            console.log(daily);
+                                            
                                             var table = "";
                                             table =
                                                 "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped' style = 'overflow-x:scroll;'>";
@@ -451,11 +480,15 @@
                             </div>
                         </div>
                         <div class="col-sm-6 text-center">
-                            <strong>---------</strong>
+                            <!-- <strong>---------</strong>
                             <img class="animated bounce infinite" src="{% static 'images/dbuscartoon.png' %}">
-                            <strong>---------</strong>
-                            <h4 class="ml-2 mt-2 text-white">Travel Time {{ est }} mins</h4>
-                            <p class="text-white m-0" style="font-size:18px;">Bus Number: {{ busNum }}</p>
+                            <strong>---------</strong> -->
+                            <img class="img-fluid" src="{% static 'images/busanimation.gif' %}">
+                            <h4 class="ml-2 mt-2 text-white">Travel Time: {{ est }} mins</h4>
+                            <p class = "text-white m-0" style = "font-size:18px;">Bus Number: {{ busNum }}</p>
+                            {% if return > 0 %}
+                                <p class = "text-white m-0" style = "font-size:18px;">Return Time: {{ return }} mins</p>
+                            {% endif %}
                         </div>
                         <div class="col-sm-3">
                             <div class="col-sm-12 rounded shadow" style="background-color:white;">

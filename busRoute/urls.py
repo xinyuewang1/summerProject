@@ -21,6 +21,7 @@ urlpatterns = [
 
     #These URL's contain the data necessary for Autocomplete functions. 
     url(r'^RouteInfo', views.GenBusData, name='RouteInfo'),
+    url(r'^problem', views.problemView.as_view(), name='problem'),
 
     url(r'^dublinBusRoutes', views.routeDirectionServices, name='dublinBusRoutes'),
     url(r'dublinBusInfo', views.DublinBusInfo, name = 'DublinBusInfo'),
