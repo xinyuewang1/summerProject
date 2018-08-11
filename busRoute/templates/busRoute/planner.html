@@ -11,7 +11,12 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0&libraries=places&callback=myMap"
         async defer></script>
     <script src="{% static 'script/jquery.timepicker.min.js' %}"></script>
-
+    
+<script>
+    $(document).ready(function () {
+        myMap()
+    });
+</script>
     
 
     <div id = "load_screen" style = "display: none;"><div id = "loading"><h3>Loading Result..</h3></div></div>
@@ -530,87 +535,87 @@
                     })
             }
 
-            function googDirections() {
-                var x = document.getElementById("id_source").value;
-                var y = document.getElementById("id_destination").value;
+            // function googDirections() {
+            //     var x = document.getElementById("id_source").value;
+            //     var y = document.getElementById("id_destination").value;
 
 
-                "{% if bus %}"
-                "{% for p in bus %}"
+            //     "{% if bus %}"
+            //     "{% for p in bus %}"
 
-                if (x == "{{ p.num }}" || x == "{{ p.name }}") {
+            //     if (x == "{{ p.num }}" || x == "{{ p.name }}") {
 
-                    var slat = "{{ p.lat }}"
-                    var slong = "{{ p.lng }}"
+            //         var slat = "{{ p.lat }}"
+            //         var slong = "{{ p.lng }}"
 
-                    var startLat = parseFloat(slat);
-                    var startLng = parseFloat(slong);
+            //         var startLat = parseFloat(slat);
+            //         var startLng = parseFloat(slong);
 
-                };
+            //     };
 
-                if (y == "{{ p.num }}" || y == "{{ p.name }}") {
+            //     if (y == "{{ p.num }}" || y == "{{ p.name }}") {
 
-                    var flat = "{{ p.lat }}"
-                    var flong = "{{ p.lng }}"
+            //         var flat = "{{ p.lat }}"
+            //         var flong = "{{ p.lng }}"
 
-                    var finLat = parseFloat(flat);
-                    var finLng = parseFloat(flong);
-                };
+            //         var finLat = parseFloat(flat);
+            //         var finLng = parseFloat(flong);
+            //     };
 
-                "{% endfor %}"
-                "{% endif %}"
+            //     "{% endfor %}"
+            //     "{% endif %}"
 
-                // var startLat = 53.309442;
-                // var startLng =  -6.218855;
+            //     // var startLat = 53.309442;
+            //     // var startLng =  -6.218855;
 
-                // var finLat = 53.381437;
-                // var finLng = -6.591407;
+            //     // var finLat = 53.381437;
+            //     // var finLng = -6.591407;
 
-                var directionsService = new google.maps.DirectionsService();
-                var directionsDisplay = new google.maps.DirectionsRenderer();
+            //     var directionsService = new google.maps.DirectionsService();
+            //     var directionsDisplay = new google.maps.DirectionsRenderer();
 
-                var start = new google.maps.LatLng(startLat, startLng);
-                var end = new google.maps.LatLng(finLat, finLng);
+            //     var start = new google.maps.LatLng(startLat, startLng);
+            //     var end = new google.maps.LatLng(finLat, finLng);
 
-                var mapOptions = {
-                    zoom: 14,
-                    center: start
-                }
-                var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-                directionsDisplay.setMap(map);
+            //     var mapOptions = {
+            //         zoom: 14,
+            //         center: start
+            //     }
+            //     var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+            //     directionsDisplay.setMap(map);
 
 
-                function calcRouteNum() {
-                    var request = {
-                        origin: start,
-                        destination: end,
-                        travelMode: 'TRANSIT',
-                        transitOptions: {
-                            //departureTime: new Date(1337675679473),
-                            modes: ['BUS'],
-                            routingPreference: 'FEWER_TRANSFERS'
-                        },
-                    };
-                    directionsService.route(request, function (response, status) {
-                        if (status == 'OK') {
-                            directionsDisplay.setDirections(response);
+            //     function calcRouteNum() {
+            //         var request = {
+            //             origin: start,
+            //             destination: end,
+            //             travelMode: 'TRANSIT',
+            //             transitOptions: {
+            //                 //departureTime: new Date(1337675679473),
+            //                 modes: ['BUS'],
+            //                 routingPreference: 'FEWER_TRANSFERS'
+            //             },
+            //         };
+            //         directionsService.route(request, function (response, status) {
+            //             if (status == 'OK') {
+            //                 directionsDisplay.setDirections(response);
 
-                            var x = response.routes[0].legs[0].steps;
-                            var buses = [];
-                            for (var i = 0; i < x.length; i++) {
-                                try {
-                                    buses.push(x[i].transit.line.short_name);
-                                } catch {}
-                            }
-                        }
-                        //var res = response.routes[0].legs[0].steps[0].transit.line.short_name;
-                        var jqxhr = $.getJSON('/busNum/' + buses[0] + '/', function (daily) {
-                            document.getElementById("busRouteNum").innerHTML = daily;
-                        });
-                    })
-                };
-            }
-            calcRouteNum()
+            //                 var x = response.routes[0].legs[0].steps;
+            //                 var buses = [];
+            //                 for (var i = 0; i < x.length; i++) {
+            //                     try {
+            //                         buses.push(x[i].transit.line.short_name);
+            //                     } catch {}
+            //                 }
+            //             }
+            //             //var res = response.routes[0].legs[0].steps[0].transit.line.short_name;
+            //             var jqxhr = $.getJSON('/busNum/' + buses[0] + '/', function (daily) {
+            //                 document.getElementById("busRouteNum").innerHTML = daily;
+            //             });
+            //         })
+            //     };
+            // }
+            // calcRouteNum()
         </script>
 
 

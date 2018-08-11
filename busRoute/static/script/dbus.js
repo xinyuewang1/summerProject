@@ -1,8 +1,3 @@
-$(document).ready(function () {
-    myMap()
-});
-
-
 function myMap() {
 
     // Function to display the google map on startup
