@@ -13,6 +13,7 @@ numpy = "*"
 rq = "*"
 scikit-learn = "*"
 scipy = "*"
+pandas = "*"
 
 [requires]
 python_version = "3.5.2"
