@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'jo8u7=)fsv1+@%!_h&5gd0vr$qd4ej!k9=79tw5p&r9ulf-0^x'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [ 'majestic-zion-95130.herokuapp.com', '127.0.0.1', 'localhost']
 

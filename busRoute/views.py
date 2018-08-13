@@ -338,7 +338,7 @@ def DublinBusInfo(request):
 
     results = []
 
-    with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r', encoding="utf8") as f:
+    with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r', encoding='utf-8') as f:
 
         reader = csv.reader(f)
 
@@ -365,7 +365,7 @@ def DublinBus():
 
     results = []
 
-    with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r', encoding="utf8") as f:
+    with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r', encoding='utf-8') as f:
 
         reader = csv.reader(f)
 
@@ -445,7 +445,7 @@ def routeDirectionServices(request):
 
     results = []
   
-    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r') as f:
+    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r', encoding='utf-8') as f:
 
         reader = csv.reader(f)
         
@@ -473,7 +473,7 @@ def get_route_data(request, route):
     results = []
     
 
-    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r') as f:
+    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r', encoding='utf-8') as f:
 
         reader = pd.read_csv(f)
         x = reader.loc[reader['direction'] == route ]
@@ -942,6 +942,12 @@ def handler511(request):
     response = render(request, '511.html', context={})
     response.status_code = 511
     return response
+
+def loaderIO(request):
+    f = open(os.path.join(settings.STATIC_ROOT, 'loaderio-28122c5da51ed4a3468e82360273222a.txt'), 'r', encoding='utf-8')
+    file_content = f.read()
+    f.close()
+    return HttpResponse(file_content, content_type="text/plain")
 
 # def markerInformation(request, name, num ):
 

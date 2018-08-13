@@ -70,6 +70,10 @@ urlpatterns = [
 
     #url(r'Ann39A', AnnEst39A, name='Ann39A'),
 
-    url(r'', views.plannerView.as_view(), name='planner'),
+    url(r'^\s*$', views.plannerView.as_view(), name='planner'),
+
+    #LoaderIO
+
+    url(r'^loaderio-28122c5da51ed4a3468e82360273222a', views.loaderIO, name='loaderio-28122c5da51ed4a3468e82360273222a'),
 
 ]
