@@ -62,6 +62,6 @@ class TestUtils(TestCase):
         # estimatedTime
 
         # test for env
-        #print(os.environ.get('googleapi'))
+        print(os.environ.get('googleapi'))
 
 

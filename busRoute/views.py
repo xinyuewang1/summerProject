@@ -19,7 +19,6 @@ import pandas as pd
 def problemRend(message):
     form = routeForm()
     bus = DublinBus()
-
     context = {'bus': bus, 'form': form}
     context['error'] = message
 
@@ -353,8 +352,8 @@ def DublinBusInfo(request):
 
             
                 dbInfo = json.dumps(Info) 
-                loadedBikes = json.loads(dbInfo)
-                results.append(loadedBikes)
+                loadedBus = json.loads(dbInfo)
+                results.append(loadedBus)
         
     return JsonResponse(results, safe=False)
           
@@ -380,8 +379,8 @@ def DublinBus():
 
             
                 dbInfo = json.dumps(Info) 
-                loadedBikes = json.loads(dbInfo)
-                results.append(loadedBikes)
+                loadedBus = json.loads(dbInfo)
+                results.append(loadedBus)
         
     return results
 
@@ -405,8 +404,8 @@ def GenBusData(request):
                     }
 
                 dbInfo = json.dumps(Info) 
-                loadedBikes = json.loads(dbInfo)
-                results.append(loadedBikes)
+                loadedBus = json.loads(dbInfo)
+                results.append(loadedBus)
       
     return JsonResponse(results, safe=False) 
 
@@ -431,8 +430,8 @@ def stopNearMe(request,lat, lng):
                 }
 
         dbInfo = json.dumps(Info) 
-        loadedBikes = json.loads(dbInfo)
-        results.append(loadedBikes)
+        stopInfo = json.loads(dbInfo)
+        results.append(stopInfo)
       
 
     return JsonResponse(results, safe=False)
@@ -458,8 +457,8 @@ def routeDirectionServices(request):
                 pass
             else:
                 dbInfo = json.dumps(Info) 
-                loadedBikes = json.loads(dbInfo)
-                results.append(loadedBikes)
+                routeInfo = json.loads(dbInfo)
+                results.append(routeInfo)
         
     return JsonResponse(results, safe=False) 
 
@@ -492,8 +491,8 @@ def get_route_data(request, route):
                     }
 
                 dbInfo = json.dumps(Info) 
-                loadedBikes = json.loads(dbInfo)
-                results.append(loadedBikes)
+                routeData = json.loads(dbInfo)
+                results.append(routeData)
         else: 
 
             results = 'fail'
@@ -958,7 +957,6 @@ def loaderIO(request):
 #                 'num': num
                                
 #                     }
-
 
 #         dbInfo = json.dumps(Info) 
 #         loadedBikes = json.loads(dbInfo)
