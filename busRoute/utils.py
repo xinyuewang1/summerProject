@@ -22,6 +22,7 @@ def load_obj(name):
     except FileNotFoundError:
         print("\""+name+"\" not found")
         # raise FileNotFoundError("\"%s\" not found" %(name))
+        return -3
 
 # def getFirstAndLastStops1(route, stop1, stop2):
 #     '''
@@ -92,7 +93,10 @@ def getFirstAndLastStops3(route, stop1, stop2):
                     # raise Exception("Wrong input order: The bus run from "+str(progrnumber1)+" to "+str(progrnumber2))
                     return stopList[0], stopList[-1], progrnumber2, progrnumber1
     # print("Make here.")
-    raise FileNotFoundError("Can't match %d and %d on %s" % (stop1, stop2, route))
+    # raise FileNotFoundError("Can't match %d and %d on %s" % (stop1, stop2, route))
+
+    # return -2
+
 
 class Ett39A:
     '''
@@ -144,8 +148,8 @@ class Ett39A:
                 scaler = load_obj(
                     scalerDir + str(self.route) + '_' + str(identifier[0]) + '_' + str(identifier[1]) + '_scaler')
             except FileNotFoundError:
-                print("Cannot find model for Route", self.route, "From", str(identifier[0]), "To", str(identifier[1]))
-                return -1
+                # print("Cannot find model for Route", self.route, "From", str(identifier[0]), "To", str(identifier[1]))
+                return -2
 
             '''
             routeDict = load_obj(open(os.path.join(STATIC_ROOT, 'pickles/routeDict.pkl'), 'rb'))
@@ -207,12 +211,11 @@ class Ett39A:
             # print(inputArr)
             inputArr = scaler.transform(inputArr)
             pred = model.predict(inputArr)
-            error_code = 0
-            return pred[1] - pred[0], error_code
+            return pred[1] - pred[0], 0
 
         else:
             error = "Fail to map " + str(self.source) + " and " + str(self.dest) + " on the same route."
-            raise Exception(error)
+            # raise Exception(error)
             return error, -1
 
     # def monthWeek(self):
