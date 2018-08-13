@@ -212,7 +212,7 @@ class Ett39A:
 
         else:
             error = "Fail to map " + str(self.source) + " and " + str(self.dest) + " on the same route."
-            raise Exception(error)
+            # raise Exception(error)
             return error, -1
 
     # def monthWeek(self):
