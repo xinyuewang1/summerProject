@@ -284,7 +284,7 @@ def query_weather():
     of relevant weather information as well current date and time
     """
 
-    r = requests.get('http://api.openweathermap.org/data/2.5/weather?q=Dublin&APPID=094f61b4b2da3c4541e43364bab71b0b')
+    r = requests.get('http://api.openweathermap.org/data/2.5/weather?q=Dublin&APPID='+os.environ.get(appid))
     r = r.json()
     now = datetime.datetime.now()
     my_date = date.today()
@@ -308,7 +308,7 @@ def bikes_query(request):
     Connects to the JCDecaux API and returns the dublin bikes information 
     """
     
-    url = 'https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey=163a27dc14a77d825fb26c4212d74477642b4469' # the website containing the data
+    url = 'https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey='+os.environ.get(jcdecaux) # the website containing the data
    
     web_data = requests.get(url)
 
@@ -417,7 +417,7 @@ def stopNearMe(request,lat, lng):
     '''this function is linked to a jQuery which takes the users current lat and long from the geolocation
     This passes this into the google nearby search which returns a list of bus stops near the user. '''
 
-    url = requests.get(f"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={lat},{lng}&radius=500&type=bus_station&key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0")
+    url = requests.get(f"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={lat},{lng}&radius=500&type=bus_station&key="+os.environ.get(googleapi))
     url = url.json()
 
     x = url['results']
