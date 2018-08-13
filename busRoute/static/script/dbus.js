@@ -179,10 +179,19 @@ function swapSearch() {
         document.getElementById("addSearch").style.backgroundColor = "#00743F";
         document.getElementById('id_source').placeholder = 'Source Address..';
 
+        //This code turns off the autocomplete function to make sure they results from the stop autocomplete do not appear under the general address search. 
+
+        $( "#id_source" ).autocomplete({
+            disabled: true})
+
+            $( "#id_destination" ).autocomplete({
+                disabled: true})
         //Changes the autocomplete in the source to address based on name
         //     $('input[name=source]').autocomplete({
 
         //Autocomplete for general Address Input from Google in the Destination Input
+
+
         sourceAutocomplete = new google.maps.places.Autocomplete(document.getElementById(
             'id_source'))
 
@@ -217,6 +226,11 @@ function swapSearch() {
         document.getElementById('id_source').placeholder = 'Source Stop..';
 
 
+        $( "#id_source" ).autocomplete({
+            disabled: false})
+
+            $( "#id_destination" ).autocomplete({
+                disabled: false})
 
         //This is needed to remove the google maps api before changing it to search by roots. 
         //Reference: //https://stackoverflow.com/questions/9828856/how-to-toggle-the-google-maps-autocomplete-on-and-off
