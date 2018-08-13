@@ -143,7 +143,7 @@ class DjangoSession(models.Model):
 class Testtrip(models.Model):
     datasource = models.CharField(max_length=5, blank=True, null=True)
     dayofservice = models.CharField(primary_key=True, max_length=20)
-    tripid = models.CharField(max_length=10, primary_key = True)
+    tripid = models.CharField(max_length=10)  # , primary_key = True)
     lineid = models.CharField(max_length=10, blank=True, null=True)
     routeid = models.CharField(max_length=10, blank=True, null=True)
     direction = models.IntegerField(blank=True, null=True)

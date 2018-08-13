@@ -1,7 +1,9 @@
 from django.conf.urls import url
 from django.urls import path
 from . import views
+
 from .views import Est39A
+from busRoute.views import GenBusData, bikes_query, DublinBus
 from .models import Testtrip
 from .views import Est39A #, AnnEst39A
 
@@ -28,7 +30,9 @@ handler511 = 'views.handler511'
 
 urlpatterns = [
 
+
     #URLs for the main pages
+    url(r'', views.plannerView.as_view(), name='landing_page'),
     url(r'^index', views.homeView.as_view(), name='index'),
 
     url(r'^planner', views.plannerView.as_view(), name='planner'),
@@ -37,19 +41,30 @@ urlpatterns = [
 
     url(r'^tourism', views.tourismView.as_view(), name='tourism'),
 
-
-
-    #This URL is used for Autocomplete Information for the form
+    #These URL's contain the data necessary for Autocomplete functions. 
     url(r'^RouteInfo', views.GenBusData, name='RouteInfo'),
+    url(r'^problem', views.problemView.as_view(), name='problem'),
 
-    # This URL is used for Autocomplete Information for the Route Search Option
-    url(r'^dublinBusRoutes', views.DublinBusRoutes, name='dublinBusRoutes'),
+    url(r'^dublinBusRoutes', views.routeDirectionServices, name='dublinBusRoutes'),
+    url(r'dublinBusInfo', views.DublinBusInfo, name = 'DublinBusInfo'),
 
-     #This URL passes the route to the get_route_data function in views.py
-    path('details/<slug:route>/', views.get_route_data, name='detail'),
+    #contains the information for the bikes data 
+    url(r'^dublinBikeInfo', views.bikes_query, name='dublinBikeInfo'),
+
+    url(r'dublinBusInfo', views.DublinBusInfo, name = 'DublinBusInfo'),
+
+    #data rendered here is used for the suggested stops near the user selections. 
+    url(r'^nearestBus/(-?\d+(?:\.\d+)?)/(-?\d+(?:\.\d+)?)', views.stopNearMe, name='nearestBus'),
+
+    #This URL passes the route to the get_route_data function in views.py
+
+    #?P<route>[\w\ ]
+    url(r'^details/(?P<route>[\w\ ]+)', views.get_route_data, name='detail'),
 
     path('busNum/<slug:bus>/', views.getRoute, name='busNum'),
- 
+
+    # url(r'^markerInformation/(?P<name>[\w,\ ]+)/(?P<num>[\w,\ ]+)', views.markerInformation, name='busNum'),
+
     #Pickle
     url(r'Ett39A', Est39A, name="Ett39A"),
 
