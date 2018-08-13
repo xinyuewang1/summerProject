@@ -308,7 +308,7 @@ def bikes_query(request):
     Connects to the JCDecaux API and returns the dublin bikes information 
     """
     
-    url = 'https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey='+os.environ.get('jcdecaux') # the website containing the data
+    url = 'https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey='+os.environ.get('jcdecauxi') # the website containing the data
    
     web_data = requests.get(url)
 

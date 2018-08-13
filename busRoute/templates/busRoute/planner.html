@@ -236,7 +236,7 @@
 
                                 function displayBikeMarkers() {
 
-                                    var jqxhr = $.getJSON('http://localhost:8000/dublinBikeInfo',
+                                    var jqxhr = $.getJSON('/dublinBikeInfo',
                                         function (daily) {
                                             var infoWindow = new google.maps.InfoWindow;
                                             var infoBikes = new google.maps.InfoWindow;
@@ -861,6 +861,8 @@
                         document.getElementById("id_destination").value = num;
                     }
                 }
+
+                $('#MarkersModal').modal('hide');
 
             }
         </script>

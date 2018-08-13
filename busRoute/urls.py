@@ -32,10 +32,8 @@ urlpatterns = [
 
 
     #URLs for the main pages
-    url(r'', views.plannerView.as_view(), name='landing_page'),
-    url(r'^index', views.homeView.as_view(), name='index'),
 
-    url(r'^planner', views.plannerView.as_view(), name='planner'),
+    url(r'^index', views.homeView.as_view(), name='index'),
 
     url(r'^result', views.resultView.as_view(), name='result'),
 
@@ -43,12 +41,14 @@ urlpatterns = [
 
     #These URL's contain the data necessary for Autocomplete functions. 
     url(r'^RouteInfo', views.GenBusData, name='RouteInfo'),
+
     url(r'^problem', views.problemView.as_view(), name='problem'),
 
     url(r'^dublinBusRoutes', views.routeDirectionServices, name='dublinBusRoutes'),
-    url(r'dublinBusInfo', views.DublinBusInfo, name = 'DublinBusInfo'),
+    url(r'^dublinBusInfo', views.DublinBusInfo, name = 'DublinBusInfo'),
 
     #contains the information for the bikes data 
+    
     url(r'^dublinBikeInfo', views.bikes_query, name='dublinBikeInfo'),
 
     url(r'dublinBusInfo', views.DublinBusInfo, name = 'DublinBusInfo'),
@@ -69,5 +69,7 @@ urlpatterns = [
     url(r'Ett39A', Est39A, name="Ett39A"),
 
     #url(r'Ann39A', AnnEst39A, name='Ann39A'),
-    
+
+    url(r'', views.plannerView.as_view(), name='planner'),
+
 ]
