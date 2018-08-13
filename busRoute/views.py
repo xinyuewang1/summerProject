@@ -845,7 +845,6 @@ def findLatLong(location):
         
     raise Exception("Unable to find this stop number")
 
-<<<<<<< HEAD
 #####Error Pages########
 
 def handler400(request):
@@ -943,7 +942,6 @@ def handler511(request):
     response = render(request, '511.html', context={})
     response.status_code = 511
     return response
-=======
 
 # def markerInformation(request, name, num ):
 
@@ -968,4 +966,3 @@ def handler511(request):
 
 
 
->>>>>>> cee2ae5656dab3bca54a2c624b6843ee88f60ea2
