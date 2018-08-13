@@ -207,10 +207,13 @@ class Ett39A:
             # print(inputArr)
             inputArr = scaler.transform(inputArr)
             pred = model.predict(inputArr)
-            return pred[1] - pred[0]
+            error_code = 0
+            return pred[1] - pred[0], error_code
 
         else:
-            raise Exception("Fail to map " + str(self.source) + " and " + str(self.dest) + "on the same route.")
+            error = "Fail to map " + str(self.source) + " and " + str(self.dest) + " on the same route."
+            raise Exception(error)
+            return error, -1
 
     # def monthWeek(self):
     #     monthList = [0] * 5

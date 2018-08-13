@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8f414dcb-d6b4-4a5b-82cf-cef4d25b8bfd" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/busRoute/test_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/test_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/busRoute/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/manage.py" beforeDir="false" afterPath="$PROJECT_DIR$/manage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/busRoute/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/busRoute/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/utils.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -16,63 +14,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="utils.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/busRoute/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="115">
-              <caret line="36" column="31" selection-start-line="36" selection-start-column="28" selection-end-line="36" selection-end-column="31" />
+            <state relative-caret-position="302">
+              <caret line="215" column="21" selection-start-line="215" selection-start-column="21" selection-end-line="215" selection-end-column="21" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="getPlannedTime.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/busRoute/getPlannedTime.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="10" selection-start-column="7" selection-end-column="10" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="tests.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/busRoute/tests.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <folding>
-                <element signature="e#0#48#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/busApp/settings.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1258">
-              <caret line="74" column="13" selection-start-line="74" selection-start-column="13" selection-end-line="74" selection-end-column="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="manage.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/manage.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="7" column="75" selection-start-line="7" selection-start-column="75" selection-end-line="7" selection-end-column="75" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/busRoute/views.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="183">
-              <caret line="286" column="108" selection-start-line="286" selection-start-column="108" selection-end-line="286" selection-end-column="108" />
-              <folding>
-                <element signature="e#0#32#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -81,8 +29,8 @@
       <file leaf-file-name="test_utils.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/busRoute/test_utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="64" column="39" selection-start-line="64" selection-start-column="39" selection-end-line="64" selection-end-column="39" />
+            <state relative-caret-position="255">
+              <caret line="64" column="14" lean-forward="true" selection-start-line="64" selection-start-column="14" selection-end-line="64" selection-end-column="14" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
               </folding>
@@ -90,9 +38,16 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".env" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/.env">
-          <provider selected="true" editor-type-id="text-editor" />
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/busRoute/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="156">
+              <caret line="518" column="39" lean-forward="true" selection-start-line="518" selection-start-column="39" selection-end-line="518" selection-end-column="39" />
+              <folding>
+                <element signature="e#0#32#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
         </entry>
       </file>
     </leaf>
@@ -120,8 +75,8 @@
       <find>&gt;&gt;&gt;&gt;</find>
       <find>openwea</find>
       <find>open</find>
-      <find>url</find>
       <find>api</find>
+      <find>url</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -146,12 +101,13 @@
         <option value="$PROJECT_DIR$/requirements.txt" />
         <option value="$PROJECT_DIR$/busRoute/templates/busRoute/tourism.html" />
         <option value="$PROJECT_DIR$/.env" />
-        <option value="$PROJECT_DIR$/busRoute/utils.py" />
         <option value="$PROJECT_DIR$/busRoute/static/script/dbus.js" />
         <option value="$PROJECT_DIR$/busRoute/getPlannedTime.py" />
         <option value="$PROJECT_DIR$/manage.py" />
         <option value="$PROJECT_DIR$/busRoute/test_utils.py" />
         <option value="$PROJECT_DIR$/busRoute/views.py" />
+        <option value="$PROJECT_DIR$/busRoute/models.py" />
+        <option value="$PROJECT_DIR$/busRoute/utils.py" />
       </list>
     </option>
   </component>
@@ -199,7 +155,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="SearchEverywhereHistoryKey" value="setting&#9;FILE&#9;file://C:/Users/User/Documents/summerP/InnovationStation/busApp/settings.py&#10;se&#9;FILE&#9;file://C:/Users/User/Documents/summerP/InnovationStation/busApp/settings.py&#10;sett&#9;FILE&#9;file://C:/Users/User/Documents/summerP/InnovationStation/busApp/settings.py" />
+    <property name="SearchEverywhereHistoryKey" value="TestTr&#9;null&#9;null&#10;setting&#9;FILE&#9;file://C:/Users/User/Documents/summerP/InnovationStation/busApp/settings.py&#10;se&#9;FILE&#9;file://C:/Users/User/Documents/summerP/InnovationStation/busApp/settings.py&#10;sett&#9;FILE&#9;file://C:/Users/User/Documents/summerP/InnovationStation/busApp/settings.py" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -322,9 +278,6 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="Unittests_for_test_utils_TestUtils_test_getFirstAndLastStop3 - 2018.08.09 at 14h 41m 28s.xml">
-      <configuration name="Unittests for test_utils.TestUtils.test_getFirstAndLastStop3" configurationId="tests" />
-    </history-entry>
     <history-entry file="Unittests_for_test_utils_TestUtils_test_Ett39A - 2018.08.09 at 14h 48m 33s.xml">
       <configuration name="Unittests for test_utils.TestUtils.test_Ett39A" configurationId="tests" />
     </history-entry>
@@ -352,17 +305,20 @@
     <history-entry file="Unittests_for_test_utils_TestUtils_test_Ett39A - 2018.08.13 at 11h 47m 04s.xml">
       <configuration name="Unittests for test_utils.TestUtils.test_Ett39A" configurationId="tests" />
     </history-entry>
+    <history-entry file="Unittests_for_test_utils_TestUtils_test_Ett39A - 2018.08.13 at 11h 55m 25s.xml">
+      <configuration name="Unittests for test_utils.TestUtils.test_Ett39A" configurationId="tests" />
+    </history-entry>
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24963397" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24963397" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50292826" side_tool="true" weight="0.3290938" />
       <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.49707174" weight="0.3290938" />
       <window_info anchor="bottom" id="Python Console" order="7" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49707174" visible="true" weight="0.3290938" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49707174" visible="true" weight="0.3290938" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49853587" weight="0.3290938" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -650,13 +606,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/busRoute/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="99" column="6" selection-start-line="99" selection-start-column="6" selection-end-line="99" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Anaconda3/envs/summerProject/Lib/genericpath.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="132">
@@ -723,53 +672,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/busRoute/tests.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#48#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/.env">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/busRoute/static/script/dbus.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="163" lean-forward="true" selection-start-line="163" selection-end-line="163" />
+        <state relative-caret-position="114">
+          <caret line="222" column="54" selection-start-line="222" selection-start-column="51" selection-end-line="222" selection-end-column="54" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/busRoute/getPlannedTime.py">
+    <entry file="file://$PROJECT_DIR$/busRoute/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="10" selection-start-column="7" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/busRoute/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="115">
-          <caret line="36" column="31" selection-start-line="36" selection-start-column="28" selection-end-line="36" selection-end-column="31" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/busRoute/test_utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="64" column="39" selection-start-line="64" selection-start-column="39" selection-end-line="64" selection-end-column="39" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/busApp/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1258">
-          <caret line="74" column="13" selection-start-line="74" selection-start-column="13" selection-end-line="74" selection-end-column="13" />
+        <state relative-caret-position="183">
+          <caret line="145" column="48" selection-start-line="145" selection-start-column="46" selection-end-line="145" selection-end-column="69" />
         </state>
       </provider>
     </entry>
@@ -780,15 +696,55 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.env">
-      <provider selected="true" editor-type-id="text-editor" />
+    <entry file="file://$PROJECT_DIR$/busApp/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1258">
+          <caret line="74" column="13" selection-start-line="74" selection-start-column="13" selection-end-line="74" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/busRoute/tests.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#48#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/busRoute/getPlannedTime.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="10" selection-start-column="7" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/busRoute/test_utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="64" column="14" lean-forward="true" selection-start-line="64" selection-start-column="14" selection-end-line="64" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/busRoute/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="286" column="108" selection-start-line="286" selection-start-column="108" selection-end-line="286" selection-end-column="108" />
+        <state relative-caret-position="156">
+          <caret line="518" column="39" lean-forward="true" selection-start-line="518" selection-start-column="39" selection-end-line="518" selection-end-column="39" />
           <folding>
             <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/busRoute/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="302">
+          <caret line="215" column="21" selection-start-line="215" selection-start-column="21" selection-end-line="215" selection-end-column="21" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
