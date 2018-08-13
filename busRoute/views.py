@@ -284,7 +284,7 @@ def query_weather():
     of relevant weather information as well current date and time
     """
 
-    r = requests.get('http://api.openweathermap.org/data/2.5/weather?q=Dublin&APPID='+os.environ.get(appid))
+    r = requests.get('http://api.openweathermap.org/data/2.5/weather?q=Dublin&APPID='+os.environ.get('appid'))
     r = r.json()
     now = datetime.datetime.now()
     my_date = date.today()
@@ -308,7 +308,7 @@ def bikes_query(request):
     Connects to the JCDecaux API and returns the dublin bikes information 
     """
     
-    url = 'https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey='+os.environ.get(jcdecaux) # the website containing the data
+    url = 'https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey='+os.environ.get('jcdecaux') # the website containing the data
    
     web_data = requests.get(url)
 
@@ -417,7 +417,7 @@ def stopNearMe(request,lat, lng):
     '''this function is linked to a jQuery which takes the users current lat and long from the geolocation
     This passes this into the google nearby search which returns a list of bus stops near the user. '''
 
-    url = requests.get(f"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={lat},{lng}&radius=500&type=bus_station&key="+os.environ.get(googleapi))
+    url = requests.get(f"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={lat},{lng}&radius=500&type=bus_station&key="+os.environ.get('googleapi'))
     url = url.json()
 
     x = url['results']
@@ -659,7 +659,7 @@ def query_rain_weather(time, date):
 
     t = str(t)
   
-    r = requests.get('https://api.openweathermap.org/data/2.5/forecast?q=Dublin,IE&appid=26580fb5867fb2fb6af75662d670dd4c')
+    r = requests.get('https://api.openweathermap.org/data/2.5/forecast?q=Dublin,IE&appid='+os.environ.get('appid'))
     r = r.json()
 
     for i in range(0, len(r['list'])):
@@ -729,7 +729,7 @@ def googDir(origin, dest, date, t):
 
     try:
         b = "&alternatives=true"
-        r = requests.get(f"https://maps.googleapis.com/maps/api/directions/json?origin={start}&destination={end}&mode=transit&departure_time={v}&transit_mode=bus&transit_routing_preference=fewer_transfers&key="+os.environ.get(googleapi))
+        r = requests.get(f"https://maps.googleapis.com/maps/api/directions/json?origin={start}&destination={end}&mode=transit&departure_time={v}&transit_mode=bus&transit_routing_preference=fewer_transfers&key="+os.environ.get('googleapi'))
 
     except:
         #raise Exception("Could not find bus route for this journey")
