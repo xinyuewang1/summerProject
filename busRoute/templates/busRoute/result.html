@@ -17,9 +17,22 @@
                 scrollTop: $('#results').offset().top
             }, 'slow');
         });
+
     </script>
 
+    <script>
+        window.addEventListener("load", function(){
+            var load_screen = document.getElementById("load_screen");
+            document.body.removeChild(load_screen);
+        });
+    </script>
+
+    <div id = "load_screen" style = "display: none;"><div id = "loading"><h3>Loading Result..</h3></div></div>
+
+    
     <div id="homeCenter" class="container">
+        
+
         <div class="row">
             <div class="col-sm-8">
                 <div class="c1 col-sm-12 shadow rounded mt-4" style="padding:3px;">
@@ -29,7 +42,7 @@
                                 <a class="nav-link" id="trafficButton" onclick="toggleTraffic(this)" href="#">Traffic</a>
                             </div>
                             <div class="col-4 nav2 border border-white border-top-0 border-left-0 border-bottom-0">
-                                <a class="nav-link" href="#" onclick="displayBusMarkers()" id="markersbutton">Markers</a>
+                                <a class="nav-link" href="#" onclick="displayBusMarkers()" id="markersbutton">Stops</a>
                             </div>
                             <div class="col-4 nav2">
                                 <a class="nav-link" href="#" onclick="displayBikeMarkers()" id="bikesbutton">Bikes</a>
@@ -39,26 +52,77 @@
                     </div>
 
                     <div id="map"></div>
-                    <script>
-                        //Rezises the map div to a smaller value for very short phone screens
-                        $(document).ready(function () {
-                            var width = $(window).width();
-                            var height = $(window).height();
-
-                            if (height <= 740) {
-                                $('#map').css("height", "240px")
-                            }
-
-                        });
-                    </script>
 
                 </div>
 
                 <div id="directionsPanel" class="m-2" style="background-color:white;float:right"></div>
 
             </div>
+            <!-- Walk Me Modal -->
+            <div class="modal fade" id="walkMeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Geolocation is disabled</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <p>
+                                <!-- <script>
+                                    permissiontate
+                                </script> -->
+                            </p>
+
+                            <p>If you would like to use this function, you will need to allow access to your current location.</p>
+
+                            <p>You can do this by updating your browser location settings. </p>
 
 
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Onclick Marker Modal -->
+
+            <div class="modal fade" id="MarkersModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Route Planner</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <p>Would you like to make this Marker your source or destination stop?</p>
+
+                            <p>
+                                <input type="radio" name="choice" value="Source" id="first"> Source
+                                <br>
+                            </p>
+                            <p>
+                                <input type="radio" name="choice" value="Destination" id="second"> Desination
+                                <br>
+                            </p>
+                           
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" onclick="HandleResponse()">Go</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        
             <div class="col-sm-4">
                 <div class="c1 col-sm-12 rounded shadow mt-4">
                     <h3>Route Planner</h3>
@@ -82,7 +146,7 @@
                     </div>
                     <div id="routeSearchOptions" style="display:none;border-top:1px solid white;">
                         <p class="text-white">Enter a route number to view on map</p>
-                        <input id="routeSearch" placeholder="Search Routes" onfocus="routeSearch()">
+                        <input id="routeSearch" placeholder="Search Routes">
                     </div>
 
                 </div>
@@ -98,7 +162,7 @@
                             <strong>By Address</strong>
                         </div>
                     </div>
-                    <form id="routePlanner" role="form" method="POST">
+                    <form name = "routes" id = "routePlanner" role = "form" method="POST">
                         {% csrf_token %}
                         <div class="row mt-2">
 
@@ -120,15 +184,38 @@
                                     <div class="col-6 planner">{{ form.returnDate }}</div>
                                 </div>
                             </div>
+                            
+                            
+                                <script>
+                                    var d = new Date();
+                                    var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
+                                    document.getElementById("id_departDate").value = fullDate;
+                                    $('#id_departTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now', timeFormat: "H:i" });
+                                    $( function() {
+                                    $( "#id_departDate" ).datepicker();
+                                    });
+                                    $('#id_returnTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now',timeFormat: "H:i" });
+                                    $( function() {
+                                    $( "#id_returnDate" ).datepicker({});
+                                    });
+                                </script>
+                            
+                        </div>   
+                        <div class = "row">
+                            <button type ="submit" class = "btn btn-block btn-primary m-2" name = "go" onclick="showLoadGif()">GO!</button>
+                            
 
-
+                        </div>
                             <script>
+                                var bikeMarkers = 0;
+                                var markBikes = []
 
                                 function displayBikeMarkers() {
 
-
                                     var jqxhr = $.getJSON('http://localhost:8000/dublinBikeInfo',
                                         function (daily) {
+                                            var infoWindow = new google.maps.InfoWindow;
+                                            var infoBikes = new google.maps.InfoWindow;
 
 
 
@@ -136,13 +223,12 @@
 
                                                 //this function displays the dublin bikes markers
 
-                                                var markers = [];
                                                 for (var i = 0; i < daily.length; i++) {
 
 
                                                     var lat = daily[i].lat;
                                                     var long = daily[i].lng;
-                                                    var name = daily[i].name;
+
 
 
                                                     var busicon = {
@@ -151,42 +237,37 @@
                                                     };
 
 
-
-                                                    var latlng = new google.maps.LatLng(lat, long);
+                                                    latlng = new google.maps.LatLng(lat, long);
                                                     var marker = new google.maps.Marker({
                                                         position: latlng,
                                                         icon: busicon,
-                                                        title: name
+                                                        title: daily[i].name
                                                     });
 
-                                                    markers.push(marker);
 
+                                                    marker.addListener('mouseover', function () {
 
-                                                    google.maps.event.addListener(marker, 'click', (function (
-                                                        markers) {
-                                                        return function () {
-                                                            infoBikes.open(map, this);
-                                                            infoBikes.setContent(name);
-                                                        }
-                                                    })(markers));
+                                                        infoBikes.open(map, this);
+                                                        infoBikes.setContent(this.title);
+                                                    })
 
+                                                    markBikes.push(marker);
                                                 }
 
-                                                var markerCluster = new MarkerClusterer(map, markers, {
+                                                markerCluster1 = new MarkerClusterer(map, markBikes, {
                                                     imagePath: "{% static 'images/m' %}"
                                                 });
 
-                                                bikeMarkers++;
+
 
                                                 document.getElementById("bikesbutton").innerHTML = "Hide Bikes";
+                                                bikeMarkers++;
+
                                             } else {
 
-
-                                                var mapProp = {
-                                                    center: new google.maps.LatLng(53.347515, -6.265377),
-                                                    zoom: 10,
-                                                };
-                                                map = new google.maps.Map(document.getElementById("map"), mapProp);
+                                                //this checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
+                                                markerCluster1.clearMarkers();
+                                                markBikes = []
 
                                                 document.getElementById("bikesbutton").innerHTML = "Bikes";
                                                 bikeMarkers--;
@@ -197,73 +278,132 @@
                                         });
 
                                 };
-
-                                function routeSearch() {
-                                    $(document).ready(function () {
-                                        $.ajax({
-                                            type: "GET",
-                                            url: "dublinBusRoutes",
-                                            dataType: "json",
-
-                                            success: function (data) {
-                                                createArray(data);
-                                            }
-                                        });
-                                    });
-
-
-                                    function createArray(Data) {
-
-                                        var results = [];
-                                        for (var i = 0; i < Data.length; i++) {
-                                            results.push(Data[i].route);
-                                        }
-                                        $("#routeSearch").autocomplete({
-                                            source: results,
-                                            minLength: 1,
-                                        });
-                                    }
-
-                                }
-                                var d = new Date();
-                                var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
-                                document.getElementById("id_departDate").value = fullDate;
-                                $('#id_departTime').timepicker({
-                                    'forceRoundTime': true,
-                                    'scrollDefault': 'now',
-                                    timeFormat: "H:i"
-                                });
-                                $(function () {
-                                    $("#id_departDate").datepicker();
-                                });
-                                $('#id_returnTime').timepicker({
-                                    'forceRoundTime': true,
-                                    'scrollDefault': 'now',
-                                    timeFormat: "H:i"
-                                });
-                                $(function () {
-                                    $("#id_returnDate").datepicker({});
-                                });
-                            </script>
-
-                        </div>
-                        <div class="row">
-                            <button type="submit" class="btn btn-block btn-primary m-2" name="go">GO!</button>
-                            <script>
                                 var onEnter = document.getElementById("routeSearch");
                                 onEnter.addEventListener("keydown", function (value) {
                                     if (value.keyCode === 13) {
                                         getStops(value);
                                     }
                                 });
+                                var markers = [];
+
+                                function getStops() {
+                                    //this function is responsible for displaying the route information
+                                    //It uses jQuery to intitialise and pass the value to the url and to grab the data that is returned by get_route_info
+                                    // poly = new google.maps.Polyline({
+                                    //     strokeColor: '#000000',
+                                    //     strokeOpacity: 1.0,
+                                    //     strokeWeight: 3
+                                    // });
+                                    // poly.setMap(map);
+                                    if (markers)
+                                        //this checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
+                                        for (var i = 0; i < markers.length; i++) {
+                                            markers[i].setMap(null);
+                                        }
+                                    var jqxhr = $.getJSON('/details/' + document.getElementById("routeSearch").value +
+                                        '/',
+                                        function (daily) {
+                                            var table = "";
+                                            table =
+                                                "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped overflow-y: hidden'>";
+                                            table += "<tr><thead>";
+                                            table += "<th>Stop</th>";
+                                            table += "</tr></thead><tbody>";
+                                            for (var i = 0; i < daily.length; i++) {
+                                                var lat = daily[i].lat;
+                                                var long = daily[i].lng;
+                                                var name = daily[i].name;
+                                                var id = daily[i].id;
+                                                table += "<tr>";
+                                                table += "<td>" + daily[i].name + "(" + id + ")" + "</td>";
+                                                table += "</tr>";
+                                                infoWindow = new google.maps.InfoWindow;
+                                                infoBus = new google.maps.InfoWindow;
+                                                //this function displays the dublin bus markers
+                                                myLatLng = new google.maps.LatLng(lat, long)
+                                                marker = new google.maps.Marker({
+                                                    position: myLatLng,
+                                                    map: map,
+                                                    title: name + "(" + id + ")"
+                                                });
+                                                marker.addListener('mouseover', function () {
+                                                    infoBus.open(map, this);
+                                                    infoBus.setContent(this.title);
+                                                })
+                                                markers.push(marker);
+                                                // <!-- 
+                                                //                             var path = poly.getPath();
+                                                //                             path.push(myLatLng); -->
+                                            }
+                                            table += "</tbody></table>";
+                                            document.getElementById("RouteDiv").innerHTML = table;
+                                        })
+                                };
                             </script>
-                        </div>
+                            <script>
+                                function generateQuery() {
+                                    //this function gets real time information for the stop that is selected.
+                                    var jqxhr = $.getJSON(
+                                        'https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?stopid=' +
+                                        "{{ source}}" + '&format=json',
+                                        function (daily) {
+                                            var now = new Date();
+                                            var temp = new Date();
+                                            
+                                            var table = "";
+                                            table =
+                                                "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped' style = 'overflow-x:scroll;'>";
+                                            table += "<tr><thead>";
+                                            table += "<th>Route</th>";
+                                            table += "<th>Destination</th>";
+                                            table += "<th>Arrival Time</th>";
+                                            table += "<th>Expected</th>";
+                                            table += "</tr></thead><tbody>";
+                                            x = daily.results;
+                                            for (var i = 0; i < x.length; i++) {
+
+                                                var ti = x[i].arrivaldatetime.slice(11, );
+
+                                                var array = ti.split(":");
+                                                temp.setHours(array[0]);
+                                                temp.setMinutes(array[1]);
+                                                temp.setSeconds(array[2]);
+                                                var difference = new Date();
+                                                difference.setTime(temp - now);
+                                                var m = difference.getMinutes();
+
+                                                if (difference.getSeconds() >= 30) {
+                                                    m = m + 1;
+                                                };
+                                                if (m == 0) {
+                                                    m = "Due"
+                                                } else {
+                                                    m = String(m) + " mins"
+                                                };
+
+                                                table += "<tr>";
+                                                table += "<td>" + x[i].route + "</td>";
+                                                table += "<td>" + x[i].destination + "</td>";
+                                                table += "<td>" + ti.slice(0, 5) + "</td>";
+                                                table += "<td>" + m + "</td>";
+                                                table += "</tr>";
+                                            }
+                                            table += "</tbody></table><br>";
+                                            document.getElementById("realtimeTable").innerHTML = table;
+
+                                        })
+                                };
+                            </script>
+                        
                     </form>
 
                 </div>
 
             </div>
         </div>
+
+
+
 
         <script>
             //Timepicker and datepicker function for the date and time functions
@@ -291,8 +431,9 @@
 
         <div class="row" style="margin-top:20px;">
             <div class="col-sm-12" id="results">
+
                 <div class="c1 col-sm-12 rounded shadow">
-                    <div class="display-4 mb-3 border-bottom border-black" style="font-size:50px;">{{header.day}} {{header.date}} {{header.month}} </div>
+                    <div class="display-4 mb-3 border-bottom border-black" style="font-size:50px;">{{header.day}} {{header.date}} {{header.month}}</div>
 
                     <div class="row">
                         <div class="col-sm-3">
@@ -306,11 +447,15 @@
                             </div>
                         </div>
                         <div class="col-sm-6 text-center">
-                            <strong>---------</strong>
+                            <!-- <strong>---------</strong>
                             <img class="animated bounce infinite" src="{% static 'images/dbuscartoon.png' %}">
-                            <strong>---------</strong>
-                            <h4 class="ml-2 mt-2 text-white">Travel Time {{ est }} mins</h4>
-                            <p class="text-white m-0" style="font-size:18px;">Bus Number: {{ busNum }}</p>
+                            <strong>---------</strong> -->
+                            <img class="img-fluid" src="{% static 'images/busanimation.gif' %}">
+                            <h4 class="ml-2 mt-2 text-white">Travel Time: {{ est }} mins</h4>
+                            <p class = "text-white m-0" style = "font-size:18px;">Bus Number: {{ busNum }}</p>
+                            {% if return > 0 %}
+                                <p class = "text-white m-0" style = "font-size:18px;">Return Time: {{ return }} mins</p>
+                            {% endif %}
                         </div>
                         <div class="col-sm-3">
                             <div class="col-sm-12 rounded shadow" style="background-color:white;">
@@ -326,11 +471,11 @@
                     <div class="row mt-2">
                         <div class="col-sm-4 mb-1">
                             <a href="#homeCenter">
-                                <button class="btn btn-block btn-success" onclick="walkMe()">Walk Me</button>
+                                <button class="btn btn-block btn-success" onclick="walkMe();">Walk to stop</button>
                             </a>
                         </div>
                         <div class="col-sm-4 mb-1">
-                            <button id="realtimebtn" class="btn btn-block btn-danger" onclick="realTimeInfo()">Real-time</button>
+                            <button id="realtimebtn" class="btn btn-block btn-danger" onclick="generateQuery()">Real-time</button>
                         </div>
                         <div class="col-sm-4 mb-1">
                             <button class="btn btn-block btn-warning text-white">Timetable</button>
@@ -347,97 +492,101 @@
 
         <script>
             function walkMe() {
-
-
-                //this function is responsible for the Google Maps Direction Service. 
-
-                //             $(document).ready(function() {
-                //             $.ajax({
-                //               type: "GET",
-                //               url: "RouteInfo",
-                //               dataType: "json",
-
-                //                success: function(data) {createArray(data);}
-
-                //            });
-                //           });
-
-                // function createArray(Data) {
-
-                //        for (var i = 0; i < Data.length; i++){
-                //         console.log(Data[i].lat);
-                //         console.log(Data[i].lng);
-
-
-                //        }     
-                //         } 
-
                 //this function is responsible for the directions service. 
                 //it takes the source destintion input value to find its long/lat through an if statament
                 //and the users current location 
                 //and it will display the results on the map and the actual written directions below!
+                if (result == "fail") {
 
-                var curLat = pos.lat;
-                var curLng = pos.lng;
-
-                var x = document.getElementById("id_source").value;
-
-
-                "{% if bus %}"
-                "{% for p in bus %}"
-
-                var lat = "{{ p.lat }}"
-                var long = "{{ p.lng }}"
-
-                lat = parseFloat(lat);
-                long = parseFloat(long);
+                    $modal = $('#walkMeModal');
+                    $modal.modal('show');
 
 
-                if (x == "{{ p.num }}") {
 
+                } else if (result == "ok") {
 
-                    var directionsService = new google.maps.DirectionsService();
-                    var directionsDisplay = new google.maps.DirectionsRenderer();
+                    var curLat = pos.lat
+                    var curLng = pos.lng;
+                    var x = "{{ source }}"
 
-                    var start = new google.maps.LatLng(curLat, curLng);
-                    var end = new google.maps.LatLng(lat, long);
+                    "{% if bus %}"
+                    "{% for p in bus %}"
+                    var lat = "{{ p.lat }}"
+                    var long = "{{ p.lng }}"
+                    lat = parseFloat(lat);
+                    long = parseFloat(long);
+                    if (x == "{{ p.num }}") {
+                        var directionsService = new google.maps.DirectionsService();
+                        var directionsDisplay = new google.maps.DirectionsRenderer();
+                        var start = new google.maps.LatLng(curLat, curLng);
+                        var end = new google.maps.LatLng(lat, long);
 
-
-                    var mapProp = {
-                        center: new google.maps.LatLng(53.347515, -6.265377),
-                        zoom: 10,
-                    };
-                    map = new google.maps.Map(document.getElementById("map"), mapProp);
-                    directionsDisplay.setMap(map);
-                    directionsDisplay.setPanel(document.getElementById('directionsPanel'));
-
-
-                    function calcRoute() {
-
-                        var request = {
-                            origin: start,
-                            destination: end,
-                            travelMode: 'WALKING'
+                        var mapProp = {
+                            center: new google.maps.LatLng(53.347515, -6.265377),
+                            zoom: 10,
                         };
-                        directionsService.route(request, function (result, status) {
-                            if (status == 'OK') {
-                                directionsDisplay.setDirections(result);
-                            }
-                        });
+                        map = new google.maps.Map(document.getElementById("map"), mapProp);
+                        directionsDisplay.setMap(map);
+                        directionsDisplay.setPanel(document.getElementById('directionsPanel'));
 
+                        function calcRoute() {
+                            var request = {
+                                origin: start,
+                                destination: end,
+                                travelMode: 'WALKING'
+                            };
+                            directionsService.route(request, function (result, status) {
+                                if (status == 'OK') {
+                                    directionsDisplay.setDirections(result);
+                                }
+                            });
+                        }
+                        calcRoute();
                     }
-
-                    calcRoute();
+                    "{% endfor %}"
+                    "{% endif %}"
                 }
-
-
-
-                "{% endfor %}"
-                "{% endif %}"
 
             }
 
+            var placeSearch, autocomplete;
+
+            function initialize() {
+                //https://www.w3docs.com/learn-javascript/places-autocomplete.html
+                //https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-multiple-countries
+                //the below function used a combination of the above two efforts. 
+                //This function is responsible for allowing the user to search for a general address
+                //the map will then zoom in on that place
+                //they can then chose to view the markers in that area.
+                autocomplete = new google.maps.places.Autocomplete(document.getElementById('genSearch'));
+                autocomplete.setComponentRestrictions({
+                    'country': 'ie'
+                });
+                google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                    var place = autocomplete.getPlace();
+                    console.log(place);
+                    if (!place.geometry) {
+                        // User entered the name of a Place that was not suggested and
+                        // pressed the Enter key, or the Place Details request failed.
+                        window.alert("No details available for input: '" + place.name + "'");
+                        return;
+                    }
+                    // If the place has a geometry, then present it on a map.
+                    if (place.geometry.viewport) {
+                        map.fitBounds(place.geometry.viewport);
+                    } else {
+                        map.setCenter(place.geometry.location);
+                        map.setZoom(17); // Why 17? Because it looks good.
+                    }
+                    marker.setPosition(place.geometry.location);
+                    marker.setVisible(true);
+                });
+            };
+            initialize();
             var busMarkers = 0;
+            var busMarkers = 0;
+
+            var markBus = []
 
             function displayBusMarkers() {
 
@@ -446,9 +595,6 @@
                 infoBus = new google.maps.InfoWindow;
 
                 if (busMarkers == 0) {
-
-
-                    var markers = []
 
 
                     //this function displays the dublin bus markers
@@ -460,7 +606,7 @@
                     var lat = "{{ p.lat }}"
                     var long = "{{ p.lng }}"
                     var name = "{{ p.name }}"
-                    var id = "{{ p.id }}";
+                    var id = "{{ p.num }}";
 
                     var lat = parseFloat(lat);
                     var long = parseFloat(long);
@@ -474,73 +620,65 @@
 
                     });
 
-                    markers.push(marker);
+                    markBus.push(marker);
 
-
-                    google.maps.event.addListener(marker, 'mouseover', (function (markers) {
+                    google.maps.event.addListener(marker, 'mouseover', (function (markBus) {
                         return function () {
                             infoBus.open(map, this);
-                            infoBus.setContent('{{ p.name }}' + '<br>' + '(' + '{{ p.id }}' + ')');
+                            infoBus.setContent('{{ p.name }}' + '<br>' + '(' + '{{ p.num }}' + ')');
                         }
-                    })(markers));
+                    })(markBus));
 
-                    google.maps.event.addListener(marker, 'click', (function (markers) {
+                    google.maps.event.addListener(marker, 'click', (function (markBus) {
                         return function () {
 
-                            document.getElementById("autocomplete").value = '{{ p.id }}';
+                            $modal = $('#MarkersModal');
+                            $modal.modal('show');
+                            
                         }
-                    })(markers));
+
+
+
+                    })(markBus));
 
 
                     "{% endfor %}"
                     "{% endif %}"
 
 
-                    var markerCluster = new MarkerClusterer(map, markers, {
+                    markerCluster = new MarkerClusterer(map, markBus, {
                         imagePath: "{% static 'images/m' %}"
                     });
 
-                    document.getElementById("markersbutton").innerHTML = "Hide Markers";
+                    document.getElementById("markersbutton").innerHTML = "Hide Stops";
 
                     busMarkers++;
 
                 } else {
 
-                    var mapProp = {
-                        center: new google.maps.LatLng(53.347515, -6.265377),
-                        zoom: 10,
-                    };
-                    map = new google.maps.Map(document.getElementById("map"), mapProp);
-
-                    document.getElementById("markersbutton").innerHTML = "Markers";
+                    markerCluster.clearMarkers();
+                    markBus = []
+                    document.getElementById("markersbutton").innerHTML = "Stops";
                     busMarkers--;
 
                 };
             }
-
-            var bikeMarkers = 0;
-
-
-            infoWindow = new google.maps.InfoWindow;
-            infoBikes = new google.maps.InfoWindow;
-
         </script>
 
 
 
         <script>
             function googDirections(sLat, sLng, fLat, fLng) {
-                //Function to plot the bus route on a map after a post request is submitted
 
+                //Function to plot the bus route on a map after a post request is submitted
                 var startLat = parseFloat(sLat);
                 var startLng = parseFloat(sLng);
 
                 var finLat = parseFloat(fLat);
                 var finLng = parseFloat(fLng);
-
                 var directionsService = new google.maps.DirectionsService();
                 var directionsDisplay = new google.maps.DirectionsRenderer();
-
+                
                 var start = new google.maps.LatLng(startLat, startLng);
                 var end = new google.maps.LatLng(finLat, finLng);
 
@@ -551,7 +689,6 @@
                 }
                 var map = new google.maps.Map(document.getElementById('map'), mapOptions);
                 directionsDisplay.setMap(map);
-
 
                 function calcRouteNum() {
                     var request = {
@@ -567,11 +704,9 @@
                     directionsService.route(request, function (response, status) {
                         if (status == 'OK') {
                             directionsDisplay.setDirections(response);
-
                         }
                     });
                 }
-
                 calcRouteNum()
             };
 

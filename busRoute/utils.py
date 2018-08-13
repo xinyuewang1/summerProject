@@ -1,10 +1,7 @@
 import pickle
 import numpy as np
 import os
-from django.conf import settings
-import urllib.request
-import json
-import operator
+from busApp.settings import STATIC_ROOT
 from busRoute import getPlannedTime
 from datetime import datetime
 
@@ -15,56 +12,57 @@ def load_obj(name):
     :param name: name of the file if in current directory, directory/name if not.
     :return: loaded pkl file
     '''
-    if name.endswith('.pkl'):
-        with open(os.path.join(settings.STATIC_ROOT, name), 'rb') as f:
+    try:
+        path = os.path.join(STATIC_ROOT, name).replace('\\', '/')
+        if name.endswith('.pkl'):
+            with open(path, 'rb') as f:
+                return pickle.load(f)
+        with open(path + '.pkl', 'rb') as f:
             return pickle.load(f)
-    with open(os.path.join(settings.STATIC_ROOT, name + '.pkl'), 'rb') as f:
-        return pickle.load(f)
+    except FileNotFoundError:
+        print("\""+name+"\" not found")
+        # raise FileNotFoundError("\"%s\" not found" %(name))
 
-#---------------------TEST-------------------
-#l = load_obj('static/pickles/sortedStopList')
-#print(l)
-
-def getFirstAndLastStops1(route, stop1, stop2):
-    '''
-    Take route and two stops on it, return the first and last stop of this route as identifier.
-    Using API.
-    :param stop1: input stop 1
-    :param stop2: input stop 2
-    :return: first and last stop
-    '''
-    with urllib.request.urlopen(
-            "https://data.dublinked.ie/cgi-bin/rtpi/routeinformation?routeid=" + str(
-                route) + "&operator=bac&format=json") as url:
-        data = json.loads(url.read().decode())
-        for result in data['results']:
-            for stop in result['stops']:
-                if stop['stopid'] == stop1:
-                    continue
-                if stop['stopid'] == stop2:
-                    return result['stops'][0]['stopid'], result['stops'][-1]['stopid']
-
-
-def getFirstAndLastStops2(route, stop1, stop2):
-    '''
-    Using routeDict flavor
-    :param route: bus line, e.g.:39A (Haven't consider case sensitive yet)
-    :param stop1: stop1 on route
-    :param stop2: stop2 on route
-    :return: first and last stop on this route
-    '''
-    for d in os.listdir('static/pickles/stopDicts'):
-        if d.startswith(route):
-            stopD = load_obj('pickles/stopDicts/' + d)
-
-            if stop1 in stopD and stop2 in stopD:
-                return (min(stopD.items(), key=operator.itemgetter(1))[0],
-                        max(stopD.items(), key=operator.itemgetter(1))[0])
-
-
-# This function is working, but one problem is that it will return the first route that matches, but meanwhile, it could
-# not be the longest or most frequently used one.
-# print(getFirstAndLastStops2('39A',769,793))
+# def getFirstAndLastStops1(route, stop1, stop2):
+#     '''
+#     Take route and two stops on it, return the first and last stop of this route as identifier.
+#     Using API.
+#     :param stop1: input stop 1
+#     :param stop2: input stop 2
+#     :return: first and last stop
+#     '''
+#     with urllib.request.urlopen(
+#             "https://data.dublinked.ie/cgi-bin/rtpi/routeinformation?routeid=" + str(
+#                 route) + "&operator=bac&format=json") as url:
+#         data = json.loads(url.read().decode())
+#         for result in data['results']:
+#             for stop in result['stops']:
+#                 if stop['stopid'] == stop1:
+#                     continue
+#                 if stop['stopid'] == stop2:
+#                     return result['stops'][0]['stopid'], result['stops'][-1]['stopid']
+#
+#
+# def getFirstAndLastStops2(route, stop1, stop2):
+#     '''
+#     Using routeDict flavor
+#     :param route: bus line, e.g.:39A (Haven't consider case sensitive yet)
+#     :param stop1: stop1 on route
+#     :param stop2: stop2 on route
+#     :return: first and last stop on this route
+#     '''
+#     for d in os.listdir('static/pickles/stopDicts'):
+#         if d.startswith(route):
+#             stopD = load_obj('pickles/stopDicts/' + d)
+#
+#             if stop1 in stopD and stop2 in stopD:
+#                 return (min(stopD.items(), key=operator.itemgetter(1))[0],
+#                         max(stopD.items(), key=operator.itemgetter(1))[0])
+#
+#
+# # This function is working, but one problem is that it will return the first route that matches, but meanwhile, it could
+# # not be the longest or most frequently used one.
+# # print(getFirstAndLastStops2('39A',769,793))
 
 def getFirstAndLastStops3(route, stop1, stop2):
     '''
@@ -74,16 +72,18 @@ def getFirstAndLastStops3(route, stop1, stop2):
     :param stop2: stop2
     :return: first stop and last stop of the route, also the position of stop1 and stop2 on it.
     '''
+    route = route.upper()
     path = 'pickles/stopLists/'
     for l in load_obj('pickles/sortedIdList'):
-        #print("l:", l)
+        # print("l:", l)
         if l.split('_')[0] == route:
             stopList = load_obj(path + l)
-            #print("stopList:", stopList)
+            # print("stopList:", stopList)
             if stop1 in stopList and stop2 in stopList:
                 progrnumber1 = stopList.index(stop1) + 1
                 progrnumber2 = stopList.index(stop2) + 1
-                #print("prog numbers", progrnumber1, progrnumber1)
+                # print("prog numbers", progrnumber1, progrnumber1)
+
                 # index starts with 0, progrnumber starts with 1
                 if progrnumber1 < progrnumber2:
                     return stopList[0], stopList[-1], progrnumber1, progrnumber2
@@ -91,6 +91,8 @@ def getFirstAndLastStops3(route, stop1, stop2):
                 else:
                     # raise Exception("Wrong input order: The bus run from "+str(progrnumber1)+" to "+str(progrnumber2))
                     return stopList[0], stopList[-1], progrnumber2, progrnumber1
+    # print("Make here.")
+    raise FileNotFoundError("Can't match %d and %d on %s" % (stop1, stop2, route))
 
 class Ett39A:
     '''
@@ -120,14 +122,6 @@ class Ett39A:
             else:
                 mark += 1
 
-        '''
-        if self.time//3 == 0:
-            pass
-        elif self.time//3 == 8 or self.time == 00:
-            timeList[6] = 1
-        else:
-            timeList[(self.time//4)-1] = 1
-            '''
         return timeList
 
     def ucdTerm(self):
@@ -141,7 +135,7 @@ class Ett39A:
         scalerDir = 'pickles/scalers/'
         # print("The file path is", os.path.dirname(os.path.abspath(__file__)))
         identifier = getFirstAndLastStops3(self.route, self.source, self.dest)
-        #print("identifier:",identifier)
+        # print("identifier:",identifier)
 
         if identifier:
             try:
@@ -154,7 +148,7 @@ class Ett39A:
                 return -1
 
             '''
-            routeDict = load_obj(open(os.path.join(settings.STATIC_ROOT, 'pickles/routeDict.pkl'), 'rb'))
+            routeDict = load_obj(open(os.path.join(STATIC_ROOT, 'pickles/routeDict.pkl'), 'rb'))
             for key, route in routeDict.items():
                 if route == int(self.source):
                     source = key
@@ -176,7 +170,7 @@ class Ett39A:
             #headsign, dis1, dis2 = None, None, None
             dis1, dis2 = None, None
 
-            filPath = os.path.join(settings.STATIC_ROOT, 'pickles/stopDicts')
+            filPath = os.path.join(STATIC_ROOT, 'pickles/stopDicts')
             for d in os.listdir(filPath):
                 if d.startswith(str(self.route) + '_' + str(identifier[0]) + '_' + str(identifier[1])):
                     # headsign = d.split('_')[-1][:-4]
@@ -241,10 +235,10 @@ class Ett39A:
 
 # -------------------------Test set---------------
 #route, source, dest, precipitation, temp, timeStr, weekday, dateStr
-#tic = time.time()
-#ett = Ett39A('67', 1444, 3913, 0, 18, "16:45", 3, "7/26/2018")
-#print(ett.estimatedTime())
-#print("Time:",time.time()-tic)
+# tic = time.time()
+# ett = Ett39A('67', 1444, 3913, 0, 18, "16:45", 3, "7/26/2018")
+# print(ett.estimatedTime())
+# print("Time:",time.time()-tic)
 
 # class Ann39A:
 

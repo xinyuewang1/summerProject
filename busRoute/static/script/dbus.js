@@ -1,4 +1,5 @@
 function myMap() {
+
     // Function to display the google map on startup
     var mapProp = {
         center: new google.maps.LatLng(53.347515, -6.265377),
@@ -11,6 +12,8 @@ function myMap() {
     //this code is reponsible for finding and displaing the users current location. 
     //This came from https://developers.google.com/maps/documentation/javascript/examples/map-geolocation
     if (navigator.geolocation) {
+
+        result = "ok"
         navigator.geolocation.getCurrentPosition(function (position) {
             pos = {
                 lat: position.coords.latitude,
@@ -45,11 +48,31 @@ function myMap() {
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.setPosition(pos);
+
     infoWindow.setContent(browserHasGeolocation ?
-        'Error: The Geolocation service failed.' :
+        'Geolocation is Disabled' :
         'Error: Your browser doesn\'t support geolocation.');
     infoWindow.open(map);
+    result = "fail";
 }
+
+// function getLocation() {
+//     if (navigator.geolocation) {
+//         location = navigator.geolocation.watchPosition(update);
+//     } else {
+//         // Geolocation is not supported by this browser.
+//     }
+
+//     function update(pos) {
+//         var update = pos.coords;
+//         console.log('Your updated current position is:');
+//         console.log('Latitude', update.latitude);
+//         console.log('Longitude', update.longitude);
+//     }
+
+// }
+
+// getLocation();
 
 
 //autocomplete for general area
@@ -66,18 +89,16 @@ function toggleTraffic(btn) {
             center: new google.maps.LatLng(53.347515, -6.265377),
             zoom: 12,
         };
-        var map = new google.maps.Map(document.getElementById("map"), mapProp);
-        var trafficLayer = new google.maps.TrafficLayer();
+
+        map = new google.maps.Map(document.getElementById("map"), mapProp);
+        trafficLayer = new google.maps.TrafficLayer();
         trafficLayer.setMap(map);
         document.getElementById("trafficButton").innerHTML = "Hide Traffic";
         trafficCheck++;
 
     } else {
-        var mapProp = {
-            center: new google.maps.LatLng(53.347515, -6.265377),
-            zoom: 12,
-        };
-        var map = new google.maps.Map(document.getElementById("map"), mapProp);
+
+        trafficLayer.setMap(null);
         document.getElementById("trafficButton").innerHTML = "Traffic";
         trafficCheck--;
     }
@@ -139,6 +160,8 @@ $(document).ready(function () {
             $("#planner-toggle").html("Hide Route Planner")
 
         } else if ($("#planner-toggle").text() == "Hide Route Planner") {
+
+
             $("#planner-toggle").text("Expand Route Planner")
         }
     });
@@ -177,87 +200,15 @@ function swapSearch() {
             'country': 'ie'
         });
 
+        //implementing the autocompletes for the different input fields - source and destination. 
         google.maps.event.addListener(sourceAutocomplete, 'place_changed', function () {
             source = sourceAutocomplete.getPlace();
 
             google.maps.event.addListener(destinationAutocomplete, 'place_changed', function () {
                 destination = destinationAutocomplete.getPlace();
 
-                sourceLat = source.geometry.location.lat();
-                sourceLong = source.geometry.location.lng();
-                destinationLat = destination.geometry.location.lat();
-                destinationLong = destination.geometry.location.lng();
-
-
-
-                var startLat = parseFloat(sourceLat);
-
-                var startLng = parseFloat(sourceLong);
-        
-                var finLat = parseFloat(destinationLat);
-                var finLng = parseFloat(destinationLong);
-        
-                var directionsService = new google.maps.DirectionsService();
-             
-        
-                var start = new google.maps.LatLng(startLat, startLng);
-                var end = new google.maps.LatLng(finLat, finLng);
-        
-        
-        
-                function calcRouteNum() {
-                    var request = {
-                        origin: start,
-                        destination: end,
-                        travelMode: 'TRANSIT',
-                        transitOptions: {
-        
-                            modes: ['BUS'],
-                            routingPreference: 'FEWER_TRANSFERS'
-                        },
-                    };
-                    directionsService.route(request, function (response, status) {
-        
-                        if (status == 'OK'){
-                    
-                        var x = response.routes[0].legs[0].steps;
-                        console.log(x)
-                       
-                        for (var i = 0; i < x.length; i++) {
-
-                           console.log(x[i].distance);
-
-                         
-                            if (x[i].transit) {
-
-                                console.log(x[i].transit.arrival_stop.location.lat());
-                                console.log(x[i].transit.arrival_stop.location.lng());
-                                console.log(x[i].transit.departure_stop.location.lat());
-                                console.log(x[i].transit.departure_stop.location.lng());
-                    
-                                
-    
-                                
-                            }
-                        }
-        
-                        }
-        
-                    })
-        
-        
-        
-                }
-        
-                calcRouteNum();
-
             })
         })
-
-      
-
-  
-
 
 
     } else {
@@ -395,6 +346,7 @@ function getStops() {
         })
 };
 
+
 function realTimeInfo() {
 
     //this function gets real time information for the stop that is selected.
@@ -450,7 +402,6 @@ function realTimeInfo() {
 };
 
 
-
 //Functions to display/hide the stop search and route search
 function findStop() {
     if (document.getElementById("stopSearchOptions").style.display == "none") {
@@ -471,54 +422,47 @@ function findRoute() {
 }
 
 
-function stopsNearMe() {
 
-    var jqxhr = $.getJSON('/nearestBus/',
-        document.getElementById("id_source").value + '&format=json',
-        function (daily) {
+//autocomplete for stop search on page load
 
+$("#id_souce, #id_destination").ready(function (){
+$.ajax({
+    type: "GET",
+    url: "RouteInfo",
+    dataType: "json",
 
+    success: function (data) {
+        createArray(data);
+    }
+});
 
-            for (var i = 0; i < daily.length; i++) {
-
-                var name = daily[i].name;
-                var lat = parseFloat(daily[i].lat);
-                var long = parseFloat(daily[i].long);
-
-
-
-                infoWindow = new google.maps.InfoWindow;
-                infoBus = new google.maps.InfoWindow;
-
-                //this function displays the dublin bus markers
-                myLatLng = new google.maps.LatLng(lat, long)
-                marker = new google.maps.Marker({
-                    position: myLatLng,
-                    map: map,
-                    title: name
-                });
-
-                marker.addListener('mouseover', function () {
-                    infoBus.open(map, this);
-                    infoBus.setContent(this.title);
-                })
-
-                marker.addListener('click', function () {
-                    document.getElementById("id_source").value = this.title;
-
-                })
-
-                markers.push(marker);
-
-            }
+})
 
 
+function createArray(Data) {
 
-        })
+    results = [];
+    for (var i = 0; i < Data.length; i++) {
+        results.push(Data[i].num);
+    }
+    $("#id_destination, #id_source").autocomplete({
+        source: results,
+        minLength: 2,
+    });
+
 }
 
 
-
+//Shows the loading gif when the submit button is initally pressed
+function showLoadGif(){
+    var x = document.forms["routes"]["source"].value;
+    var y = document.forms["routes"]["destination"].value;
+    var z = document.forms["routes"]["departTime"].value;
+    
+    if (x != "" && y != "" && z != "") {
+        document.getElementById("load_screen").style.display = "block"
+    }
+}
 
 // References:
 // https://github.com/jonthornton/jquery-timepicker 

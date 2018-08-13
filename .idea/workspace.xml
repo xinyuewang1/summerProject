@@ -1,18 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8f414dcb-d6b4-4a5b-82cf-cef4d25b8bfd" name="Default" comment="fixed picking wrong model issue.">
+    <list default="true" id="8f414dcb-d6b4-4a5b-82cf-cef4d25b8bfd" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/busRoute/static/images/brokenbus.gif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/busRoute/static/images/busanimation.gif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/busRoute/static/images/dbBoppng.gif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/busRoute/static/pickles/RouteAdresses.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/busRoute/templates/busRoute/problem.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/busApp/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/busApp/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/busRoute/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pipfile" beforeDir="false" afterPath="$PROJECT_DIR$/Pipfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/busRoute/getPlannedTime.py" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/getPlannedTime.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/busRoute/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/static/css/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/busRoute/static/script/dbus.js" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/static/script/dbus.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/busRoute/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/templates/base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/busRoute/templates/busRoute/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/templates/busRoute/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/busRoute/templates/busRoute/planner.html" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/templates/busRoute/planner.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/busRoute/templates/busRoute/result.html" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/templates/busRoute/result.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/busRoute/templates/busRoute/stops.html" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/templates/busRoute/stops.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/busRoute/templates/busRoute/routes.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/busRoute/templates/busRoute/stops.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/busRoute/templates/busRoute/test.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/busRoute/templates/busRoute/tourism.html" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/templates/busRoute/tourism.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/busRoute/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/tests.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/busRoute/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/busRoute/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/busRoute/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/busRoute/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -26,8 +38,8 @@
       <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/busRoute/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret line="13" column="81" selection-start-line="13" selection-start-column="81" selection-end-line="13" selection-end-column="81" />
+            <state relative-caret-position="-2768">
+              <caret line="141" column="78" selection-start-line="141" selection-start-column="78" selection-end-line="141" selection-end-column="78" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -38,17 +50,31 @@
       <file leaf-file-name="dbus.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/busRoute/static/script/dbus.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-68">
-              <caret line="140" column="73" selection-start-line="140" selection-start-column="73" selection-end-line="140" selection-end-column="73" />
+            <state relative-caret-position="170">
+              <caret line="163" lean-forward="true" selection-start-line="163" selection-end-line="163" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="tourism.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/busRoute/templates/busRoute/tourism.html">
+      <file leaf-file-name="getPlannedTime.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/busRoute/getPlannedTime.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2890">
-              <caret line="170" column="14" selection-start-line="170" selection-start-column="14" selection-end-line="170" selection-end-column="14" />
+            <state relative-caret-position="272">
+              <caret line="107" lean-forward="true" selection-start-line="107" selection-end-line="107" />
+              <folding>
+                <element signature="e#0#27#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tests.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/busRoute/tests.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <element signature="e#0#48#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -56,13 +82,32 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/busRoute/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3553">
-              <caret line="275" column="58" selection-start-line="275" selection-start-column="58" selection-end-line="275" selection-end-column="58" />
+            <state relative-caret-position="-10377">
+              <caret line="161" column="19" selection-start-line="161" selection-start-column="19" selection-end-line="161" selection-end-column="19" />
+              <folding>
+                <element signature="e#0#32#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".env" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.env">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="17">
+              <caret line="1" column="49" selection-start-line="1" selection-start-column="49" selection-end-line="1" selection-end-column="49" />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -77,6 +122,7 @@
       <find>est39a</find>
       <find>est</find>
       <find>save_obj</find>
+      <find>&gt;&gt;&gt;&gt;</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -84,7 +130,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="ac0352510f1efce9ed6c323ac80854bc5b6d453f" />
+        <entry key="$PROJECT_DIR$" value="WangBranch" />
       </map>
     </option>
   </component>
@@ -99,11 +145,12 @@
         <option value="$PROJECT_DIR$/busRoute/templates/busRoute/index.html" />
         <option value="$PROJECT_DIR$/busRoute/urls.py" />
         <option value="$PROJECT_DIR$/requirements.txt" />
-        <option value="$PROJECT_DIR$/busRoute/getPlannedTime.py" />
+        <option value="$PROJECT_DIR$/busRoute/templates/busRoute/tourism.html" />
+        <option value="$PROJECT_DIR$/.env" />
         <option value="$PROJECT_DIR$/busRoute/views.py" />
         <option value="$PROJECT_DIR$/busRoute/utils.py" />
         <option value="$PROJECT_DIR$/busRoute/static/script/dbus.js" />
-        <option value="$PROJECT_DIR$/busRoute/templates/busRoute/tourism.html" />
+        <option value="$PROJECT_DIR$/busRoute/getPlannedTime.py" />
       </list>
     </option>
   </component>
@@ -142,19 +189,6 @@
               <item name="busRoute" type="462c0819:PsiDirectoryNode" />
               <item name="static" type="462c0819:PsiDirectoryNode" />
               <item name="script" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="InnovationStation" type="b2602c69:ProjectViewProjectNode" />
-              <item name="InnovationStation" type="462c0819:PsiDirectoryNode" />
-              <item name="busRoute" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="InnovationStation" type="b2602c69:ProjectViewProjectNode" />
-              <item name="InnovationStation" type="462c0819:PsiDirectoryNode" />
-              <item name="busRoute" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-              <item name="busRoute" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -196,6 +230,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.utils" />
         <item itemvalue="Python.utils" />
         <item itemvalue="Python.utils" />
         <item itemvalue="Python.utils" />
@@ -265,28 +300,60 @@
     </task>
     <servers />
   </component>
+  <component name="TestHistory">
+    <history-entry file="Unittests_for_test_utils_TestUtils_test_load_obj - 2018.08.09 at 14h 33m 59s.xml">
+      <configuration name="Unittests for test_utils.TestUtils.test_load_obj" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_for_test_utils_TestUtils_test_load_obj - 2018.08.09 at 14h 35m 41s.xml">
+      <configuration name="Unittests for test_utils.TestUtils.test_load_obj" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_for_test_utils_TestUtils_test_load_obj - 2018.08.09 at 14h 36m 42s.xml">
+      <configuration name="Unittests for test_utils.TestUtils.test_load_obj" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_for_test_utils_TestUtils_test_load_obj - 2018.08.09 at 14h 37m 29s.xml">
+      <configuration name="Unittests for test_utils.TestUtils.test_load_obj" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_for_test_utils_TestUtils_test_getFirstAndLastStop3 - 2018.08.09 at 14h 39m 22s.xml">
+      <configuration name="Unittests for test_utils.TestUtils.test_getFirstAndLastStop3" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_for_test_utils_TestUtils_test_getFirstAndLastStop3 - 2018.08.09 at 14h 40m 15s.xml">
+      <configuration name="Unittests for test_utils.TestUtils.test_getFirstAndLastStop3" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_for_test_utils_TestUtils_test_getFirstAndLastStop3 - 2018.08.09 at 14h 41m 28s.xml">
+      <configuration name="Unittests for test_utils.TestUtils.test_getFirstAndLastStop3" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_for_test_utils_TestUtils_test_Ett39A - 2018.08.09 at 14h 48m 33s.xml">
+      <configuration name="Unittests for test_utils.TestUtils.test_Ett39A" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_for_test_utils_TestUtils_test_Ett39A - 2018.08.09 at 14h 50m 57s.xml">
+      <configuration name="Unittests for test_utils.TestUtils.test_Ett39A" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_for_test_utils_TestUtils_test_Ett39A - 2018.08.09 at 14h 52m 58s.xml">
+      <configuration name="Unittests for test_utils.TestUtils.test_Ett39A" configurationId="tests" />
+    </history-entry>
+  </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24963397" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5036603" side_tool="true" weight="0.3290938" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50292826" side_tool="true" weight="0.3290938" />
       <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.49707174" weight="0.3290938" />
       <window_info anchor="bottom" id="Python Console" order="7" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49633968" visible="true" weight="0.3290938" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49707174" visible="true" weight="0.3290938" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49853587" weight="0.3290938" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4978038" weight="0.3290938" />
+      <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.49707174" weight="0.3290938" />
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24963397" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.49707174" weight="0.3290938" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4978038" weight="0.3290938" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50073206" side_tool="true" visible="true" weight="0.3290938" />
@@ -301,21 +368,11 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Add test for getFirstAndLastStop3" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add test for getFirstAndLastStop3" />
+  </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/busRoute/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="9231">
-          <caret line="622" column="19" selection-start-line="622" selection-start-column="19" selection-end-line="622" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Pipfile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="12" column="8" selection-start-line="12" selection-start-column="8" selection-end-line="12" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/busApp/settings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="24">
@@ -648,30 +705,53 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/busRoute/getPlannedTime.py">
+    <entry file="file://$PROJECT_DIR$/busRoute/templates/busRoute/tourism.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="534">
-          <caret line="106" column="1" selection-start-line="106" selection-start-column="1" selection-end-line="106" selection-end-column="1" />
+        <state relative-caret-position="2890">
+          <caret line="170" column="14" selection-start-line="170" selection-start-column="14" selection-end-line="170" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/busRoute/test_utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="326">
+          <caret line="62" selection-start-line="62" selection-end-line="62" />
           <folding>
-            <element signature="e#0#27#0" expanded="true" />
+            <element signature="e#0#32#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/.env">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="49" selection-start-line="1" selection-start-column="49" selection-end-line="1" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/busRoute/tests.py">
-      <provider selected="true" editor-type-id="text-editor" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#48#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/busRoute/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3553">
-          <caret line="275" column="58" selection-start-line="275" selection-start-column="58" selection-end-line="275" selection-end-column="58" />
+        <state relative-caret-position="-10377">
+          <caret line="161" column="19" selection-start-line="161" selection-start-column="19" selection-end-line="161" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/busRoute/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="13" column="81" selection-start-line="13" selection-start-column="81" selection-end-line="13" selection-end-column="81" />
+        <state relative-caret-position="-2768">
+          <caret line="141" column="78" selection-start-line="141" selection-start-column="78" selection-end-line="141" selection-end-column="78" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
@@ -680,15 +760,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/busRoute/static/script/dbus.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-68">
-          <caret line="140" column="73" selection-start-line="140" selection-start-column="73" selection-end-line="140" selection-end-column="73" />
+        <state relative-caret-position="170">
+          <caret line="163" lean-forward="true" selection-start-line="163" selection-end-line="163" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/busRoute/templates/busRoute/tourism.html">
+    <entry file="file://$PROJECT_DIR$/busRoute/getPlannedTime.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2890">
-          <caret line="170" column="14" selection-start-line="170" selection-start-column="14" selection-end-line="170" selection-end-column="14" />
+        <state relative-caret-position="272">
+          <caret line="107" lean-forward="true" selection-start-line="107" selection-end-line="107" />
+          <folding>
+            <element signature="e#0#27#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

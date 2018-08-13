@@ -1,10 +1,9 @@
-{%extends 'base.html' %} {% load staticfiles %} {% block body %}
+{%extends 'base.html' %} {% load staticfiles %}{% block body %}
 
 <body>
     <script>
-        $(document).ready(function() {
-                myMap()
-            });
+        //this accesses the data that is rendered in and creates a variable that can be accessed in the external DB.JS file. 
+        var bus = "{{ bus| length }}"
     </script>
     <!-- Link to main javaScript file -->
     <script src="{% static 'script/dbus.js' %}"></script>
@@ -12,6 +11,15 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0&libraries=places&callback=myMap"
         async defer></script>
     <script src="{% static 'script/jquery.timepicker.min.js' %}"></script>
+    
+<script>
+    $(document).ready(function () {
+        myMap()
+    });
+</script>
+    
+
+    <div id = "load_screen" style = "display: none;"><div id = "loading"><h3>Loading Result..</h3></div></div>
 
 
     <div id="homeCenter" class="container">
@@ -24,7 +32,7 @@
                                 <a class="nav-link" id="trafficButton" onclick="toggleTraffic(this)" href="#">Traffic</a>
                             </div>
                             <div class="col-4 nav2 border border-white border-top-0 border-left-0 border-bottom-0">
-                                <a class="nav-link" href="#" onclick="displayBusMarkers()" id="markersbutton">Markers</a>
+                                <a class="nav-link" href="#" onclick="displayBusMarkers()" id="markersbutton">Stops</a>
                             </div>
                             <div class="col-4 nav2">
                                 <a class="nav-link" href="#" onclick="displayBikeMarkers()" id="bikesbutton">Bikes</a>
@@ -35,15 +43,15 @@
                     <div id="map"></div>
                     <script>
                         //Rezises the map div to a smaller value for very short phone screens
-                        $(document).ready(function () {
-                            var width = $(window).width();
-                            var height = $(window).height();
+                        // $(document).ready(function(){
+                        //     var width = $(window).width(); 
+                        //     var height = $(window).height(); 
 
-                            if (height <= 740) {
-                                $('#map').css("height", "240px")
-                            }
+                        //     if (height<=740) {
+                        //         $('#map').css("height", "240px")
+                        //     }
 
-                        });
+                        // });
                     </script>
                     <!-- <div id = "RouteDiv"></div> -->
                 </div>
@@ -64,19 +72,26 @@
                         </div>
                         <div class="col-6 text-center text-white">
                             <a href="#" onclick="findRoute()">
-                                <span style="color:white" onclick="placeSearch()">Route Info</span>
+                                <span style="color:white">Route Info</span>
                             </a>
                         </div>
                     </div>
                     <div id="stopSearchOptions" style="display:none;border-top:1px solid white;">
                         <p class="text-white">Enter a location below to view the it's local stops</p>
                         <div>
-                            <inputid='genSearch' placeholder='Search Area' type='text'></input>
+                            <input id='genSearch' placeholder='Search Area' type='text' onclick="placeSearch()">
+                            </input>
+                        </div>
+                    </div>
+                    <div id="stopSearchOptions" style="display:none;border-top:1px solid white;">
+                        <p class="text-white">Enter a location below to view the it's local stops</p>
+                        <div>
+                            <input id='genSearch' placeholder='Search Area' type='text' onclick="placeSearch()"></input>
                         </div>
                     </div>
                     <div id="routeSearchOptions" style="display:none;border-top:1px solid white;">
                         <p class="text-white">Enter a route number to view on map</p>
-                        <input onfocus="routeSearch()" id="routeSearch" placeholder="Search Routes">
+                        <input id="routeSearch" onfocus="routeSearch(),changeBackGroundColor();" placeholder="Search Routes">
                     </div>
 
                 </div>
@@ -91,9 +106,7 @@
                             <strong>By Address</strong>
                         </div>
                     </div>
-
-
-                    <form id="routePlanner" role="form" method="POST">
+                    <form name = "routes" id = "routePlanner" role = "form" method="POST">
                         {% csrf_token %}
                         <div class="row mt-2">
 
@@ -116,7 +129,81 @@
                                 </div>
                             </div>
 
+                            <script>
+                                function changeBackGroundColor() {
 
+                                    $("#routeSearch").css('background-color', 'white');
+                                }
+                                $(document).on("change", "#id_departTime", function () {
+                                    $("#id_departTime").css('background-color', 'white');
+                                    var startTime = "06:30"
+                                    var endTime = "23:30"
+                                    var time1 = new Date("HH:MM")
+                                    var time2 = new Date("HH:MM")
+                                    var time1 = "06:30"
+                                    var time2 = "23:30"
+                                    console.log(time1, time2)
+
+                                    var x = new Date(("HH:MM"))
+                                    var x = document.getElementById("id_departTime").value;
+
+                                    if (x < time1 || x > time2) {
+
+                                        $modal = $('#exampleModalCenter');
+                                        $modal.modal('show');
+                                        $("#id_departTime").css('background-color', 'red');
+                                    }
+                                })
+                            </script>
+
+                            <!-- Time Error Modal -->
+                            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLongTitle">Time Selection Error</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Unfortuntaley there are no buses available at the time you have selected
+                                                <p>
+                                                    <p>Buses will resume at approximately 06:30.</p>
+                                                    <p>However, timetables are subject to change depending on routes</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Route Search Modal -->
+                            <div class="modal fade" id="routeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLongTitle">Route Selection Error</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Unfortunately there was an error returning the stops for that route</p>
+
+                                            <p>You might need to be a little more specific.</p>
+
+                                            <p>Did you provide a direction?</p>
+
+                                            <p>Use the Autocomplete function for guidance.</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <script>
                                 var d = new Date();
                                 var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
@@ -141,13 +228,81 @@
 
                         </div>
                         <div class="row">
-                            <button type="submit" class="btn btn-block btn-primary m-2" name="go">GO!</button>
-
-
+                            <button type="submit" class="btn btn-block btn-primary m-2" name="go" onclick="showLoadGif()">GO!</button>
                         </div>
-                        <div class="row">
-
                             <script>
+                                var bikeMarkers = 0;
+                                var markBikes = []
+
+                                function displayBikeMarkers() {
+
+                                    var jqxhr = $.getJSON('http://localhost:8000/dublinBikeInfo',
+                                        function (daily) {
+                                            var infoWindow = new google.maps.InfoWindow;
+                                            var infoBikes = new google.maps.InfoWindow;
+
+
+
+                                            if (bikeMarkers == 0) {
+
+                                                //this function displays the dublin bikes markers
+
+                                                for (var i = 0; i < daily.length; i++) {
+
+
+                                                    var lat = daily[i].lat;
+                                                    var long = daily[i].lng;
+
+
+
+                                                    var busicon = {
+                                                        url: "{% static 'images/dublinBikes.png' %}", // url
+                                                        scaledSize: new google.maps.Size(40, 40), // scaled size            
+                                                    };
+
+
+                                                    latlng = new google.maps.LatLng(lat, long);
+                                                    var marker = new google.maps.Marker({
+                                                        position: latlng,
+                                                        icon: busicon,
+                                                        title: daily[i].name
+                                                    });
+
+
+                                                    marker.addListener('mouseover', function () {
+
+                                                        infoBikes.open(map, this);
+                                                        infoBikes.setContent(this.title);
+                                                    })
+
+                                                    markBikes.push(marker);
+                                                }
+
+                                                markerCluster1 = new MarkerClusterer(map, markBikes, {
+                                                    imagePath: "{% static 'images/m' %}"
+                                                });
+
+
+
+                                                document.getElementById("bikesbutton").innerHTML = "Hide Bikes";
+                                                bikeMarkers++;
+
+                                            } else {
+
+                                                //this checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
+                                                markerCluster1.clearMarkers();
+                                                markBikes = []
+
+                                                document.getElementById("bikesbutton").innerHTML = "Bikes";
+                                                bikeMarkers--;
+
+                                            }
+
+
+                                        });
+
+                                };
+
                                 function placeSearch() {
 
 
@@ -191,10 +346,11 @@
                                     });
                                 };
 
-                                //This piece of code allows the getStops function to be called when the user hits the enter key. 
-
-                                var onEnter = document.getElementById("routeSearch");
-
+                                </script>
+                             
+                
+                            <script>
+                            var onEnter = document.getElementById("routeSearch");
                                 onEnter.addEventListener("keydown", function (value) {
                                     if (value.keyCode === 13) {
 
@@ -202,15 +358,16 @@
                                     }
                                 });
 
-                                var markers = [];
+
+                                markers = [];
 
                                 function getStops() {
+
 
                                     //this function is responsible for displaying the route information
                                     //It uses jQuery to intitialise and pass the value to the url and to grab the data that is returned by get_route_info
 
                                     if (markers)
-
                                         //this checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
                                         for (var i = 0; i < markers.length; i++) {
 
@@ -218,67 +375,61 @@
 
                                         }
 
-
                                     var jqxhr = $.getJSON('/details/' + document.getElementById("routeSearch").value +
                                         '/',
                                         function (daily) {
 
+                                            if (daily == "fail") {
+                                                $modal = $('#routeModal');
+                                                $modal.modal('show');
+                                                $("#routeSearch").css('background-color', 'red');
+                                            } else {
+                                                var table = "";
+                                                table =
+                                                    "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped overflow-y: hidden'>";
+                                                table += "<tr><thead>";
+                                                table += "<th>Stop</th>";
+                                                table += "</tr></thead><tbody>";
 
-                                            var table = "";
-                                            table =
-                                                "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped overflow-y: hidden'>";
-                                            table += "<tr><thead>";
-                                            table += "<th>Stop</th>";
-                                            table += "</tr></thead><tbody>";
+                                                for (var i = 0; i < daily.length; i++) {
 
-                                            for (var i = 0; i < daily.length; i++) {
-
-
-                                                var lat = daily[i].lat;
-                                                var long = daily[i].lng;
-                                                var name = daily[i].name;
-
-                                                var id = daily[i].id;
-
-                                                table += "<tr>";
-                                                table += "<td>" + daily[i].name + "(" + id + ")" + "</td>";
-                                                table += "</tr>";
+                                                    table += "<tr>";
+                                                    table += "<td>" + daily[i].name + "(" + daily[i].id +
+                                                        ")" + "</td>";
+                                                    table += "</tr>";
 
 
-                                                infoWindow = new google.maps.InfoWindow;
-                                                infoBus = new google.maps.InfoWindow;
+                                                    infoWindow = new google.maps.InfoWindow;
+                                                    infoBus = new google.maps.InfoWindow;
 
-                                                //this function displays the dublin bus markers
-                                                myLatLng = new google.maps.LatLng(lat, long)
-                                                marker = new google.maps.Marker({
-                                                    position: myLatLng,
-                                                    map: map,
-                                                    title: name
-                                                });
+                                                    //this function displays the dublin bus markers
+                                                    myLatLng = new google.maps.LatLng(parseFloat(daily[i].lat),
+                                                        parseFloat(daily[i].lng))
+                                                    marker = new google.maps.Marker({
+                                                        position: myLatLng,
+                                                        map: map,
+                                                        title: daily[i].name + " " + "(" + daily[i].id +
+                                                            ")"
+                                                    });
 
-                                                marker.addListener('mouseover', function () {
-                                                    infoBus.open(map, this);
-                                                    infoBus.setContent(this.title);
-                                                })
+                                                    marker.addListener('mouseover', function () {
+                                                        infoBus.open(map, this);
+                                                        infoBus.setContent(this.title);
+                                                    })
 
-                                                marker.addListener('click', function () {
-                                                    document.getElementById("id_source").value = this.title;
+                                                    markers.push(marker);
+                                                }
 
-                                                })
 
-                                                markers.push(marker);
 
-                                                // <!-- 
-                                                //                             var path = poly.getPath();
-                                                //                             path.push(myLatLng); -->
+                                                table += "</tbody></table>";
+                                                document.getElementById("RouteDiv").innerHTML = table;
+
                                             }
-
-                                            table += "</tbody></table>";
-                                            document.getElementById("RouteDiv").innerHTML = table;
                                         })
                                 };
                             </script>
-                        </div>
+                        
                     </form>
 
                 </div>
@@ -342,91 +493,130 @@
             <button onclick="stopsNearMe()">Stops Near Me</button>
         </div>
         <script>
-            function googDirections() {
-                var x = document.getElementById("id_source").value;
-                var y = document.getElementById("id_destination").value;
+            function stopsNearMe() {
+
+                console.log(pos.lat);
+                console.log(pos.lng);
+
+                var jqxhr = $.getJSON('/nearestBus/' + pos.lat + '/' + pos.lng,
+                    document.getElementById("id_source").value + '&format=json',
+                    function (daily) {
 
 
-                "{% if bus %}"
-                "{% for p in bus %}"
+                        for (var i = 0; i < daily.length; i++) {
 
-                if (x == "{{ p.num }}" || x == "{{ p.name }}") {
+                            var name = daily[i].name;
+                            var lat = parseFloat(daily[i].lat);
+                            var long = parseFloat(daily[i].long);
 
-                    var slat = "{{ p.lat }}"
-                    var slong = "{{ p.lng }}"
+                            infoWindow = new google.maps.InfoWindow;
+                            infoBus = new google.maps.InfoWindow;
 
-                    var startLat = parseFloat(slat);
-                    var startLng = parseFloat(slong);
+                            //this function displays the dublin bus markers
+                            myLatLng = new google.maps.LatLng(lat, long)
+                            marker = new google.maps.Marker({
+                                position: myLatLng,
+                                map: map,
+                                title: name
+                            });
 
-                };
+                            marker.addListener('mouseover', function () {
+                                infoBus.open(map, this);
+                                infoBus.setContent(this.title);
+                            })
 
-                if (y == "{{ p.num }}" || y == "{{ p.name }}") {
+                            marker.addListener('click', function () {
+                                document.getElementById("id_source").value = this.title;
 
-                    var flat = "{{ p.lat }}"
-                    var flong = "{{ p.lng }}"
+                            })
 
-                    var finLat = parseFloat(flat);
-                    var finLng = parseFloat(flong);
-                };
-
-                "{% endfor %}"
-                "{% endif %}"
-
-                // var startLat = 53.309442;
-                // var startLng =  -6.218855;
-
-                // var finLat = 53.381437;
-                // var finLng = -6.591407;
-
-                var directionsService = new google.maps.DirectionsService();
-                var directionsDisplay = new google.maps.DirectionsRenderer();
-
-                var start = new google.maps.LatLng(startLat, startLng);
-                var end = new google.maps.LatLng(finLat, finLng);
-
-                var mapOptions = {
-                    zoom: 14,
-                    center: start
-                }
-                var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-                directionsDisplay.setMap(map);
-
-
-                function calcRouteNum() {
-                    var request = {
-                        origin: start,
-                        destination: end,
-                        travelMode: 'TRANSIT',
-                        transitOptions: {
-                            //departureTime: new Date(1337675679473),
-                            modes: ['BUS'],
-                            routingPreference: 'FEWER_TRANSFERS'
-                        },
-                    };
-                    directionsService.route(request, function (response, status) {
-                        if (status == 'OK') {
-                            directionsDisplay.setDirections(response);
-
-                            var x = response.routes[0].legs[0].steps;
-                            var buses = [];
-                            for (var i = 0; i < x.length; i++) {
-                                try {
-                                    buses.push(x[i].transit.line.short_name);
-                                } catch {}
-                            }
+                            markers.push(marker);
                         }
-                        //var res = response.routes[0].legs[0].steps[0].transit.line.short_name;
-
-
-                        var jqxhr = $.getJSON('/busNum/' + buses[0] + '/', function (daily) {
-                            document.getElementById("busRouteNum").innerHTML = daily;
-                        });
                     })
-                };
             }
-            calcRouteNum()
-        </script>
 
+            // function googDirections() {
+            //     var x = document.getElementById("id_source").value;
+            //     var y = document.getElementById("id_destination").value;
+
+
+            //     "{% if bus %}"
+            //     "{% for p in bus %}"
+
+            //     if (x == "{{ p.num }}" || x == "{{ p.name }}") {
+
+            //         var slat = "{{ p.lat }}"
+            //         var slong = "{{ p.lng }}"
+
+            //         var startLat = parseFloat(slat);
+            //         var startLng = parseFloat(slong);
+
+            //     };
+
+            //     if (y == "{{ p.num }}" || y == "{{ p.name }}") {
+
+            //         var flat = "{{ p.lat }}"
+            //         var flong = "{{ p.lng }}"
+
+            //         var finLat = parseFloat(flat);
+            //         var finLng = parseFloat(flong);
+            //     };
+
+            //     "{% endfor %}"
+            //     "{% endif %}"
+
+            //     // var startLat = 53.309442;
+            //     // var startLng =  -6.218855;
+
+            //     // var finLat = 53.381437;
+            //     // var finLng = -6.591407;
+
+            //     var directionsService = new google.maps.DirectionsService();
+            //     var directionsDisplay = new google.maps.DirectionsRenderer();
+
+            //     var start = new google.maps.LatLng(startLat, startLng);
+            //     var end = new google.maps.LatLng(finLat, finLng);
+
+            //     var mapOptions = {
+            //         zoom: 14,
+            //         center: start
+            //     }
+            //     var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+            //     directionsDisplay.setMap(map);
+
+
+            //     function calcRouteNum() {
+            //         var request = {
+            //             origin: start,
+            //             destination: end,
+            //             travelMode: 'TRANSIT',
+            //             transitOptions: {
+            //                 //departureTime: new Date(1337675679473),
+            //                 modes: ['BUS'],
+            //                 routingPreference: 'FEWER_TRANSFERS'
+            //             },
+            //         };
+            //         directionsService.route(request, function (response, status) {
+            //             if (status == 'OK') {
+            //                 directionsDisplay.setDirections(response);
+
+            //                 var x = response.routes[0].legs[0].steps;
+            //                 var buses = [];
+            //                 for (var i = 0; i < x.length; i++) {
+            //                     try {
+            //                         buses.push(x[i].transit.line.short_name);
+            //                     } catch {}
+            //                 }
+            //             }
+            //             //var res = response.routes[0].legs[0].steps[0].transit.line.short_name;
+            //             var jqxhr = $.getJSON('/busNum/' + buses[0] + '/', function (daily) {
+            //                 document.getElementById("busRouteNum").innerHTML = daily;
+            //             });
+            //         })
+            //     };
+            // }
+            // calcRouteNum()
+        </script>
 
 
         <script>
@@ -498,7 +688,10 @@
 
             }
 
+
             var busMarkers = 0;
+
+            var markBus = []
 
             function displayBusMarkers() {
 
@@ -507,9 +700,6 @@
                 infoBus = new google.maps.InfoWindow;
 
                 if (busMarkers == 0) {
-
-
-                    var markers = []
 
 
                     //this function displays the dublin bus markers
@@ -535,126 +725,50 @@
 
                     });
 
-                    markers.push(marker);
+                    markBus.push(marker);
 
-                    google.maps.event.addListener(marker, 'mouseover', (function (markers) {
+                    google.maps.event.addListener(marker, 'mouseover', (function (markBus) {
                         return function () {
                             infoBus.open(map, this);
                             infoBus.setContent('{{ p.name }}' + '<br>' + '(' + '{{ p.num }}' + ')');
                         }
-                    })(markers));
+                    })(markBus));
 
-                    google.maps.event.addListener(marker, 'click', (function (markers) {
+                    google.maps.event.addListener(marker, 'click', (function (markBus) {
                         return function () {
 
-                            document.getElementById("id_source").value = '{{ p.num }}';
+                            markerName = '{{ p.name }}'
+                            markerNum = '{{ p.num }}'
+                            $(".modal-body #markerName").text(markerName + " " + markerNum);
+                            $modal = $('#MarkersModal');
+                            $modal.modal('show');
+
                         }
-                    })(markers));
+                    })(markBus));
 
 
                     "{% endfor %}"
                     "{% endif %}"
 
 
-                    var markerCluster = new MarkerClusterer(map, markers, {
+                    markerCluster = new MarkerClusterer(map, markBus, {
                         imagePath: "{% static 'images/m' %}"
                     });
 
-                    document.getElementById("markersbutton").innerHTML = "Hide Markers";
+                    document.getElementById("markersbutton").innerHTML = "Hide Stops";
 
                     busMarkers++;
 
                 } else {
 
-                    var mapProp = {
-                        center: new google.maps.LatLng(53.347515, -6.265377),
-                        zoom: 10,
-                    };
-                    map = new google.maps.Map(document.getElementById("map"), mapProp);
-
-                    document.getElementById("markersbutton").innerHTML = "Markers";
+                    markerCluster.clearMarkers();
+                    markBus = []
+                    document.getElementById("markersbutton").innerHTML = "Stops";
                     busMarkers--;
 
                 };
             }
 
-            var bikeMarkers = 0;
-
-
-            infoWindow = new google.maps.InfoWindow;
-            infoBikes = new google.maps.InfoWindow;
-
-            function displayBikeMarkers() {
-
-
-                var jqxhr = $.getJSON('http://localhost:8000/dublinBikeInfo',
-                    function (daily) {
-
-
-
-                        if (bikeMarkers == 0) {
-
-                            //this function displays the dublin bikes markers
-
-                            var markers = [];
-                            for (var i = 0; i < daily.length; i++) {
-
-
-                                var lat = daily[i].lat;
-                                var long = daily[i].lng;
-                                var name = daily[i].name;
-
-
-                                var busicon = {
-                                    url: "{% static 'images/dublinBikes.png' %}", // url
-                                    scaledSize: new google.maps.Size(40, 40), // scaled size            
-                                };
-
-
-                                var latlng = new google.maps.LatLng(lat, long);
-                                var marker = new google.maps.Marker({
-                                    position: latlng,
-                                    icon: busicon,
-                                    title: name
-                                });
-
-                                markers.push(marker);
-
-
-                                google.maps.event.addListener(marker, 'click', (function (markers) {
-                                    return function () {
-                                        infoBikes.open(map, this);
-                                        infoBikes.setContent(name);
-                                    }
-                                })(markers));
-
-                            }
-
-                            var markerCluster = new MarkerClusterer(map, markers, {
-                                imagePath: "{% static 'images/m' %}"
-                            });
-
-                            bikeMarkers++;
-
-                            document.getElementById("bikesbutton").innerHTML = "Hide Bikes";
-                        } else {
-
-
-                            var mapProp = {
-                                center: new google.maps.LatLng(53.347515, -6.265377),
-                                zoom: 10,
-                            };
-                            map = new google.maps.Map(document.getElementById("map"), mapProp);
-
-                            document.getElementById("bikesbutton").innerHTML = "Bikes";
-                            bikeMarkers--;
-
-                        }
-
-
-                    });
-
-            };
 
             //Autocomplete for Route Search this is paired with an onfocus function to watch for a user click into the box. 
             function routeSearch() {
@@ -674,8 +788,13 @@
                 function createArray(Data) {
 
                     var results = [];
+
                     for (var i = 0; i < Data.length; i++) {
+
                         results.push(Data[i].route);
+
+
+
                     }
                     $("#routeSearch").autocomplete({
                         source: results,
@@ -684,6 +803,68 @@
                 }
             }
         </script>
+
+        <!-- Onclick Marker Modal -->
+
+        <div class="modal fade" id="MarkersModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Route Planner</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <h3 id="markerName"></h3>
+
+                        <p>Would you like to make this Marker your source or destination stop?</p>
+                        <p>
+                            <input type="radio" name="choice" value="Source" id="first"> Source
+                            <br>
+                        </p>
+                        <p>
+                            <input type="radio" name="choice" value="Destination" id="second"> Desination
+                            <br>
+                        </p>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="HandleResponse(markerName, markerNum)">Go</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function HandleResponse(name, num) {
+
+                if (document.getElementById("first").checked) {
+
+                    var c = document.getElementById("stopSearch").style.backgroundColor;
+                    //checks the background color and adds the address if address is selected or adds number if number is selected. 
+                    if (c == "black") {
+                        document.getElementById("id_source").value = name;
+                    } else {
+                        document.getElementById("id_source").value = num;
+                    }
+                } else if (document.getElementById("second").checked)
+                {
+
+                    var c = document.getElementById("stopSearch").style.backgroundColor;
+
+                    if (c == "black") {
+                        document.getElementById("id_destination").value = name;
+                    } else {
+                        document.getElementById("id_destination").value = num;
+                    }
+                }
+
+            }
+        </script>
+
 </body>
 
 {% endblock %}

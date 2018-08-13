@@ -14,8 +14,17 @@ import os
 import csv
 import time
 from django.conf import settings
+import pandas as pd
     
+def problemRend(message):
+    form = routeForm()
+    bus = DublinBus()
 
+    context = {'bus': bus, 'form': form}
+    context['error'] = message
+
+    return context
+    
 class homeView(generic.TemplateView):
 
     '''Class to render index.html. Includes functions:
@@ -35,76 +44,7 @@ class homeView(generic.TemplateView):
     
     def post(self, request):
         form = routeForm(request.POST)
-
-        if form.is_valid():
-            source_address = form.cleaned_data['source']
-            destination_address = form.cleaned_data['destination']
-            depart_time = form.cleaned_data['departTime']
-            depart_date = form.cleaned_data['departDate']
-
-        
-        busNum = googDir(findLatLong(source_address),findLatLong(destination_address), depart_date, depart_time)[0]
-        busNum = busNum.upper()
-
-        stops_local = []
-        stops_local.extend(findLatLong(source_address).split(","))
-        stops_local.extend(findLatLong(destination_address).split(","))
-
-        startLat = stops_local[0]
-        startLng = stops_local[1]
-        finLat = stops_local[2]
-        finLng = stops_local[3]
-
-
-        weather = query_weather()
-        rain, temp = query_rain_weather(depart_time, depart_date)
-        day = parseDayNumber(depart_date)
-        bus = DublinBus()
-      
-
-        
-        #Used to find the stop name using a given stop number
-        for i in bus:
-            if source_address == i['num']:
-                source_name = i['name']
-            if destination_address == i['num']:
-                destination_name = i['name']
-
-        try:
-            source_address = int(source_address)
-            destination_address = int(destination_address)
-
-        except:
-            for i in bus:
-                if source_address == i['name']:
-                    source_address = i['num']
-                if destination_address == i['name']:
-                    destination_address = i['num']
-            print("in the except with", source_address, destination_address)
-            print("oops")
-
-        dateChosen = datetime.datetime.strptime(depart_date, "%m/%d/%Y")
-        #my_date = date.today()
-        header = {'day': calendar.day_name[dateChosen.weekday()],
-                     'date': dateChosen.strftime("%d"),
-                     'month': dateChosen.strftime("%B")}
-
-
-        #print(source_num, dest_num)
-        print("take the bus", busNum)
-
-        #Finds the estimated travel time
-        est = Est39A(busNum, int(source_address), int(destination_address), rain, temp, depart_time, day, depart_date)
-
-        #Calculates arrival time based on departure time and estimated length of trip
-        arrival = arrivalTime(depart_time, est)
-
-        
-
-        args = {'form': form, 'bus': bus, 'busNum': busNum, 'source': source_address, 'source_name':source_name, 
-        'destination': destination_address, 'destination_name': destination_name, 'depart_time': depart_time, 
-        'depart_date': depart_date , 'arrival_time': arrival, 'startLat':startLat, 'startLng': startLng, 'finLat':finLat,
-        'finLng':finLng, 'est': est, 'weather': weather, 'header':header}
+        args = postFunc(request, form)
 
         return render(request, "busRoute/result.html", args)
 
@@ -118,82 +58,23 @@ class plannerView(generic.TemplateView):
     template_name = "busRoute/planner.html"
 
     def get(self,request):
+
         form = routeForm()
         weather = query_weather()
         bus = DublinBus()
-        #print(googDir(findLatLong("768"),findLatLong("7161"), "07/28/2018", "11:50"))
         context = {'weather': weather,'bus': bus, 'form': form}
+        
         return render(request, self.template_name, context)
     
     def post(self, request):
 
         form = routeForm(request.POST)
-
-        if form.is_valid():
-            source_address = form.cleaned_data['source']
-            destination_address = form.cleaned_data['destination']
-            depart_time = form.cleaned_data['departTime']
-            depart_date = form.cleaned_data['departDate']
-
+        args = postFunc(request, form)
         
-        busNum = googDir(findLatLong(source_address),findLatLong(destination_address), depart_date, depart_time)[0]
-        busNum = busNum.upper()
-
-        stops_local = []
-        stops_local.extend(findLatLong(source_address).split(","))
-        stops_local.extend(findLatLong(destination_address).split(","))
-
-        startLat = stops_local[0]
-        startLng = stops_local[1]
-        finLat = stops_local[2]
-        finLng = stops_local[3]
-
-
-        weather = query_weather()
-        rain, temp = query_rain_weather(depart_time, depart_date)
-        day = parseDayNumber(depart_date)
-        bus = DublinBus()
-
-        
-        #Used to find the stop name using a given stop number
-        for i in bus:
-            if source_address == i['num']:
-                source_name = i['name']
-            if destination_address == i['num']:
-                destination_name = i['name']
-
-        try:
-            source_address = int(source_address)
-            destination_address = int(destination_address)
-
-        except:
-            for i in bus:
-                if source_address == i['name']:
-                    source_address = i['num']
-                if destination_address == i['name']:
-                    destination_address = i['num']
-            
-
-        dateChosen = datetime.datetime.strptime(depart_date, "%m/%d/%Y")
-        header = {'day': calendar.day_name[dateChosen.weekday()],
-                     'date': dateChosen.strftime("%d"),
-                     'month': dateChosen.strftime("%B")}
-
-        #print(source_num, dest_num)
-        print("take the bus", busNum)
-
-        #Finds the estimated travel time
-        est = Est39A(busNum, int(source_address), int(destination_address), rain, temp, depart_time, day, depart_date)
-
-        #Calculates arrival time based on departure time and estimated length of trip
-        arrival = arrivalTime(depart_time, est)
-
-        
-
-        args = {'form': form, 'bus': bus, 'busNum': busNum, 'source': source_address, 'source_name':source_name, 
-        'destination': destination_address, 'destination_name': destination_name, 'depart_time': depart_time, 
-        'depart_date': depart_date , 'arrival_time': arrival, 'startLat':startLat, 'startLng': startLng, 'finLat':finLat,
-        'finLng':finLng, 'est': est, 'weather': weather, 'header':header}
+        if 'problem' in args:
+            prob = args['problem']
+            b = problemRend(prob)
+            return render(request, "busRoute/problem.html", b)
 
         return render(request, "busRoute/result.html", args)
 
@@ -214,77 +95,27 @@ class resultView(generic.TemplateView):
         return render(request, self.template_name, context)
     
     def post(self, request):
+
         form = routeForm(request.POST)
+        args = postFunc(request, form)
 
-        if form.is_valid():
-            source_address = form.cleaned_data['source']
-            destination_address = form.cleaned_data['destination']
-            depart_time = form.cleaned_data['departTime']
-            depart_date = form.cleaned_data['departDate']
-
-        
-        busNum = googDir(findLatLong(source_address),findLatLong(destination_address), depart_date, depart_time)[0]
-        busNum = busNum.upper()
-
-        stops_local = []
-        stops_local.extend(findLatLong(source_address).split(","))
-        stops_local.extend(findLatLong(destination_address).split(","))
-
-        startLat = stops_local[0]
-        startLng = stops_local[1]
-        finLat = stops_local[2]
-        finLng = stops_local[3]
-
-
-        weather = query_weather()
-        rain, temp = query_rain_weather(depart_time, depart_date)
-        day = parseDayNumber(depart_date)
-        bus = DublinBus()
-
-        dateChosen = datetime.datetime.strptime(depart_date, "%m/%d/%Y")
-        #my_date = date.today()
-        header = {'day': calendar.day_name[dateChosen.weekday()],
-                     'date': dateChosen.strftime("%d"),
-                     'month': dateChosen.strftime("%B")}
-
-        
-        #Used to find the stop name using a given stop number
-        for i in bus:
-            if source_address == i['num']:
-                source_name = i['name']
-            if destination_address == i['num']:
-                destination_name = i['name']
-
-        try:
-            source_address = int(source_address)
-            destination_address = int(destination_address)
-
-        except:
-            for i in bus:
-                if source_address == i['name']:
-                    source_address = i['num']
-                if destination_address == i['name']:
-                    destination_address = i['num']
-            print("in the except with", source_address, destination_address)
-            print("oops")
-
-
-        #print(source_num, dest_num)
-        print("take the bus", busNum)
-
-        #Finds the estimated travel time
-        est = Est39A(busNum, int(source_address), int(destination_address), rain, temp, depart_time, day, depart_date)
-
-        #Calculates arrival time based on departure time and estimated length of trip
-        arrival = arrivalTime(depart_time, est)
-
-        
-
-        args = {'form': form,'bus': bus, 'busNum': busNum, 'source': source_address, 'source_name':source_name, 
-        'destination': destination_address, 'destination_name': destination_name, 'depart_time': depart_time, 
-        'depart_date': depart_date , 'arrival_time': arrival, 'startLat':startLat, 'startLng': startLng, 'finLat':finLat,
-        'finLng':finLng, 'est': est, 'weather': weather, 'header':header} 
         return render(request, self.template_name, args)
+
+class problemView(generic.TemplateView):
+    '''Class to render template for problems with the form input, with functions:
+        get: Loads the page
+        post: Renders the results page for a route plan
+    '''
+
+    template_name = "busRoute/problem.html"
+
+    def get(self,request):
+        form = routeForm()
+        weather = query_weather()
+        bus = DublinBus()
+        context = {'weather': weather,'bus':bus, 'form': form}
+        return render(request, self.template_name, context)
+    
 
 class tourismView(generic.TemplateView):
 
@@ -304,75 +135,148 @@ class tourismView(generic.TemplateView):
         return render(request, self.template_name, context)
 
     def post(self, request):
+
         form = routeForm(request.POST)
-
-        if form.is_valid():
-            source_address = form.cleaned_data['source']
-            destination_address = form.cleaned_data['destination']
-            depart_time = form.cleaned_data['departTime']
-            depart_date = form.cleaned_data['departDate']
-
-        
-        busNum = googDir(findLatLong(source_address),findLatLong(destination_address), depart_date, depart_time)[0]
-        busNum = busNum.upper()
-
-        stops_local = []
-        stops_local.extend(findLatLong(source_address).split(","))
-        stops_local.extend(findLatLong(destination_address).split(","))
-
-        startLat = stops_local[0]
-        startLng = stops_local[1]
-        finLat = stops_local[2]
-        finLng = stops_local[3]
-
-
-        weather = query_weather()
-        rain, temp = query_rain_weather(depart_time, depart_date)
-        day = parseDayNumber(depart_date)
-        bus = DublinBus()
-
-        
-        #Used to find the stop name using a given stop number
-        for i in bus:
-            if source_address == i['num']:
-                source_name = i['name']
-            if destination_address == i['num']:
-                destination_name = i['name']
-
-        try:
-            source_address = int(source_address)
-            destination_address = int(destination_address)
-
-        except:
-            for i in bus:
-                if source_address == i['name']:
-                    source_address = i['num']
-                if destination_address == i['name']:
-                    destination_address = i['num']
-            print("in the except with", source_address, destination_address)
-            print("oops")
-
-
-        #print(source_num, dest_num)
-        print("take the bus", busNum)
-
-        #Finds the estimated travel time
-        est = Est39A(busNum, int(source_address), int(destination_address), rain, temp, depart_time, day, depart_date)
-
-        #Calculates arrival time based on departure time and estimated length of trip
-        arrival = arrivalTime(depart_time, est)
-
-        
-
-        args = {'form': form,'bus': bus, 'busNum': busNum, 'source': source_address, 'source_name':source_name, 
-        'destination': destination_address, 'destination_name': destination_name, 'depart_time': depart_time, 
-        'depart_date': depart_date , 'arrival_time': arrival, 'startLat':startLat, 'startLng': startLng, 'finLat':finLat,
-        'finLng':finLng, 'est': est, 'weather': weather} 
+        args = postFunc(request, form)
 
         return render(request,"busRoute/result.html" , args)
     
+def postFunc(request, form):
 
-'''these are the more general queries called inside the above classes'''
+    if form.is_valid():
+        source_address = form.cleaned_data['source']
+        destination_address = form.cleaned_data['destination']
+        depart_time = form.cleaned_data['departTime']
+        depart_date = form.cleaned_data['departDate']
+
+
+        #Check for valid time inputs for times that have not already passed and are within a week of current time
+        timeChosen = datetime.datetime.strptime(depart_date + " " + depart_time, "%m/%d/%Y %H:%M")
+        now = datetime.datetime.now()
+        diff = (timeChosen - now).total_seconds() - 3600
+
+        if diff < 0:
+            problem = {'problem': "Cannot make a prediction for a past date"}
+            return problem
+            
+        elif diff > 604800:
+            problem = {'problem': "Predictions can only be made within a week from today. Please pick a valid date."}
+            return problem
+    
+
+        #Checking if return values have been given
+        try:
+            return_time = form.cleaned_data['returnTime']
+            return_date = form.cleaned_data['returnDate']
+        except:
+            pass
+
+    
+    #Get travel information from google: Bus and stop numbers
+    busNum, legs, source_address1, destination_address1 = googDir(source_address,destination_address, depart_date, depart_time)
+    if busNum == -1:
+        problem = {'problem': "Error retrieve journey information from Google"}
+        return problem
+
+    elif busNum == -2:
+        problem = {'problem': "Could not find route for this journey"}
+        return problem
+
+    elif busNum == -3:
+        problem = {'problem': "Could not find dublin bus route for this journey"}
+        return problem
+    
+
+    #Get start and end location of full journey by lat lng to plot on the map
+    stops_locat = []
+    stops_locat.extend(findLatLong(legs[0][1]).split(","))
+    stops_locat.extend(findLatLong(legs[len(legs)-1][2]).split(","))
+
+    startLat = stops_locat[0]
+    startLng = stops_locat[1]
+    finLat = stops_locat[2]
+    finLng = stops_locat[3]
+
+
+    #Other context data: weather, rain, temperature, day (by number), bus and bike markers
+    weather = query_weather()
+    rain, temp = query_rain_weather(depart_time, depart_date)
+    day = parseDayNumber(depart_date)
+    bus = DublinBus()
+
+
+    
+    #Used to find the stop name using a given stop number
+    for i in bus:
+        if source_address1 == i['num']:
+            source_name = i['name']
+        if destination_address1 == i['num']:
+            destination_name = i['name']
+
+    try:
+        source_address = int(source_address)
+        destination_address = int(destination_address)
+
+    except:
+        for i in bus:
+            if source_address == i['name']:
+                source_address = i['num']
+            if destination_address == i['name']:
+                destination_address = i['num']
+        
+
+    #Gets date information to be displayed on the prediction result
+    dateChosen = datetime.datetime.strptime(depart_date, "%m/%d/%Y")
+    header = {'day': calendar.day_name[dateChosen.weekday()],
+                    'date': dateChosen.strftime("%d"),
+                    'month': dateChosen.strftime("%B")}
+
+
+    #Finds the estimated travel time for each leg in the journey
+    est = 0
+    busNum = ""
+
+    for i in legs:
+
+        ett = Est39A(i[0], int(i[1]), int(i[2]), rain, temp, depart_time, day, depart_date)
+        try:
+            ett = int(ett)
+        except:
+            problem = {'problem': ett}
+            return problem
+
+        #print("ESTimated ", ett)
+        est += ett
+        busNum += str(i[0] + " ")
+    
+
+    #Calculates arrival time based on departure time and estimated length of trip
+    arrival = arrivalTime(depart_time, est)
+
+    #Checks for return time and calculates return journey based on the return input information
+    if not return_time:
+        ert = 0
+        pass
+
+    else:
+        busNum2, legs2, source_return, destination_return = googDir(destination_address,source_address, return_date, return_time)
+        rDay = parseDayNumber(return_date)
+        rRain, rTemp = query_rain_weather(return_time, return_date)
+
+        for i in legs:
+            ert = int(Est39A(legs2[0][0], int(legs[0][1]), int(legs[0][2]), rRain, rTemp, return_time, day, return_date))
+        print("return Time", ert)
+
+
+    #Return arguments for front end result prediction
+    args = {'form': form,'bus': bus, 'busNum': busNum, 'source': source_address1, 'source_name':source_name, 
+    'destination': destination_address1, 'destination_name': destination_name, 'depart_time': depart_time, 
+    'depart_date': depart_date , 'arrival_time': arrival, 'startLat':startLat, 'startLng': startLng, 'finLat':finLat,
+    'finLng':finLng, 'est': est, 'weather': weather, 'header':header, 'return': ert}
+
+    return args
+
+    
 
 def query_weather():
     """
@@ -398,14 +302,6 @@ def query_weather():
     loaded_weather = json.loads(weatherInfo)
     return loaded_weather
 
-# def Est39A(source, dest, weather, time, month, day):
-#     ett = Ett39A(source, dest, weather, time, month, day)
-#     result = ett.estimatedTime()
-#     return result
-
-# def AnnEst39A(source, dest, actualArr, rain, day):
-#     ett = Ann39A(source, dest, actualArr, rain, day)
-#     return ett.estimatedTime()
 
 def bikes_query(request):
     """ 
@@ -433,37 +329,8 @@ def bikes_query(request):
 
     return JsonResponse(results, safe=False)
 
-
-def DublinBus(request):
-    '''
-    This function creates a dictionary from the dublin bus data located inside Routes.csv to be accessed on the page for the markers
-    '''
-
-
-    results = []
-
-    with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r') as f:
-
-        reader = csv.reader(f)
-
-        for i in reader:
-               
-            
-                Info= {'lat': i[2],
-                        'lng':i[3],
-                        'name': i[1],
-                        'num': i[0]
-                    }
-
-            
-                dbInfo = json.dumps(Info) 
-                loadedBikes = json.loads(dbInfo)
-                results.append(loadedBikes)
-        
-    return JsonResponse(results, safe=False)
-
-
-def DublinBus():
+def DublinBusInfo(request):
+    
     '''
     This function creates a dictionary from the dublin bus data located inside Routes.csv to be accessed on the page for the markers
     '''
@@ -489,36 +356,34 @@ def DublinBus():
                 loadedBikes = json.loads(dbInfo)
                 results.append(loadedBikes)
         
-    return results
-
-
-
-def get_route_data(request, route):
-
-
-    ''''This backend function takes an argument from a url (a route entered in the route info search option) and uses it to query the smart dublin api for its stops information '''
-
-    url = requests.get(f"http://data.dublinked.ie/cgi-bin/rtpi/routeinformation?routeid={route}&operator=bac&format=json")
-    url = url.json()
+    return JsonResponse(results, safe=False)
+          
+def DublinBus():
+    '''
+    This function creates a dictionary from the dublin bus data located inside Routes.csv to be accessed on the page for the markers
+    '''
 
     results = []
-    x = url['results'][1]['stops']
-  
 
-    for i in x: 
-    
-        Info= {'lat': i['latitude'],
-                        'lng':i['longitude'],
-                        'name': i['fullname'],
-                        'id': i['stopid']
-            }
+    with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r', encoding="utf8") as f:
 
-        dbInfo = json.dumps(Info) 
-        loadedBikes = json.loads(dbInfo)
-        results.append(loadedBikes)
+        reader = csv.reader(f)
 
-    return JsonResponse(results, safe=False)
+        for i in reader:
+               
+            
+                Info= {'lat': i[2],
+                        'lng':i[3],
+                        'name': i[1],
+                        'num': i[0]
+                    }
 
+            
+                dbInfo = json.dumps(Info) 
+                loadedBikes = json.loads(dbInfo)
+                results.append(loadedBikes)
+        
+    return results
 
 def GenBusData(request): 
     '''
@@ -546,41 +411,13 @@ def GenBusData(request):
     return JsonResponse(results, safe=False) 
 
 
-def DublinBusRoutes(request):
-    '''
-    This function connects to RTPI to get a list of the Routes on Dublin Bus to use for the route search option
-    '''
+def stopNearMe(request,lat, lng):
 
-    url = requests.get("https://data.dublinked.ie/cgi-bin/rtpi/routelistinformation?operator=bac&format=json")
-    url = url.json()
-    results = []
-    x = url['results']
-    count = 0
-  
-    for i in x: 
-        count += 1
 
-        if count == 352:
+    '''this function is linked to a jQuery which takes the users current lat and long from the geolocation
+    This passes this into the google nearby search which returns a list of bus stops near the user. '''
 
-            #there was some weird things happening with the api with things called BAC. Will need to find alternative. 
-            break
-
-        else:   
-            Info= {'route': i['route']
-                    
-                    }
-
-            dbInfo = json.dumps(Info) 
-            loadedBikes = json.loads(dbInfo)
-            results.append(loadedBikes)
-
-    return JsonResponse(results, safe=False) 
-
-    
-#used to get the Dublin bus stops nearest to the user. 
-def stopNearMe(request):
-
-    url = requests.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=53.3090972,-6.2237539&radius=500&type=bus_station&key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0")
+    url = requests.get(f"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={lat},{lng}&radius=500&type=bus_station&key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0")
     url = url.json()
 
     x = url['results']
@@ -597,22 +434,74 @@ def stopNearMe(request):
         loadedBikes = json.loads(dbInfo)
         results.append(loadedBikes)
       
-       
 
     return JsonResponse(results, safe=False)
 
 
+def routeDirectionServices(request):
 
-# def Est39A(source, dest, weather, time, month, day):
-#     '''
-#     Function to find and format the estimated travel travel time
-#     '''
 
-#     ett = Ett39A(source, dest, weather, time, month, day)
-#     result = ett.estimatedTime()
-#     result_min = float("{0:.2f}".format(result/60))
+    '''This accesses the routes and directions from a CSV and passs it to a URL that is connected to an AJAX autocomplete function for the Route Search'''
 
-#     return result_min
+    results = []
+  
+    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r') as f:
+
+        reader = csv.reader(f)
+        
+
+        for i in reader:
+            Info= {
+                        'route': i[5]
+                    }
+            if Info in results:
+                pass
+            else:
+                dbInfo = json.dumps(Info) 
+                loadedBikes = json.loads(dbInfo)
+                results.append(loadedBikes)
+        
+    return JsonResponse(results, safe=False) 
+
+
+def get_route_data(request, route):
+
+
+    ''''This backend function takes an argument from a url (a route entered in the route info search option) and uses it to access the stops on that route using pandas'''
+
+
+    results = []
+    
+
+    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r') as f:
+
+        reader = pd.read_csv(f)
+        x = reader.loc[reader['direction'] == route ]
+        
+        if not x.empty: 
+            for index, row in x.iterrows(): 
+                stop = row['stopid']
+                lat = row['stop_lat']
+                lng = row['stop_lon']
+                name = row['stop_name']
+
+                Info= {'lat': lat,
+                                'lng': lng,
+                                'name': name,
+                                'id': stop
+                    }
+
+                dbInfo = json.dumps(Info) 
+                loadedBikes = json.loads(dbInfo)
+                results.append(loadedBikes)
+        else: 
+
+            results = 'fail'
+            print(results)
+
+        return JsonResponse(results, safe=False)
+
+
 
 def Est39A(route, source, dest, precipitation, temp, timeStr, weekday, dateStr):
     '''
@@ -627,12 +516,16 @@ def Est39A(route, source, dest, precipitation, temp, timeStr, weekday, dateStr):
     :return: Estimated travel time
     '''
     ett = Ett39A(route, source, dest, precipitation, temp, timeStr, weekday, dateStr)
-    result = ett.estimatedTime()
-    result_min = float("{0:.2f}".format(result / 60))
+    result, error_code = ett.estimatedTime()
 
-    return result_min
+    if error_code == -1:
+        return result
+    else:
+        result_min = float("{0:.2f}".format(result / 60))
+        return result_min
     
-
+   
+    
 
 def readTimeIn(time):
     '''
@@ -747,18 +640,22 @@ def query_rain_weather(time, date):
 
     if len(date) == 10:
         day = int(date[3:5])
-
+    
+    elif len(date) == 8:
+        day = int(date[2:3])
     else:
         day = int(date[2:4])
     
 
     t = int(time[:2])
-
+    
     if t//3 != 0: 
         t= t + (3-(t%3))
+    elif t < 3:
+        t = 3
+    if t > 21:
+        t = 21
     
-    if t == 24:
-        t = 0
 
     t = str(t)
   
@@ -782,8 +679,9 @@ def query_rain_weather(time, date):
     
 
 def getRoute(request, bus):
-    print(bus)
     return JsonResponse(bus, safe=False)
+
+
 
 def googDir(origin, dest, date, t):
     """
@@ -797,33 +695,128 @@ def googDir(origin, dest, date, t):
 
     #origin = '53.381131,-6.592682'
     #dest = "53.298665 -6.302196"
+    #start = "Bray,CountyWicklow,Ireland"
+    #end = "Maynooth,CountyKildare,Ireland"
     #tim = "1532785345"
+    
+    origin = str(origin)
+    
+    try:
+        origin = int(origin)
+        dest = int(dest)
+        start = findLatLong(str(origin))
+        end = findLatLong(str(dest))
+        source_stop = str(origin)
+        dest_stop = str(dest)
+        inputType = "stop" 
+
+    except:
+        start = origin.replace(" ", "")
+        end = dest.replace(" ", "")
+        inputType = "address"
+        
+
     if len(date) == 9:
         date = "0" + date
 
     buses = []
+    legs = []
 
     #date_str = "07/28/2018 11:50"
     date_str = date + " " + t
     dt_obj = datetime.datetime.strptime(date_str, "%m/%d/%Y %H:%M")
     v = int(time.mktime(dt_obj.timetuple()))
-    
+
     try:
-        r = requests.get("https://maps.googleapis.com/maps/api/directions/json?origin={origin}&destination={dest}&mode=transit&departure_time={v}&transit_mode=bus&key=AIzaSyC_TopsrUXWcqAxGDfmmbpJzAbZWyVx_s0")
+        b = "&alternatives=true"
+        r = requests.get(f"https://maps.googleapis.com/maps/api/directions/json?origin={start}&destination={end}&mode=transit&departure_time={v}&transit_mode=bus&transit_routing_preference=fewer_transfers&key="+os.environ.get(googleapi))
+
     except:
-        raise Exception("Could not find bus route for this journey")
+        #raise Exception("Could not find bus route for this journey")
+        return -1,-1,-1,-1
 
     r = r.json()
-    response = r['routes'][0]['legs'][0]['steps']
-    for i in response:
-        try:
-            buses.append(i['transit_details']['line']['short_name'])
-        except:
-            pass
-    if not buses:
-        raise Exception("No buses available")
+
+
+    try:
+        response = r['routes'][0]['legs'][0]['steps']
+
+    except:
+        return -2,-2,-2,-2
+
+    #print(response)
+    
+    if inputType == "address":
+        
+        for i in response:
+
+            #company = i['transit_details']['line']['agencies'][0]['name']
+            
+            if i['travel_mode'] == "TRANSIT":
+                buses.append(i['transit_details']['line']['short_name'])
+
+                print("goog start", i['start_location']['lat'], ",", i['start_location']['lng'])
+                print("goog end", i['end_location']['lat'], ",", i['end_location']['lng'])
+
+                sLat = float("{0:.4f}".format(i['start_location']['lat']))
+                sLng = float("{0:.4f}".format(i['start_location']['lng']))
+
+                fLat = float("{0:.4f}".format(i['end_location']['lat']))
+                fLng = float("{0:.4f}".format(i['end_location']['lng']))
+
+                startName = i['transit_details']['departure_stop']['name']  
+                endName = i['transit_details']['arrival_stop']['name']
+                # print()
+                # print("GOOGLE JOURNEY DETAILS")
+                # print("----------------------")
+                # print("Start:", startName, "-- Lat:", sLat, "Long:", sLng)
+                # print()
+                # print("End:", endName, "-- Lat:", fLat, "Long:", fLng)
+                # print()
+                # print()
+
+                bus = DublinBus()
+            
+                for k in range(1,len(bus)):
+                    h = bus[k]['lat'][:7]
+                    y = bus[k]['lng'][:7]
+                    u = bus[k]['name']
+                    
+                    #if (str(sLat) == h or str(sLng) == y) and startName.startswith(u):
+                    if startName.startswith(u):
+                        source_stop = bus[k]['num']
+                        print("Found 1:", bus[k]['name'])
+
+                       
+                    #elif (str(fLat) == h or str(fLng) == y) and endName.startswith(u):
+                    elif endName.startswith(u):
+                        dest_stop = bus[k]['num']
+                        #print(u)
+                        print("Found 2:", bus[k]['name'])
+                    #print("blah", w, p)
+                    b = i['transit_details']['line']['short_name']
+                #buses.append(b)
+                legs.append([b.upper(), source_stop, dest_stop])
+                    
+                    
+
     else:
-        return buses 
+        for i in response:
+            
+            if i['travel_mode'] == "TRANSIT":
+                b = i['transit_details']['line']['short_name']
+                buses.append(b)
+                legs.append([b.upper(),source_stop, dest_stop])
+
+
+    if not buses:
+        #raise Exception("No buses available")
+        return -3, -3, -3, -3
+    
+    else:
+        print("Bus Numbers:", buses)
+        print("legs", legs)
+        return buses, legs, source_stop, dest_stop
 
 def findLatLong(location):
     """
@@ -833,10 +826,10 @@ def findLatLong(location):
     """
     try:
         stop_id = int(location)
-        print(stop_id)
+
     except:
         address = location
-        print(address)
+    
 
     buses = DublinBus()
     if 'stop_id' in locals():
@@ -851,4 +844,28 @@ def findLatLong(location):
                 return latLng_str
         
     raise Exception("Unable to find this stop number")
+
+
+# def markerInformation(request, name, num ):
+
+#         results = []
+
+#         Info= {'name': name,
+
+#                 'num': num
+                               
+#                     }
+
+
+#         dbInfo = json.dumps(Info) 
+#         loadedBikes = json.loads(dbInfo)
+        
+        
+#         return JsonResponse(loadedBikes, safe=False)
+
+
+                
+
+
+
 
