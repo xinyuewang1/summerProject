@@ -11,6 +11,7 @@ urlpatterns = [
 
 
     #URLs for the main pages
+    url(r'', views.plannerView.as_view(), name='landing_page'),
     url(r'^index', views.homeView.as_view(), name='index'),
 
     url(r'^planner', views.plannerView.as_view(), name='planner'),
