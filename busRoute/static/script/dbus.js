@@ -13,7 +13,6 @@ function myMap() {
     //This came from https://developers.google.com/maps/documentation/javascript/examples/map-geolocation
     if (navigator.geolocation) {
 
-        result = "ok"
         navigator.geolocation.getCurrentPosition(function (position) {
             pos = {
                 lat: position.coords.latitude,
@@ -53,7 +52,6 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
         'Geolocation is Disabled' :
         'Error: Your browser doesn\'t support geolocation.');
     infoWindow.open(map);
-    result = "fail";
 }
 
 // function getLocation() {

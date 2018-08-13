@@ -17,21 +17,24 @@
                 scrollTop: $('#results').offset().top
             }, 'slow');
         });
-
     </script>
 
     <script>
-        window.addEventListener("load", function(){
+        window.addEventListener("load", function () {
             var load_screen = document.getElementById("load_screen");
             document.body.removeChild(load_screen);
         });
     </script>
 
-    <div id = "load_screen" style = "display: none;"><div id = "loading"><h3>Loading Result..</h3></div></div>
+    <div id="load_screen" style="display: none;">
+        <div id="loading">
+            <h3>Loading Result..</h3>
+        </div>
+    </div>
 
-    
+
     <div id="homeCenter" class="container">
-        
+
 
         <div class="row">
             <div class="col-sm-8">
@@ -112,7 +115,7 @@
                                 <input type="radio" name="choice" value="Destination" id="second"> Desination
                                 <br>
                             </p>
-                           
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" onclick="HandleResponse()">Go</button>
@@ -122,7 +125,7 @@
                 </div>
             </div>
 
-        
+
             <div class="col-sm-4">
                 <div class="c1 col-sm-12 rounded shadow mt-4">
                     <h3>Route Planner</h3>
@@ -162,7 +165,7 @@
                             <strong>By Address</strong>
                         </div>
                     </div>
-                    <form name = "routes" id = "routePlanner" role = "form" method="POST">
+                    <form name="routes" id="routePlanner" role="form" method="POST">
                         {% csrf_token %}
                         <div class="row mt-2">
 
@@ -184,217 +187,225 @@
                                     <div class="col-6 planner">{{ form.returnDate }}</div>
                                 </div>
                             </div>
-                            
-                            
-                                <script>
-                                    var d = new Date();
-                                    var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
-                                    document.getElementById("id_departDate").value = fullDate;
-                                    $('#id_departTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now', timeFormat: "H:i" });
-                                    $( function() {
-                                    $( "#id_departDate" ).datepicker();
-                                    });
-                                    $('#id_returnTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now',timeFormat: "H:i" });
-                                    $( function() {
-                                    $( "#id_returnDate" ).datepicker({});
-                                    });
-                                </script>
-                            
-                        </div>   
-                        <div class = "row">
-                            <button type ="submit" class = "btn btn-block btn-primary m-2" name = "go" onclick="showLoadGif()">GO!</button>
-                            
+
+
+                            <script>
+                                var d = new Date();
+                                var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
+                                document.getElementById("id_departDate").value = fullDate;
+                                $('#id_departTime').timepicker({
+                                    'forceRoundTime': true,
+                                    'scrollDefault': 'now',
+                                    timeFormat: "H:i"
+                                });
+                                $(function () {
+                                    $("#id_departDate").datepicker();
+                                });
+                                $('#id_returnTime').timepicker({
+                                    'forceRoundTime': true,
+                                    'scrollDefault': 'now',
+                                    timeFormat: "H:i"
+                                });
+                                $(function () {
+                                    $("#id_returnDate").datepicker({});
+                                });
+                            </script>
 
                         </div>
-                            <script>
-                                var bikeMarkers = 0;
-                                var markBikes = []
-
-                                function displayBikeMarkers() {
-
-                                    var jqxhr = $.getJSON('http://localhost:8000/dublinBikeInfo',
-                                        function (daily) {
-                                            var infoWindow = new google.maps.InfoWindow;
-                                            var infoBikes = new google.maps.InfoWindow;
+                        <div class="row">
+                            <button type="submit" class="btn btn-block btn-primary m-2" name="go" onclick="showLoadGif()">GO!</button>
 
 
+                        </div>
+                        <script>
+                            var bikeMarkers = 0;
+                            var markBikes = []
 
-                                            if (bikeMarkers == 0) {
+                            function displayBikeMarkers() {
 
-                                                //this function displays the dublin bikes markers
-
-                                                for (var i = 0; i < daily.length; i++) {
-
-
-                                                    var lat = daily[i].lat;
-                                                    var long = daily[i].lng;
+                                var jqxhr = $.getJSON('http://localhost:8000/dublinBikeInfo',
+                                    function (daily) {
+                                        var infoWindow = new google.maps.InfoWindow;
+                                        var infoBikes = new google.maps.InfoWindow;
 
 
 
-                                                    var busicon = {
-                                                        url: "{% static 'images/dublinBikes.png' %}", // url
-                                                        scaledSize: new google.maps.Size(40, 40), // scaled size            
-                                                    };
+                                        if (bikeMarkers == 0) {
 
+                                            //this function displays the dublin bikes markers
 
-                                                    latlng = new google.maps.LatLng(lat, long);
-                                                    var marker = new google.maps.Marker({
-                                                        position: latlng,
-                                                        icon: busicon,
-                                                        title: daily[i].name
-                                                    });
-
-
-                                                    marker.addListener('mouseover', function () {
-
-                                                        infoBikes.open(map, this);
-                                                        infoBikes.setContent(this.title);
-                                                    })
-
-                                                    markBikes.push(marker);
-                                                }
-
-                                                markerCluster1 = new MarkerClusterer(map, markBikes, {
-                                                    imagePath: "{% static 'images/m' %}"
-                                                });
-
-
-
-                                                document.getElementById("bikesbutton").innerHTML = "Hide Bikes";
-                                                bikeMarkers++;
-
-                                            } else {
-
-                                                //this checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
-                                                markerCluster1.clearMarkers();
-                                                markBikes = []
-
-                                                document.getElementById("bikesbutton").innerHTML = "Bikes";
-                                                bikeMarkers--;
-
-                                            }
-
-
-                                        });
-
-                                };
-                                var onEnter = document.getElementById("routeSearch");
-                                onEnter.addEventListener("keydown", function (value) {
-                                    if (value.keyCode === 13) {
-                                        getStops(value);
-                                    }
-                                });
-                                var markers = [];
-
-                                function getStops() {
-                                    //this function is responsible for displaying the route information
-                                    //It uses jQuery to intitialise and pass the value to the url and to grab the data that is returned by get_route_info
-                                    // poly = new google.maps.Polyline({
-                                    //     strokeColor: '#000000',
-                                    //     strokeOpacity: 1.0,
-                                    //     strokeWeight: 3
-                                    // });
-                                    // poly.setMap(map);
-                                    if (markers)
-                                        //this checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
-                                        for (var i = 0; i < markers.length; i++) {
-                                            markers[i].setMap(null);
-                                        }
-                                    var jqxhr = $.getJSON('/details/' + document.getElementById("routeSearch").value +
-                                        '/',
-                                        function (daily) {
-                                            var table = "";
-                                            table =
-                                                "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped overflow-y: hidden'>";
-                                            table += "<tr><thead>";
-                                            table += "<th>Stop</th>";
-                                            table += "</tr></thead><tbody>";
                                             for (var i = 0; i < daily.length; i++) {
+
+
                                                 var lat = daily[i].lat;
                                                 var long = daily[i].lng;
-                                                var name = daily[i].name;
-                                                var id = daily[i].id;
-                                                table += "<tr>";
-                                                table += "<td>" + daily[i].name + "(" + id + ")" + "</td>";
-                                                table += "</tr>";
-                                                infoWindow = new google.maps.InfoWindow;
-                                                infoBus = new google.maps.InfoWindow;
-                                                //this function displays the dublin bus markers
-                                                myLatLng = new google.maps.LatLng(lat, long)
-                                                marker = new google.maps.Marker({
-                                                    position: myLatLng,
-                                                    map: map,
-                                                    title: name + "(" + id + ")"
+
+
+
+                                                var busicon = {
+                                                    url: "{% static 'images/dublinBikes.png' %}", // url
+                                                    scaledSize: new google.maps.Size(40, 40), // scaled size            
+                                                };
+
+
+                                                latlng = new google.maps.LatLng(lat, long);
+                                                var marker = new google.maps.Marker({
+                                                    position: latlng,
+                                                    icon: busicon,
+                                                    title: daily[i].name
                                                 });
+
+
                                                 marker.addListener('mouseover', function () {
-                                                    infoBus.open(map, this);
-                                                    infoBus.setContent(this.title);
+
+                                                    infoBikes.open(map, this);
+                                                    infoBikes.setContent(this.title);
                                                 })
-                                                markers.push(marker);
-                                                // <!-- 
-                                                //                             var path = poly.getPath();
-                                                //                             path.push(myLatLng); -->
+
+                                                markBikes.push(marker);
                                             }
-                                            table += "</tbody></table>";
-                                            document.getElementById("RouteDiv").innerHTML = table;
-                                        })
-                                };
-                            </script>
-                            <script>
-                                function generateQuery() {
-                                    //this function gets real time information for the stop that is selected.
-                                    var jqxhr = $.getJSON(
-                                        'https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?stopid=' +
-                                        "{{ source}}" + '&format=json',
-                                        function (daily) {
-                                            var now = new Date();
-                                            var temp = new Date();
-                                            
-                                            var table = "";
-                                            table =
-                                                "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped' style = 'overflow-x:scroll;'>";
-                                            table += "<tr><thead>";
-                                            table += "<th>Route</th>";
-                                            table += "<th>Destination</th>";
-                                            table += "<th>Arrival Time</th>";
-                                            table += "<th>Expected</th>";
-                                            table += "</tr></thead><tbody>";
-                                            x = daily.results;
-                                            for (var i = 0; i < x.length; i++) {
 
-                                                var ti = x[i].arrivaldatetime.slice(11, );
+                                            markerCluster1 = new MarkerClusterer(map, markBikes, {
+                                                imagePath: "{% static 'images/m' %}"
+                                            });
 
-                                                var array = ti.split(":");
-                                                temp.setHours(array[0]);
-                                                temp.setMinutes(array[1]);
-                                                temp.setSeconds(array[2]);
-                                                var difference = new Date();
-                                                difference.setTime(temp - now);
-                                                var m = difference.getMinutes();
 
-                                                if (difference.getSeconds() >= 30) {
-                                                    m = m + 1;
-                                                };
-                                                if (m == 0) {
-                                                    m = "Due"
-                                                } else {
-                                                    m = String(m) + " mins"
-                                                };
 
-                                                table += "<tr>";
-                                                table += "<td>" + x[i].route + "</td>";
-                                                table += "<td>" + x[i].destination + "</td>";
-                                                table += "<td>" + ti.slice(0, 5) + "</td>";
-                                                table += "<td>" + m + "</td>";
-                                                table += "</tr>";
-                                            }
-                                            table += "</tbody></table><br>";
-                                            document.getElementById("realtimeTable").innerHTML = table;
+                                            document.getElementById("bikesbutton").innerHTML = "Hide Bikes";
+                                            bikeMarkers++;
 
-                                        })
-                                };
-                            </script>
-                        
+                                        } else {
+
+                                            //this checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
+                                            markerCluster1.clearMarkers();
+                                            markBikes = []
+
+                                            document.getElementById("bikesbutton").innerHTML = "Bikes";
+                                            bikeMarkers--;
+
+                                        }
+
+
+                                    });
+
+                            };
+                            var onEnter = document.getElementById("routeSearch");
+                            onEnter.addEventListener("keydown", function (value) {
+                                if (value.keyCode === 13) {
+                                    getStops(value);
+                                }
+                            });
+                            var markers = [];
+
+                            function getStops() {
+                                //this function is responsible for displaying the route information
+                                //It uses jQuery to intitialise and pass the value to the url and to grab the data that is returned by get_route_info
+                                // poly = new google.maps.Polyline({
+                                //     strokeColor: '#000000',
+                                //     strokeOpacity: 1.0,
+                                //     strokeWeight: 3
+                                // });
+                                // poly.setMap(map);
+                                if (markers)
+                                    //this checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
+                                    for (var i = 0; i < markers.length; i++) {
+                                        markers[i].setMap(null);
+                                    }
+                                var jqxhr = $.getJSON('/details/' + document.getElementById("routeSearch").value +
+                                    '/',
+                                    function (daily) {
+                                        var table = "";
+                                        table =
+                                            "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped overflow-y: hidden'>";
+                                        table += "<tr><thead>";
+                                        table += "<th>Stop</th>";
+                                        table += "</tr></thead><tbody>";
+                                        for (var i = 0; i < daily.length; i++) {
+                                            var lat = daily[i].lat;
+                                            var long = daily[i].lng;
+                                            var name = daily[i].name;
+                                            var id = daily[i].id;
+                                            table += "<tr>";
+                                            table += "<td>" + daily[i].name + "(" + id + ")" + "</td>";
+                                            table += "</tr>";
+                                            infoWindow = new google.maps.InfoWindow;
+                                            infoBus = new google.maps.InfoWindow;
+                                            //this function displays the dublin bus markers
+                                            myLatLng = new google.maps.LatLng(lat, long)
+                                            marker = new google.maps.Marker({
+                                                position: myLatLng,
+                                                map: map,
+                                                title: name + "(" + id + ")"
+                                            });
+                                            marker.addListener('mouseover', function () {
+                                                infoBus.open(map, this);
+                                                infoBus.setContent(this.title);
+                                            })
+                                            markers.push(marker);
+                                            // <!-- 
+                                            //                             var path = poly.getPath();
+                                            //                             path.push(myLatLng); -->
+                                        }
+                                        table += "</tbody></table>";
+                                        document.getElementById("RouteDiv").innerHTML = table;
+                                    })
+                            };
+                        </script>
+                        <script>
+                            function generateQuery() {
+                                //this function gets real time information for the stop that is selected.
+                                var jqxhr = $.getJSON(
+                                    'https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?stopid=' +
+                                    "{{ source}}" + '&format=json',
+                                    function (daily) {
+                                        var now = new Date();
+                                        var temp = new Date();
+
+                                        var table = "";
+                                        table =
+                                            "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped' style = 'overflow-x:scroll;'>";
+                                        table += "<tr><thead>";
+                                        table += "<th>Route</th>";
+                                        table += "<th>Destination</th>";
+                                        table += "<th>Arrival Time</th>";
+                                        table += "<th>Expected</th>";
+                                        table += "</tr></thead><tbody>";
+                                        x = daily.results;
+                                        for (var i = 0; i < x.length; i++) {
+
+                                            var ti = x[i].arrivaldatetime.slice(11, );
+
+                                            var array = ti.split(":");
+                                            temp.setHours(array[0]);
+                                            temp.setMinutes(array[1]);
+                                            temp.setSeconds(array[2]);
+                                            var difference = new Date();
+                                            difference.setTime(temp - now);
+                                            var m = difference.getMinutes();
+
+                                            if (difference.getSeconds() >= 30) {
+                                                m = m + 1;
+                                            };
+                                            if (m == 0) {
+                                                m = "Due"
+                                            } else {
+                                                m = String(m) + " mins"
+                                            };
+
+                                            table += "<tr>";
+                                            table += "<td>" + x[i].route + "</td>";
+                                            table += "<td>" + x[i].destination + "</td>";
+                                            table += "<td>" + ti.slice(0, 5) + "</td>";
+                                            table += "<td>" + m + "</td>";
+                                            table += "</tr>";
+                                        }
+                                        table += "</tbody></table><br>";
+                                        document.getElementById("realtimeTable").innerHTML = table;
+
+                                    })
+                            };
+                        </script>
+
                     </form>
 
                 </div>
@@ -452,9 +463,9 @@
                             <strong>---------</strong> -->
                             <img class="img-fluid" src="{% static 'images/busanimation.gif' %}">
                             <h4 class="ml-2 mt-2 text-white">Travel Time: {{ est }} mins</h4>
-                            <p class = "text-white m-0" style = "font-size:18px;">Bus Number: {{ busNum }}</p>
+                            <p class="text-white m-0" style="font-size:18px;">Bus Number: {{ busNum }}</p>
                             {% if return > 0 %}
-                                <p class = "text-white m-0" style = "font-size:18px;">Return Time: {{ return }} mins</p>
+                            <p class="text-white m-0" style="font-size:18px;">Return Time: {{ return }} mins</p>
                             {% endif %}
                         </div>
                         <div class="col-sm-3">
@@ -492,61 +503,75 @@
 
         <script>
             function walkMe() {
+
                 //this function is responsible for the directions service. 
                 //it takes the source destintion input value to find its long/lat through an if statament
                 //and the users current location 
                 //and it will display the results on the map and the actual written directions below!
-                if (result == "fail") {
-
-                    $modal = $('#walkMeModal');
-                    $modal.modal('show');
 
 
+                //this function will check the current status of geolocation. 
 
-                } else if (result == "ok") {
+                navigator.permissions.query({
+                        name: 'geolocation'
+                    })
+                    .then(function (permissionStatus) {
+                        console.log('geolocation permission state is ', permissionStatus.state);
+                        // console.log(typeof permissionStatus.state)
 
-                    var curLat = pos.lat
-                    var curLng = pos.lng;
-                    var x = "{{ source }}"
 
-                    "{% if bus %}"
-                    "{% for p in bus %}"
-                    var lat = "{{ p.lat }}"
-                    var long = "{{ p.lng }}"
-                    lat = parseFloat(lat);
-                    long = parseFloat(long);
-                    if (x == "{{ p.num }}") {
-                        var directionsService = new google.maps.DirectionsService();
-                        var directionsDisplay = new google.maps.DirectionsRenderer();
-                        var start = new google.maps.LatLng(curLat, curLng);
-                        var end = new google.maps.LatLng(lat, long);
+                        if (permissionStatus.state == "denied" ) {
 
-                        var mapProp = {
-                            center: new google.maps.LatLng(53.347515, -6.265377),
-                            zoom: 10,
-                        };
-                        map = new google.maps.Map(document.getElementById("map"), mapProp);
-                        directionsDisplay.setMap(map);
-                        directionsDisplay.setPanel(document.getElementById('directionsPanel'));
+                            $modal = $('#walkMeModal');
+                            $modal.modal('show');
 
-                        function calcRoute() {
-                            var request = {
-                                origin: start,
-                                destination: end,
-                                travelMode: 'WALKING'
-                            };
-                            directionsService.route(request, function (result, status) {
-                                if (status == 'OK') {
-                                    directionsDisplay.setDirections(result);
-                                }
-                            });
                         }
-                        calcRoute();
-                    }
-                    "{% endfor %}"
-                    "{% endif %}"
-                }
 
+                        else if  (permissionStatus.state == "granted" ){
+
+                            var curLat = pos.lat
+                            var curLng = pos.lng;
+                            var x = "{{ source }}"
+
+                            "{% if bus %}"
+                            "{% for p in bus %}"
+                            var lat = "{{ p.lat }}"
+                            var long = "{{ p.lng }}"
+                            lat = parseFloat(lat);
+                            long = parseFloat(long);
+                            if (x == "{{ p.num }}") {
+                                var directionsService = new google.maps.DirectionsService();
+                                var directionsDisplay = new google.maps.DirectionsRenderer();
+                                var start = new google.maps.LatLng(curLat, curLng);
+                                var end = new google.maps.LatLng(lat, long);
+
+                                var mapProp = {
+                                    center: new google.maps.LatLng(53.347515, -6.265377),
+                                    zoom: 10,
+                                };
+                                map = new google.maps.Map(document.getElementById("map"), mapProp);
+                                directionsDisplay.setMap(map);
+                                directionsDisplay.setPanel(document.getElementById('directionsPanel'));
+
+                                function calcRoute() {
+                                    var request = {
+                                        origin: start,
+                                        destination: end,
+                                        travelMode: 'WALKING'
+                                    };
+                                    directionsService.route(request, function (result, status) {
+                                        if (status == 'OK') {
+                                            directionsDisplay.setDirections(result);
+                                        }
+                                    });
+                                }
+                                calcRoute();
+                            }
+                            "{% endfor %}"
+                            "{% endif %}"
+                        }  
+
+                    })
             }
 
             var placeSearch, autocomplete;
@@ -634,7 +659,7 @@
 
                             $modal = $('#MarkersModal');
                             $modal.modal('show');
-                            
+
                         }
 
 
@@ -678,7 +703,7 @@
                 var finLng = parseFloat(fLng);
                 var directionsService = new google.maps.DirectionsService();
                 var directionsDisplay = new google.maps.DirectionsRenderer();
-                
+
                 var start = new google.maps.LatLng(startLat, startLng);
                 var end = new google.maps.LatLng(finLat, finLng);
 
