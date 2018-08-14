@@ -306,7 +306,7 @@ def bikes_query(request):
     """ 
     Connects to the JCDecaux API and returns the dublin bikes information 
     """
-    
+        
     url = 'https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey='+os.environ.get('jcdecauxi') # the website containing the data
    
     web_data = requests.get(url)
@@ -333,7 +333,6 @@ def DublinBusInfo(request):
     '''
     This function creates a dictionary from the dublin bus data located inside Routes.csv to be accessed on the page for the markers
     '''
-
 
     results = []
 
@@ -384,6 +383,34 @@ def DublinBus():
         
     return results
 
+
+def Db(request, stopid):
+    '''
+    This function creates a dictionary from the dublin bus data located inside Routes.csv to be accessed on the page for the markers
+    '''
+
+    results = []
+    
+
+    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r', encoding='utf-8') as f:
+
+        reader = pd.read_csv(f)
+        lat = reader.loc[reader['stopid'] == stopid, 'stop_lat'].values[0]
+        lon = reader.loc[reader['stopid'] == stopid, 'stop_lon'].values[0]
+    
+
+        Info= {'lat': lat,
+                        'lng':lon
+                       
+                    }
+        dbInfo = json.dumps(Info) 
+        loadedBus = json.loads(dbInfo)
+        results.append(loadedBus)
+
+       
+    return JsonResponse(results, safe=False)
+
+                    
 def GenBusData(request): 
     '''
     This renders the data to a URL that is used with the AJAX autocomplete function
@@ -501,7 +528,6 @@ def get_route_data(request, route):
         return JsonResponse(results, safe=False)
 
 
-
 def Est39A(route, source, dest, precipitation, temp, timeStr, weekday, dateStr):
     '''
     :param route: route number
@@ -523,9 +549,7 @@ def Est39A(route, source, dest, precipitation, temp, timeStr, weekday, dateStr):
         result_min = float("{0:.2f}".format(result / 60))
         return result_min
     
-   
     
-
 def readTimeIn(time):
     '''
     Function to find the hour of a given time input from the front end
@@ -537,7 +561,6 @@ def readTimeIn(time):
         return -1
 
     return hour
-
 
 
 def arrivalTime(depart, travel):

@@ -53,6 +53,8 @@ urlpatterns = [
     
     url(r'^dublinBikeInfo', views.bikes_query, name='dublinBikeInfo'),
 
+    path('db/<int:stopid>/', views.Db, name='db'),
+
     url(r'dublinBusInfo', views.DublinBusInfo, name = 'DublinBusInfo'),
 
     #data rendered here is used for the suggested stops near the user selections. 
