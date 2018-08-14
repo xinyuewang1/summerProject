@@ -1,8 +1,9 @@
 {%extends 'base.html' %} {% load staticfiles %}{% block body %}
+
 <body>
     <script>
         //this accesses the data that is rendered in and creates a variable that can be accessed in the external DB.JS file. 
-        var markerImages ="{% static 'images/m' %}"
+        var markerImages = "{% static 'images/m' %}"
     </script>
     <!-- Link to main javaScript file -->
     <script src="{% static 'script/dbus.js' %}"></script>
@@ -147,6 +148,14 @@
                                         $("#id_departTime").css('background-color', 'red');
                                     }
                                 })
+
+                                var onEnter = document.getElementById("routeSearch");
+                                onEnter.addEventListener("keydown", function (value) {
+                                    if (value.keyCode === 13) {
+
+                                        getStops(value);
+                                    }
+                                });
                             </script>
 
                             <!-- Time Error Modal -->
@@ -285,7 +294,7 @@
 
             <button onclick="stopsNearMe()">Stops Near Me</button>
         </div>
-    
+
         <!-- Onclick Marker Modal -->
 
         <div class="modal fade" id="MarkersModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -320,5 +329,4 @@
             </div>
         </div>
 </body>
-
 {% endblock %}

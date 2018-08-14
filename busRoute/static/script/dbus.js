@@ -624,14 +624,6 @@ function displayBikeMarkers() {
 
 };
 
-var onEnter = document.getElementById("routeSearch");
-onEnter.addEventListener("keydown", function (value) {
-    if (value.keyCode === 13) {
-
-        getStops(value);
-    }
-});
-
 markers = [];
 
 function getStops() {
@@ -806,6 +798,169 @@ function HandleResponse(name, num) {
     $('#MarkersModal').modal('hide');
 
 }
+
+function walkMe() {
+
+    //this function is responsible for the directions service. 
+    //it takes the source destintion input value to find its long/lat through an if statament
+    //and the users current location 
+    //and it will display the results on the map and the actual written directions below!
+
+
+    //this function will check the current status of geolocation. 
+
+    navigator.permissions.query({
+            name: 'geolocation'
+        })
+        .then(function (permissionStatus) {
+            console.log('geolocation permission state is ', permissionStatus.state);
+            // console.log(typeof permissionStatus.state)
+
+
+            if (permissionStatus.state == "denied" ) {
+
+                $modal = $('#walkMeModal');
+                $modal.modal('show');
+
+            }
+
+            else if  (permissionStatus.state == "granted" ){
+
+                var x = "{{ source }}"
+                var y = parseInt(x);
+                var jqxhr = $.getJSON('/db/'+y+'/',
+                            function (daily) {
+                lat = parseFloat(daily[0].lat);
+                long = parseFloat(daily[0].lng);
+                var curLat = pos.lat
+                var curLng = pos.lng;
+                 
+                    var directionsService = new google.maps.DirectionsService();
+                    var directionsDisplay = new google.maps.DirectionsRenderer();
+                    var start = new google.maps.LatLng(curLat, curLng);
+                    var end = new google.maps.LatLng(lat, long);
+
+                    calcRoute(start, end);
+
+                    var mapProp = {
+                        center: new google.maps.LatLng(53.347515, -6.265377),
+                        zoom: 10,
+                    };
+                    map = new google.maps.Map(document.getElementById("map"), mapProp);
+                    directionsDisplay.setMap(map);
+                    directionsDisplay.setPanel(document.getElementById('directionsPanel'));
+
+                    function calcRoute(start, end) {
+                        var request = {
+                            origin: start,
+                            destination: end,
+                            travelMode: 'WALKING'
+                        };
+                        directionsService.route(request, function (result, status) {
+                            if (status == 'OK') {
+                                directionsDisplay.setDirections(result);
+                            }
+                        });
+                    }
+                            })
+
+
+                   
+                
+            }  
+
+        })
+}
+
+var placeSearch, autocomplete;
+
+function initialize() {
+    //https://www.w3docs.com/learn-javascript/places-autocomplete.html
+    //https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-multiple-countries
+    //the below function used a combination of the above two efforts. 
+    //This function is responsible for allowing the user to search for a general address
+    //the map will then zoom in on that place
+    //they can then chose to view the markers in that area.
+    autocomplete = new google.maps.places.Autocomplete(document.getElementById('genSearch'));
+    autocomplete.setComponentRestrictions({
+        'country': 'ie'
+    });
+    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+        var place = autocomplete.getPlace();
+        console.log(place);
+        if (!place.geometry) {
+            // User entered the name of a Place that was not suggested and
+            // pressed the Enter key, or the Place Details request failed.
+            window.alert("No details available for input: '" + place.name + "'");
+            return;
+        }
+        // If the place has a geometry, then present it on a map.
+        if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+        } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(17); // Why 17? Because it looks good.
+        }
+        marker.setPosition(place.geometry.location);
+        marker.setVisible(true);
+    });
+};
+initialize();
+
+
+
+function generateQuery() {
+    //this function gets real time information for the stop that is selected.
+    var jqxhr = $.getJSON(
+        'https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?stopid=' +
+        "{{ source}}" + '&format=json',
+        function (daily) {
+            var now = new Date();
+            var temp = new Date();
+
+            var table = "";
+            table =
+                "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped' style = 'overflow-x:scroll;'>";
+            table += "<tr><thead>";
+            table += "<th>Route</th>";
+            table += "<th>Destination</th>";
+            table += "<th>Arrival Time</th>";
+            table += "<th>Expected</th>";
+            table += "</tr></thead><tbody>";
+            x = daily.results;
+            for (var i = 0; i < x.length; i++) {
+
+                var ti = x[i].arrivaldatetime.slice(11, );
+
+                var array = ti.split(":");
+                temp.setHours(array[0]);
+                temp.setMinutes(array[1]);
+                temp.setSeconds(array[2]);
+                var difference = new Date();
+                difference.setTime(temp - now);
+                var m = difference.getMinutes();
+
+                if (difference.getSeconds() >= 30) {
+                    m = m + 1;
+                };
+                if (m == 0) {
+                    m = "Due"
+                } else {
+                    m = String(m) + " mins"
+                };
+
+                table += "<tr>";
+                table += "<td>" + x[i].route + "</td>";
+                table += "<td>" + x[i].destination + "</td>";
+                table += "<td>" + ti.slice(0, 5) + "</td>";
+                table += "<td>" + m + "</td>";
+                table += "</tr>";
+            }
+            table += "</tbody></table><br>";
+            document.getElementById("realtimeTable").innerHTML = table;
+
+        })
+};
 
 
 

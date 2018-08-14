@@ -36,7 +36,6 @@ class homeView(generic.TemplateView):
     def get(self,request):
         form = routeForm()
         weather = query_weather()
-        bus = DublinBus()
         context = {'weather': weather, 'bus': bus, 'form': form}
         return render(request, self.template_name, context)
 
@@ -60,8 +59,7 @@ class plannerView(generic.TemplateView):
 
         form = routeForm()
         weather = query_weather()
-        bus = DublinBus()
-        context = {'weather': weather,'bus': bus, 'form': form}
+        context = {'weather': weather, 'form': form}
         
         return render(request, self.template_name, context)
     
@@ -89,8 +87,7 @@ class resultView(generic.TemplateView):
     def get(self,request):
         form = routeForm()
         weather = query_weather()
-        bus = DublinBus()
-        context = {'weather': weather,'bus':bus, 'form': form}
+        context = {'weather': weather, 'form': form}
         return render(request, self.template_name, context)
     
     def post(self, request):
@@ -111,8 +108,7 @@ class problemView(generic.TemplateView):
     def get(self,request):
         form = routeForm()
         weather = query_weather()
-        bus = DublinBus()
-        context = {'weather': weather,'bus':bus, 'form': form}
+        context = {'weather': weather,'form': form}
         return render(request, self.template_name, context)
     
 
@@ -203,8 +199,6 @@ def postFunc(request, form):
     day = parseDayNumber(depart_date)
     bus = DublinBus()
 
-
-    
     #Used to find the stop name using a given stop number
     for i in bus:
         if source_address1 == i['num']:
