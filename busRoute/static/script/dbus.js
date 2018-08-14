@@ -564,8 +564,6 @@ function displayBikeMarkers() {
             var infoWindow = new google.maps.InfoWindow;
             var infoBikes = new google.maps.InfoWindow;
 
-
-
             if (bikeMarkers == 0) {
 
                 var imageMarker = markerImages;
@@ -703,6 +701,111 @@ function getStops() {
             }
         })
 };
+
+
+function placeSearch() {
+
+
+    //https://www.w3docs.com/learn-javascript/places-autocomplete.html
+    //https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-multiple-countries
+
+    //the below function used a combination of the above two efforts. 
+
+
+    //This function is responsible for allowing the user to search for a general address
+    //the map will then zoom in on that place
+    //they can then chose to view the markers in that area.
+
+    autocomplete = new google.maps.places.Autocomplete(document.getElementById(
+        'genSearch'));
+
+    autocomplete.setComponentRestrictions({
+        'country': 'ie'
+    });
+
+    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+        var place = autocomplete.getPlace();
+
+
+        if (!place.geometry) {
+            // User entered the name of a Place that was not suggested and
+            // pressed the Enter key, or the Place Details request failed.
+            window.alert("No details available for input: '" + place.name + "'");
+            return;
+        }
+
+        // If the place has a geometry, then present it on a map.
+        if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+        } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(17); // Why 17? Because it looks good.
+        }
+        marker.setPosition(place.geometry.location);
+        marker.setVisible(true);
+    });
+};
+
+ //Autocomplete for Route Search this is paired with an onfocus function to watch for a user click into the box. 
+ function routeSearch() {
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "dublinBusRoutes",
+            dataType: "json",
+
+            success: function (data) {
+                createArray(data);
+            }
+        });
+    });
+
+
+    function createArray(Data) {
+
+        var results = [];
+
+        for (var i = 0; i < Data.length; i++) {
+
+            results.push(Data[i].route);
+
+
+
+        }
+        $("#routeSearch").autocomplete({
+            source: results,
+            minLength: 1,
+        });
+    }
+}
+
+//This function handles the users response on the markers onclick modal
+
+function HandleResponse(name, num) {
+
+    if (document.getElementById("first").checked) {
+
+        var c = document.getElementById("stopSearch").style.backgroundColor;
+        //checks the background color and adds the address if address is selected or adds number if number is selected. 
+        if (c == "black") {
+            document.getElementById("id_source").value = name;
+        } else {
+            document.getElementById("id_source").value = num;
+        }
+    } else if (document.getElementById("second").checked) {
+
+        var c = document.getElementById("stopSearch").style.backgroundColor;
+
+        if (c == "black") {
+            document.getElementById("id_destination").value = name;
+        } else {
+            document.getElementById("id_destination").value = num;
+        }
+    }
+
+    $('#MarkersModal').modal('hide');
+
+}
 
 
 

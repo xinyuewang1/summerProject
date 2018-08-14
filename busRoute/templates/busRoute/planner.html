@@ -1,5 +1,4 @@
 {%extends 'base.html' %} {% load staticfiles %}{% block body %}
-
 <body>
     <script>
         //this accesses the data that is rendered in and creates a variable that can be accessed in the external DB.JS file. 
@@ -224,134 +223,6 @@
                         <div class="row">
                             <button type="submit" class="btn btn-block btn-primary m-2" name="go" onclick="showLoadGif()">GO!</button>
                         </div>
-                        <script>
-                           
-                            function placeSearch() {
-
-
-                                //https://www.w3docs.com/learn-javascript/places-autocomplete.html
-                                //https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-multiple-countries
-
-                                //the below function used a combination of the above two efforts. 
-
-
-                                //This function is responsible for allowing the user to search for a general address
-                                //the map will then zoom in on that place
-                                //they can then chose to view the markers in that area.
-
-                                autocomplete = new google.maps.places.Autocomplete(document.getElementById(
-                                    'genSearch'));
-
-                                autocomplete.setComponentRestrictions({
-                                    'country': 'ie'
-                                });
-
-                                google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                                    var place = autocomplete.getPlace();
-
-
-                                    if (!place.geometry) {
-                                        // User entered the name of a Place that was not suggested and
-                                        // pressed the Enter key, or the Place Details request failed.
-                                        window.alert("No details available for input: '" + place.name + "'");
-                                        return;
-                                    }
-
-                                    // If the place has a geometry, then present it on a map.
-                                    if (place.geometry.viewport) {
-                                        map.fitBounds(place.geometry.viewport);
-                                    } else {
-                                        map.setCenter(place.geometry.location);
-                                        map.setZoom(17); // Why 17? Because it looks good.
-                                    }
-                                    marker.setPosition(place.geometry.location);
-                                    marker.setVisible(true);
-                                });
-                            };
-                        </script>
-
-
-                        <script>
-                            var onEnter = document.getElementById("routeSearch");
-                            onEnter.addEventListener("keydown", function (value) {
-                                if (value.keyCode === 13) {
-
-                                    getStops(value);
-                                }
-                            });
-
-
-                            markers = [];
-
-                            function getStops() {
-
-
-                                //this function is responsible for displaying the route information
-                                //It uses jQuery to intitialise and pass the value to the url and to grab the data that is returned by get_route_info
-
-                                if (markers)
-                                    //this checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
-                                    for (var i = 0; i < markers.length; i++) {
-
-                                        markers[i].setMap(null);
-
-                                    }
-
-                                var jqxhr = $.getJSON('/details/' + document.getElementById("routeSearch").value +
-                                    '/',
-                                    function (daily) {
-
-                                        if (daily == "fail") {
-                                            $modal = $('#routeModal');
-                                            $modal.modal('show');
-                                            $("#routeSearch").css('background-color', 'red');
-                                        } else {
-                                            var table = "";
-                                            table =
-                                                "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped overflow-y: hidden'>";
-                                            table += "<tr><thead>";
-                                            table += "<th>Stop</th>";
-                                            table += "</tr></thead><tbody>";
-
-                                            for (var i = 0; i < daily.length; i++) {
-
-                                                table += "<tr>";
-                                                table += "<td>" + daily[i].name + "(" + daily[i].id +
-                                                    ")" + "</td>";
-                                                table += "</tr>";
-
-
-                                                infoWindow = new google.maps.InfoWindow;
-                                                infoBus = new google.maps.InfoWindow;
-
-                                                //this function displays the dublin bus markers
-                                                myLatLng = new google.maps.LatLng(parseFloat(daily[i].lat),
-                                                    parseFloat(daily[i].lng))
-                                                marker = new google.maps.Marker({
-                                                    position: myLatLng,
-                                                    map: map,
-                                                    title: daily[i].name + " " + "(" + daily[i].id +
-                                                        ")"
-                                                });
-
-                                                marker.addListener('mouseover', function () {
-                                                    infoBus.open(map, this);
-                                                    infoBus.setContent(this.title);
-                                                })
-
-                                                markers.push(marker);
-                                            }
-
-
-
-                                            table += "</tbody></table>";
-                                            document.getElementById("RouteDiv").innerHTML = table;
-
-                                        }
-                                    })
-                            };
-                        </script>
-
                     </form>
 
                 </div>
@@ -414,42 +285,7 @@
 
             <button onclick="stopsNearMe()">Stops Near Me</button>
         </div>
-        <script>
-       
-            //Autocomplete for Route Search this is paired with an onfocus function to watch for a user click into the box. 
-            function routeSearch() {
-                $(document).ready(function () {
-                    $.ajax({
-                        type: "GET",
-                        url: "dublinBusRoutes",
-                        dataType: "json",
-
-                        success: function (data) {
-                            createArray(data);
-                        }
-                    });
-                });
-
-
-                function createArray(Data) {
-
-                    var results = [];
-
-                    for (var i = 0; i < Data.length; i++) {
-
-                        results.push(Data[i].route);
-
-
-
-                    }
-                    $("#routeSearch").autocomplete({
-                        source: results,
-                        minLength: 1,
-                    });
-                }
-            }
-        </script>
-
+    
         <!-- Onclick Marker Modal -->
 
         <div class="modal fade" id="MarkersModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -483,35 +319,6 @@
                 </div>
             </div>
         </div>
-
-        <script>
-            function HandleResponse(name, num) {
-
-                if (document.getElementById("first").checked) {
-
-                    var c = document.getElementById("stopSearch").style.backgroundColor;
-                    //checks the background color and adds the address if address is selected or adds number if number is selected. 
-                    if (c == "black") {
-                        document.getElementById("id_source").value = name;
-                    } else {
-                        document.getElementById("id_source").value = num;
-                    }
-                } else if (document.getElementById("second").checked) {
-
-                    var c = document.getElementById("stopSearch").style.backgroundColor;
-
-                    if (c == "black") {
-                        document.getElementById("id_destination").value = name;
-                    } else {
-                        document.getElementById("id_destination").value = num;
-                    }
-                }
-
-                $('#MarkersModal').modal('hide');
-
-            }
-        </script>
-
 </body>
 
 {% endblock %}
