@@ -30,7 +30,6 @@ handler511 = 'views.handler511'
 
 urlpatterns = [
 
-
     #URLs for the main pages
 
     url(r'^index', views.homeView.as_view(), name='index'),
@@ -47,22 +46,22 @@ urlpatterns = [
     url(r'^problem', views.problemView.as_view(), name='problem'),
 
     url(r'^dublinBusRoutes', views.routeDirectionServices, name='dublinBusRoutes'),
+
     url(r'^dublinBusInfo', views.DublinBusInfo, name = 'DublinBusInfo'),
 
     #contains the information for the bikes data 
     
     url(r'^dublinBikeInfo', views.bikes_query, name='dublinBikeInfo'),
 
-    path('db/<int:stopid>/', views.Db, name='db'),
+    #This accesses the source stop chosen for the walk me function, it passes it into db function to get the lat and longtitude of that stop. 
 
-    url(r'dublinBusInfo', views.DublinBusInfo, name = 'DublinBusInfo'),
+    path('db/<int:stopid>/', views.Db, name='db'),
 
     #data rendered here is used for the suggested stops near the user selections. 
     url(r'^nearestBus/(-?\d+(?:\.\d+)?)/(-?\d+(?:\.\d+)?)', views.stopNearMe, name='nearestBus'),
 
     #This URL passes the route to the get_route_data function in views.py
 
-    #?P<route>[\w\ ]
     url(r'^details/(?P<route>[\w\ ]+)', views.get_route_data, name='detail'),
 
     path('busNum/<slug:bus>/', views.getRoute, name='busNum'),

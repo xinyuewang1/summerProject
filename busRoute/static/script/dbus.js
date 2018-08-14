@@ -552,7 +552,6 @@ function displayBusMarkers() {
         });
 
 };
-
                                                
 var bikeMarkers = 0;
 var markBikes = []
