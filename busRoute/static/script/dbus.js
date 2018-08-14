@@ -10,7 +10,7 @@ function myMap() {
     infoWindow = new google.maps.InfoWindow;
 
     //this code is reponsible for finding and displaing the users current location. 
-    //This came from https://developers.google.com/maps/documentation/javascript/examples/map-geolocation
+
     if (navigator.geolocation) {
 
         navigator.geolocation.getCurrentPosition(function (position) {
@@ -53,27 +53,6 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
         'Error: Your browser doesn\'t support geolocation.');
     infoWindow.open(map);
 }
-
-// function getLocation() {
-//     if (navigator.geolocation) {
-//         location = navigator.geolocation.watchPosition(update);
-//     } else {
-//         // Geolocation is not supported by this browser.
-//     }
-
-//     function update(pos) {
-//         var update = pos.coords;
-//         console.log('Your updated current position is:');
-//         console.log('Latitude', update.latitude);
-//         console.log('Longitude', update.longitude);
-//     }
-
-// }
-
-// getLocation();
-
-
-//autocomplete for general area
 
 // Function used for displaying/hiding the traffic information using a check variable 
 var trafficCheck = 0;
@@ -233,7 +212,6 @@ function swapSearch() {
                 disabled: false})
 
         //This is needed to remove the google maps api before changing it to search by roots. 
-        //Reference: //https://stackoverflow.com/questions/9828856/how-to-toggle-the-google-maps-autocomplete-on-and-off
         if (sourceAutocomplete !== undefined && destinationAutocomplete != undefined) {
             google.maps.event.clearInstanceListeners(sourceAutocomplete);
             google.maps.event.clearInstanceListeners(destinationAutocomplete);
@@ -279,16 +257,6 @@ function getStops() {
 
     //this function is responsible for displaying the route information
     //It uses jQuery to intitialise and pass the value to the url and to grab the data that is returned by get_route_info
-
-
-    // poly = new google.maps.Polyline({
-    //     strokeColor: '#000000',
-    //     strokeOpacity: 1.0,
-    //     strokeWeight: 3
-    // });
-    // poly.setMap(map);
-
-
     if (markers)
 
         //this checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
@@ -696,10 +664,6 @@ function getStops() {
 
 function placeSearch() {
 
-
-    //https://www.w3docs.com/learn-javascript/places-autocomplete.html
-    //https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-multiple-countries
-
     //the below function used a combination of the above two efforts. 
 
 
@@ -798,116 +762,6 @@ function HandleResponse(name, num) {
 
 }
 
-function walkMe() {
-
-    //this function is responsible for the directions service. 
-    //it takes the source destintion input value to find its long/lat through an if statament
-    //and the users current location 
-    //and it will display the results on the map and the actual written directions below!
-
-
-    //this function will check the current status of geolocation. 
-
-    navigator.permissions.query({
-            name: 'geolocation'
-        })
-        .then(function (permissionStatus) {
-            console.log('geolocation permission state is ', permissionStatus.state);
-            // console.log(typeof permissionStatus.state)
-
-
-            if (permissionStatus.state == "denied" ) {
-
-                $modal = $('#walkMeModal');
-                $modal.modal('show');
-
-            }
-
-            else if  (permissionStatus.state == "granted" ){
-
-                var x = "{{ source }}"
-                var y = parseInt(x);
-                var jqxhr = $.getJSON('/db/'+y+'/',
-                            function (daily) {
-                lat = parseFloat(daily[0].lat);
-                long = parseFloat(daily[0].lng);
-                var curLat = pos.lat
-                var curLng = pos.lng;
-                 
-                    var directionsService = new google.maps.DirectionsService();
-                    var directionsDisplay = new google.maps.DirectionsRenderer();
-                    var start = new google.maps.LatLng(curLat, curLng);
-                    var end = new google.maps.LatLng(lat, long);
-
-                    calcRoute(start, end);
-
-                    var mapProp = {
-                        center: new google.maps.LatLng(53.347515, -6.265377),
-                        zoom: 10,
-                    };
-                    map = new google.maps.Map(document.getElementById("map"), mapProp);
-                    directionsDisplay.setMap(map);
-                    directionsDisplay.setPanel(document.getElementById('directionsPanel'));
-
-                    function calcRoute(start, end) {
-                        var request = {
-                            origin: start,
-                            destination: end,
-                            travelMode: 'WALKING'
-                        };
-                        directionsService.route(request, function (result, status) {
-                            if (status == 'OK') {
-                                directionsDisplay.setDirections(result);
-                            }
-                        });
-                    }
-                            })
-
-
-                   
-                
-            }  
-
-        })
-}
-
-var placeSearch, autocomplete;
-
-function initialize() {
-    //https://www.w3docs.com/learn-javascript/places-autocomplete.html
-    //https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-multiple-countries
-    //the below function used a combination of the above two efforts. 
-    //This function is responsible for allowing the user to search for a general address
-    //the map will then zoom in on that place
-    //they can then chose to view the markers in that area.
-    autocomplete = new google.maps.places.Autocomplete(document.getElementById('genSearch'));
-    autocomplete.setComponentRestrictions({
-        'country': 'ie'
-    });
-    google.maps.event.addListener(autocomplete, 'place_changed', function () {
-        var place = autocomplete.getPlace();
-        console.log(place);
-        if (!place.geometry) {
-            // User entered the name of a Place that was not suggested and
-            // pressed the Enter key, or the Place Details request failed.
-            window.alert("No details available for input: '" + place.name + "'");
-            return;
-        }
-        // If the place has a geometry, then present it on a map.
-        if (place.geometry.viewport) {
-            map.fitBounds(place.geometry.viewport);
-        } else {
-            map.setCenter(place.geometry.location);
-            map.setZoom(17); // Why 17? Because it looks good.
-        }
-        marker.setPosition(place.geometry.location);
-        marker.setVisible(true);
-    });
-};
-initialize();
-
-
-
 function generateQuery() {
     //this function gets real time information for the stop that is selected.
     var jqxhr = $.getJSON(
@@ -964,6 +818,18 @@ function generateQuery() {
 
 
 // References:
-// https://github.com/jonthornton/jquery-timepicker 
+//https://github.com/jonthornton/jquery-timepicker 
 //http://api.jqueryui.com/datepicker/
 //the code for the new Autocmplete function was inspired by; https://stackoverflow.com/questions/24594662/jqueryui-autocomplete-data-from-text-csv-file-with-ajax
+
+//the place search functions
+//https://www.w3docs.com/learn-javascript/places-autocomplete.html
+//https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-multiple-countries
+
+//toggling the autocomplete on and off
+ // https://stackoverflow.com/questions/9828856/how-to-toggle-the-google-maps-autocomplete-on-and-off
+
+
+//Geolocation
+ //https://developers.google.com/maps/documentation/javascript/examples/map-geolocation
+ 

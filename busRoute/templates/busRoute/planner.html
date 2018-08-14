@@ -136,7 +136,6 @@
                                     var time2 = new Date("HH:MM")
                                     var time1 = "06:30"
                                     var time2 = "23:30"
-                                    console.log(time1, time2)
 
                                     var x = new Date(("HH:MM"))
                                     var x = document.getElementById("id_departTime").value;
@@ -344,7 +343,6 @@
                     });
                     google.maps.event.addListener(autocomplete, 'place_changed', function () {
                         var place = autocomplete.getPlace();
-                        console.log(place);
                         if (!place.geometry) {
                             // User entered the name of a Place that was not suggested and
                             // pressed the Enter key, or the Place Details request failed.
@@ -363,7 +361,6 @@
                     });
                 };
                 initialize();
-                
                 </script>
 </body>
 {% endblock %}
