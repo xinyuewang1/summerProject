@@ -19,12 +19,11 @@
     </script>
 
 
-    <div id="load_screen" style="display: none;">
+    <!-- <div id="load_screen" style="display: none;">
         <div id="loading">
             <h3>Loading Result..</h3>
         </div>
-    </div>
-
+    </div> -->
 
     <div id="homeCenter" class="container">
         <div class="row">
@@ -147,6 +146,8 @@
                                         $("#id_departTime").css('background-color', 'red');
                                     }
                                 })
+                                
+                                //This piece of code allows the getStops function to be called when the user hits the enter key. 
 
                                 var onEnter = document.getElementById("routeSearch");
                                 onEnter.addEventListener("keydown", function (value) {
@@ -174,7 +175,7 @@
                                                     <p>However, timetables are subject to change depending on routes</p>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
                                         </div>
                                     </div>
                                 </div>
@@ -200,7 +201,7 @@
                                             <p>Use the Autocomplete function for guidance.</p>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
                                         </div>
                                     </div>
                                 </div>
@@ -291,7 +292,7 @@
                 </div>
             </div>
 
-            <button onclick="stopsNearMe()">Stops Near Me</button>
+            <button type="button"onclick="stopsNearMe()" class="btn btn-success" >Stops Near Me</button>
         </div>
 
         <!-- Onclick Marker Modal -->
@@ -321,12 +322,42 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" onclick="HandleResponse(markerName, markerNum)">Go</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-success" onclick="HandleResponse(markerName, markerNum)">Go</button>
+                        <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
         </div>
+
+         <!-- Walk Me Modal -->
+         <div class="modal fade" id="StopsNearMeMeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Geolocation is disabled</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                            <p>
+                                    <!-- <script>
+                                        permissiontate
+                                    </script> -->
+                                </p>
+    
+                                <p>If you would like to use this function, you will need to allow access to your current location.</p>
+    
+                                <p>You can do this by updating your browser location settings. </p>
+    
+    
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
         <script>var placeSearch, autocomplete;
 
@@ -361,6 +392,53 @@
                     });
                 };
                 initialize();
+
+                function stopsNearMe() {
+    
+    navigator.permissions.query({
+        name: 'geolocation'
+    })
+    .then(function (permissionStatus) {
+  
+        console.log(permissionStatus.state);
+
+
+        if (permissionStatus.state == "denied" || permissionStatus.state == "prompt") {
+
+            $modal = $('#StopsNearMeMeModal');
+            $modal.modal('show');
+
+        } else if (permissionStatus.state == "granted") {
+    var jqxhr = $.getJSON('/nearestBus/' + pos.lat + '/' + pos.lng,
+        document.getElementById("id_source").value + '&format=json',
+        function (daily) {
+            for (var i = 0; i < daily.length; i++) {
+                var name = daily[i].name;
+                var lat = parseFloat(daily[i].lat);
+                var long = parseFloat(daily[i].long);
+                infoWindow = new google.maps.InfoWindow;
+                infoBus = new google.maps.InfoWindow;
+                //this function displays the dublin bus markers
+                myLatLng = new google.maps.LatLng(lat, long)
+                marker = new google.maps.Marker({
+                    position: myLatLng,
+                    map: map,
+                    title: name
+                });
+                marker.addListener('mouseover', function () {
+                    infoBus.open(map, this);
+                    infoBus.setContent(this.title);
+                })
+                marker.addListener('click', function () {
+                    document.getElementById("id_source").value = this.title;
+                })
+                markers.push(marker);
+            }
+        })
+}
+
+})
+}
                 </script>
 </body>
 {% endblock %}

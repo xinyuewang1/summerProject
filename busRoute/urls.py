@@ -32,8 +32,6 @@ urlpatterns = [
 
     #URLs for the main pages
 
-    url(r'^index', views.homeView.as_view(), name='index'),
-
     url(r'^result', views.resultView.as_view(), name='result'),
 
     url(r'^tourism', views.tourismView.as_view(), name='tourism'),
@@ -41,7 +39,7 @@ urlpatterns = [
     url(r'^planner', views.plannerView.as_view(), name='planner'),
 
     #These URL's contain the data necessary for Autocomplete functions. 
-    url(r'^RouteInfo', views.GenBusData, name='RouteInfo'),
+    # url(r'^RouteInfo', views.DublinBusInfo, name='RouteInfo'),
 
     url(r'^problem', views.problemView.as_view(), name='problem'),
 

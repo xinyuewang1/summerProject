@@ -24,29 +24,6 @@ def problemRend(message):
 
     return context
     
-class homeView(generic.TemplateView):
-
-    '''Class to render index.html. Includes functions:
-        get: Loads the page
-        post: Renders the results page for a route plan
-    '''
-
-    template_name = "busRoute/index.html" 
-
-    def get(self,request):
-        form = routeForm()
-        weather = query_weather()
-        context = {'weather': weather,'form': form}
-        return render(request, self.template_name, context)
-
-    
-    def post(self, request):
-        form = routeForm(request.POST)
-        args = postFunc(request, form)
-
-        return render(request, "busRoute/result.html", args)
-
-
 class plannerView(generic.TemplateView):
     '''Class to render planner.html page. This is the main page of the web applications with the following functions:
         get: Loads the page
@@ -350,7 +327,7 @@ def DublinBusInfo(request):
           
 def DublinBus():
     '''
-    This function creates a dictionary from the dublin bus data located inside Routes.csv to be accessed on the page for the markers
+    This function creates a dictionary from the dublin bus data to be called for model functionality
     '''
 
     results = []

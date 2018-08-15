@@ -54,12 +54,10 @@
                         <a class="nav-link" href="planner.html">Planner</a>
 
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">News</a>
-                    </li>
+                    
                     <li class="nav-item">
 
-                        <a class="nav-link" href="tourism.html">Fares/Tourism</a>
+                        <a class="nav-link" href="tourism.html">Fares</a>
 
                     </li>
                 </ul>
@@ -70,7 +68,11 @@
                 <img src= "{% static 'images/logoscaled.png' %}" alt = "Innovation Station Logo" style="width:40px;padding-left:10px;">
             </a>
         </nav>
-
+        <div id="load_screen" style="display: none;">
+            <div id="loading">
+                <h3>Loading Result..</h3>
+            </div>
+        </div>
         {% block body %}
         {% endblock %}
     </body>
