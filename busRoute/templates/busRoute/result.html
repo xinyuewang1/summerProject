@@ -5,6 +5,8 @@
     <script>var markerImages = "{% static 'images/m' %}"
     
     var pos = pos;
+
+       var sourceStopForFunction = "{{ source }}"
     
     </script>
     <!-- Link to main javaScript file -->
@@ -381,72 +383,6 @@ var jqxhr = $.getJSON(
     })
 };
 
-            function walkMe() {
-
-                //this function is responsible for the directions service. 
-                //it takes the source destintion input value to find its long/lat through an if statament
-                //and the users current location 
-                //and it will display the results on the map and the actual written directions below!
-
-
-                //this function will check the current status of geolocation. 
-
-                navigator.permissions.query({
-                        name: 'geolocation'
-                    })
-                    .then(function (permissionStatus) {
-                        // console.log(typeof permissionStatus.state)
-
-
-                        if (permissionStatus.state == "denied") {
-
-                            $modal = $('#walkMeModal');
-                            $modal.modal('show');
-
-                        } else if (permissionStatus.state == "granted") {
-
-                            var x = "{{ source }}"
-                            var y = parseInt(x);
-                            var jqxhr = $.getJSON('/db/' + y + '/',
-                                function (daily) {
-                                    lat = parseFloat(daily[0].lat);
-                                    long = parseFloat(daily[0].lng);
-                                    var curLat = pos.lat
-                                    var curLng = pos.lng;
-
-                                    var directionsService = new google.maps.DirectionsService();
-                                    var directionsDisplay = new google.maps.DirectionsRenderer();
-                                    var start = new google.maps.LatLng(curLat, curLng);
-                                    var end = new google.maps.LatLng(lat, long);
-
-                                    calcRoute(start, end);
-
-                                    var mapProp = {
-                                        center: new google.maps.LatLng(53.347515, -6.265377),
-                                        zoom: 10,
-                                    };
-                                    map = new google.maps.Map(document.getElementById("map"), mapProp);
-                                    directionsDisplay.setMap(map);
-                                    directionsDisplay.setPanel(document.getElementById('directionsPanel'));
-
-                                    function calcRoute(start, end) {
-                                        var request = {
-                                            origin: start,
-                                            destination: end,
-                                            travelMode: 'WALKING'
-                                        };
-                                        directionsService.route(request, function (result, status) {
-                                            if (status == 'OK') {
-                                                directionsDisplay.setDirections(result);
-                                            }
-                                        });
-                                    }
-                                })
-                        }
-
-                    })
-            }
-
             function googDirections(sLat, sLng, fLat, fLng) {
 
                 //Function to plot the bus route on a map after a post request is submitted
@@ -489,6 +425,12 @@ var jqxhr = $.getJSON(
             };
 
             googDirections("{{ startLat }}", "{{ startLng }}", "{{ finLat }}", "{{ finLng }}")
+
+
+
+
+
+         
         </script>
 </body>
 {% endblock %}
