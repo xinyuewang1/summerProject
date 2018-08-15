@@ -845,7 +845,6 @@ def findLatLong(location):
     except:
         address = location
     
-
     buses = DublinBus()
     if 'stop_id' in locals():
         for b in buses:
@@ -861,7 +860,6 @@ def findLatLong(location):
     raise Exception("Unable to find this stop number")
 
 #####Error Pages########
-
 def handler400(request):
     response = render(request, '400.html', context={})
     response.status_code = 400

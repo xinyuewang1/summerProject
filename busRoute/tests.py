@@ -17,8 +17,32 @@ class TestViewResponses(unittest.TestCase):
 
     '''This Test Class Tests all the Functions in Views.py'''
 
+    def test_timeConstraints_Response(self):
 
-    def test_dateTimeCheck(self):
+        '''This test checks the returned results from timeConstraints are as expected'''
+        check = timeConstraints("10:30")
+        self.assertTrue(check == 1)
+
+    def test_timeConstraints_Response(self):
+
+        '''This test checks the returned results from timeConstraints are as expected'''
+        check = timeConstraints("19:30")
+        self.assertFalse(check == -1)
+
+    def test_timeConstraints_Response(self):
+
+        '''This test checks the returned results from timeConstraints are as expected'''
+        check = timeConstraints("03:00")
+        self.assertFalse(check == 1)
+
+
+    def test_timeConstraints_Response(self):
+
+        '''This test checks the returned results from timeConstraints are as expected'''
+        check = timeConstraints("03:00")
+        self.assertTrue(check == -1)
+
+    def test_dateTimeCheck_Response(self):
 
         '''This test checks the returned results from dateTimeCheck are as expected'''
 
@@ -26,7 +50,7 @@ class TestViewResponses(unittest.TestCase):
         self.assertTrue(check == 1)
 
 
-    def test_dateTimeCheck(self):
+    def test_dateTimeCheck_Response(self):
 
         '''This test checks the returned results from dateTimeCheck are as expected when a date is invalid'''
 
@@ -34,24 +58,21 @@ class TestViewResponses(unittest.TestCase):
         self.assertTrue(check == -1)
 
    
-    def test_dateTimeCheck(self):
+    def test_dateTimeCheck_Response(self):
 
         '''This test checks the returned results from dateTimeCheck are as expected when a time is invalid'''
 
         check = dateTimeCheck("12/09/2018", "10")
         self.assertTrue(check == -1)
-
-
-      
-    def test_dateTimeCheck(self):
+ 
+    def test_dateTimeCheck_Response(self):
 
         '''This test checks the returned results from dateTimeCheck are as expected when a time is invalid'''
 
         check = dateTimeCheck("12/09/2018", ":12")
         self.assertTrue(check == -1)
 
-    def test_routeDirectionsService(self):
-
+    def test_routeDirectionsService_Response(self):
 
         '''This function tests that the url attached to the function routeDirectionService is valid'''
 
@@ -285,8 +306,6 @@ class TestFormFields(unittest.TestCase):
 
         form = routeForm(data={'source': "768", 'destination': "7161", 'departTime': "18:00", 'departDate': ""})
         self.assertFalse(form.is_valid())
-
-
 
 if __name__ == '__main__':
     unittest.main()
