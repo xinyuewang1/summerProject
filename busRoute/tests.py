@@ -12,7 +12,6 @@ from django.urls import reverse
 from django.urls import resolve
 import os
 
-
 class TestViewResponses(unittest.TestCase):
 
     '''This Test Class Tests all the Functions in Views.py'''
