@@ -18,9 +18,8 @@ import pandas as pd
     
 def problemRend(message):
     form = routeForm()
-    bus = DublinBus()
 
-    context = {'bus': bus, 'form': form}
+    context = {'form': form}
     context['error'] = message
 
     return context
@@ -37,8 +36,7 @@ class homeView(generic.TemplateView):
     def get(self,request):
         form = routeForm()
         weather = query_weather()
-        bus = DublinBus()
-        context = {'weather': weather, 'bus': bus, 'form': form}
+        context = {'weather': weather,'form': form}
         return render(request, self.template_name, context)
 
     
@@ -61,8 +59,7 @@ class plannerView(generic.TemplateView):
 
         form = routeForm()
         weather = query_weather()
-        bus = DublinBus()
-        context = {'weather': weather,'bus': bus, 'form': form}
+        context = {'weather': weather, 'form': form}
         
         return render(request, self.template_name, context)
     
@@ -90,8 +87,7 @@ class resultView(generic.TemplateView):
     def get(self,request):
         form = routeForm()
         weather = query_weather()
-        bus = DublinBus()
-        context = {'weather': weather,'bus':bus, 'form': form}
+        context = {'weather': weather, 'form': form}
         return render(request, self.template_name, context)
     
     def post(self, request):
@@ -112,8 +108,7 @@ class problemView(generic.TemplateView):
     def get(self,request):
         form = routeForm()
         weather = query_weather()
-        bus = DublinBus()
-        context = {'weather': weather,'bus':bus, 'form': form}
+        context = {'weather': weather,'form': form}
         return render(request, self.template_name, context)
     
 
@@ -204,8 +199,6 @@ def postFunc(request, form):
     day = parseDayNumber(depart_date)
     bus = DublinBus()
 
-
-    
     #Used to find the stop name using a given stop number
     for i in bus:
         if source_address1 == i['num']:
@@ -267,9 +260,8 @@ def postFunc(request, form):
             ert = int(Est39A(legs2[0][0], int(legs[0][1]), int(legs[0][2]), rRain, rTemp, return_time, day, return_date))
         print("return Time", ert)
 
-
     #Return arguments for front end result prediction
-    args = {'form': form,'bus': bus, 'busNum': busNum, 'source': source_address1, 'source_name':source_name, 
+    args = {'form': form,'busNum': busNum, 'source': source_address1, 'source_name':source_name, 
     'destination': destination_address1, 'destination_name': destination_name, 'depart_time': depart_time, 
     'depart_date': depart_date , 'arrival_time': arrival, 'startLat':startLat, 'startLng': startLng, 'finLat':finLat,
     'finLng':finLng, 'est': est, 'weather': weather, 'header':header, 'return': ert}
@@ -277,7 +269,6 @@ def postFunc(request, form):
     return args
 
     
-
 def query_weather():
     """
     Queries Open Weather API for current weather information of Dublin City. Parses input and returns dictionary
@@ -307,7 +298,7 @@ def bikes_query(request):
     """ 
     Connects to the JCDecaux API and returns the dublin bikes information 
     """
-    
+        
     url = 'https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey='+os.environ.get('jcdecauxi') # the website containing the data
    
     web_data = requests.get(url)
@@ -335,7 +326,6 @@ def DublinBusInfo(request):
     This function creates a dictionary from the dublin bus data located inside Routes.csv to be accessed on the page for the markers
     '''
 
-
     results = []
 
     with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r', encoding='utf-8') as f:
@@ -353,8 +343,8 @@ def DublinBusInfo(request):
 
             
                 dbInfo = json.dumps(Info) 
-                loadedBikes = json.loads(dbInfo)
-                results.append(loadedBikes)
+                loadedBus = json.loads(dbInfo)
+                results.append(loadedBus)
         
     return JsonResponse(results, safe=False)
           
@@ -380,11 +370,39 @@ def DublinBus():
 
             
                 dbInfo = json.dumps(Info) 
-                loadedBikes = json.loads(dbInfo)
-                results.append(loadedBikes)
+                loadedBus = json.loads(dbInfo)
+                results.append(loadedBus)
         
     return results
 
+
+def Db(request, stopid):
+    '''
+    This accesses the lattitude and longtitude of the chosen source stop for the walk me function
+    '''
+
+    results = []
+    
+
+    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r', encoding='utf-8') as f:
+
+        reader = pd.read_csv(f)
+        lat = reader.loc[reader['stopid'] == stopid, 'stop_lat'].values[0]
+        lon = reader.loc[reader['stopid'] == stopid, 'stop_lon'].values[0]
+    
+
+        Info= {'lat': lat,
+                        'lng':lon
+                       
+                    }
+        dbInfo = json.dumps(Info) 
+        loadedBus = json.loads(dbInfo)
+        results.append(loadedBus)
+
+       
+    return JsonResponse(results, safe=False)
+
+                    
 def GenBusData(request): 
     '''
     This renders the data to a URL that is used with the AJAX autocomplete function
@@ -405,8 +423,8 @@ def GenBusData(request):
                     }
 
                 dbInfo = json.dumps(Info) 
-                loadedBikes = json.loads(dbInfo)
-                results.append(loadedBikes)
+                loadedBus = json.loads(dbInfo)
+                results.append(loadedBus)
       
     return JsonResponse(results, safe=False) 
 
@@ -431,8 +449,8 @@ def stopNearMe(request,lat, lng):
                 }
 
         dbInfo = json.dumps(Info) 
-        loadedBikes = json.loads(dbInfo)
-        results.append(loadedBikes)
+        stopInfo = json.loads(dbInfo)
+        results.append(stopInfo)
       
 
     return JsonResponse(results, safe=False)
@@ -458,8 +476,8 @@ def routeDirectionServices(request):
                 pass
             else:
                 dbInfo = json.dumps(Info) 
-                loadedBikes = json.loads(dbInfo)
-                results.append(loadedBikes)
+                routeInfo = json.loads(dbInfo)
+                results.append(routeInfo)
         
     return JsonResponse(results, safe=False) 
 
@@ -492,15 +510,14 @@ def get_route_data(request, route):
                     }
 
                 dbInfo = json.dumps(Info) 
-                loadedBikes = json.loads(dbInfo)
-                results.append(loadedBikes)
+                routeData = json.loads(dbInfo)
+                results.append(routeData)
         else: 
 
             results = 'fail'
             print(results)
 
         return JsonResponse(results, safe=False)
-
 
 
 def Est39A(route, source, dest, precipitation, temp, timeStr, weekday, dateStr):
@@ -524,9 +541,7 @@ def Est39A(route, source, dest, precipitation, temp, timeStr, weekday, dateStr):
         result_min = float("{0:.2f}".format(result / 60))
         return result_min
     
-   
     
-
 def readTimeIn(time):
     '''
     Function to find the hour of a given time input from the front end
@@ -538,7 +553,6 @@ def readTimeIn(time):
         return -1
 
     return hour
-
 
 
 def arrivalTime(depart, travel):
@@ -949,22 +963,6 @@ def loaderIO(request):
     f.close()
     return HttpResponse(file_content, content_type="text/plain")
 
-# def markerInformation(request, name, num ):
-
-#         results = []
-
-#         Info= {'name': name,
-
-#                 'num': num
-                               
-#                     }
-
-
-#         dbInfo = json.dumps(Info) 
-#         loadedBikes = json.loads(dbInfo)
-        
-        
-#         return JsonResponse(loadedBikes, safe=False)
 
 
                 
