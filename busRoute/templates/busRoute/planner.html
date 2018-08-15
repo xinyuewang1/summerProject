@@ -127,6 +127,7 @@
 
                                     $("#routeSearch").css('background-color', 'white');
                                 }
+
                                 $(document).on("change", "#id_departTime", function () {
                                     $("#id_departTime").css('background-color', 'white');
                                     var startTime = "06:30"
@@ -134,7 +135,7 @@
                                     var time1 = new Date("HH:MM")
                                     var time2 = new Date("HH:MM")
                                     var time1 = "06:30"
-                                    var time2 = "23:30"
+                                    var time2 = "23:55"
 
                                     var x = new Date(("HH:MM"))
                                     var x = document.getElementById("id_departTime").value;
@@ -146,7 +147,8 @@
                                         $("#id_departTime").css('background-color', 'red');
                                     }
                                 })
-                                
+
+
                                 //This piece of code allows the getStops function to be called when the user hits the enter key. 
 
                                 var onEnter = document.getElementById("routeSearch");
@@ -400,9 +402,6 @@
     })
     .then(function (permissionStatus) {
   
-        console.log(permissionStatus.state);
-
-
         if (permissionStatus.state == "denied" || permissionStatus.state == "prompt") {
 
             $modal = $('#StopsNearMeMeModal');

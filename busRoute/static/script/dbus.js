@@ -685,9 +685,7 @@ function walkMe() {
             name: 'geolocation'
         })
         .then(function (permissionStatus) {
-            // console.log(typeof permissionStatus.state)
-
-
+          
             if (permissionStatus.state == "denied" || permissionStatus.state == "prompt") {
 
                 $modal = $('#walkMeModal');

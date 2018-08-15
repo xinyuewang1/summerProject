@@ -121,6 +121,14 @@ def postFunc(request, form):
         depart_time = form.cleaned_data['departTime']
         depart_date = form.cleaned_data['departDate']
 
+        if dateTimeCheck(depart_date,depart_time) == -1:
+            problem = {'problem': "Error please enter a valid date/time format e.g. 10:30 and 08/15/2018"}
+            return problem
+
+        if timeConstraints(depart_time) != 1:
+            problem = {'problem': "Unfortunately there are no buses available at the time you have selected. Buses will resume at approximately 06:30"}
+            return problem
+
 
         #Check for valid time inputs for times that have not already passed and are within a week of current time
         timeChosen = datetime.datetime.strptime(depart_date + " " + depart_time, "%m/%d/%Y %H:%M")
@@ -318,7 +326,6 @@ def DublinBusInfo(request):
                         'num': i[0]
                     }
 
-            
                 dbInfo = json.dumps(Info) 
                 loadedBus = json.loads(dbInfo)
                 results.append(loadedBus)
@@ -667,6 +674,23 @@ def query_rain_weather(time, date):
             return rain, temp
 
     raise Exception("Rain and temperature cannot be set for past time")
+
+
+def dateTimeCheck(date,time):
+    #date = "mm/dd/yyyy"
+    #time = "10:30"
+
+    try:
+
+        month, day, year = (int(x) for x in date.split('/'))
+        hour, minute = (int(y) for y in time.split(':'))
+        
+        if month > 0 and month <=12 and day > 0 and day <=31 and len(str(year)) == 4 and hour >= 0 and hour < 24 and minute >= 0 and minute < 60:
+            return 1
+        else:
+            return -1
+    except:
+        return -1
     
 
 def getRoute(request, bus):
@@ -940,9 +964,14 @@ def loaderIO(request):
     f.close()
     return HttpResponse(file_content, content_type="text/plain")
 
-
-
-                
+def timeConstraints(time):
+    #Function to check the input isn't before 6am
+    
+    hour, minute = (int(y) for y in time.split(':'))
+    if hour >= 6:
+        return 1
+    else:
+        return -1  
 
 
 

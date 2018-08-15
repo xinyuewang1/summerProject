@@ -2,16 +2,17 @@ from django.test import TestCase
 from busRoute.utils import *
 import sys
 import os
+import unittest
 # sys.path.insert(0, "/path/to/parent/of/courseware") # /home/projects/my-djproj
 
-from manage import DEFAULT_SETTINGS_MODULE
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", DEFAULT_SETTINGS_MODULE)
+# from manage import DEFAULT_SETTINGS_MODULE
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", DEFAULT_SETTINGS_MODULE)
 
 # import django
 # django.setup()
 
 
-class TestUtils(TestCase):
+class TestUtils(unittest.TestCase):
 
     # Test load_obj
     def test_load_obj(self):
@@ -23,10 +24,10 @@ class TestUtils(TestCase):
         self.assertTrue(load_obj('pickles/39a1'))
 
         # Abnormal 1: file doesn't exist
-        self.assertRaises(FileNotFoundError, load_obj('pickles/something'))
+        self.assertEqual(load_obj('pickles/something'), -3)
 
         # Abnormal 2: directory doesn't exist
-        self.assertRaises(FileNotFoundError, load_obj('some/thing'))
+        self.assertEqual(load_obj('some/thing'), -3)
 
     # Test getFirstAndLastStop3
     def test_getFirstAndLastStop3(self):
@@ -42,12 +43,10 @@ class TestUtils(TestCase):
         self.assertEqual(getFirstAndLastStops3('39a', 793, 770), (767, 7162, 4, 20))
 
         # Abnormal 2, not on the same path
-        with self.assertRaises(FileNotFoundError):
-            getFirstAndLastStops3('39a', 770, 766)
+        self.assertIsNone(getFirstAndLastStops3('39a', 770, 766))
 
         # Abnormal 3, stops not on route
-        with self.assertRaises(FileNotFoundError):
-            getFirstAndLastStops3('someroute', 770, 793)
+        self.assertIsNone(getFirstAndLastStops3('someroute', 770, 793))
 
     # Test for class Ett39A
     def test_Ett39A(self):
@@ -63,5 +62,3 @@ class TestUtils(TestCase):
 
         # test for env
         print(os.environ.get('googleapi'))
-
-
