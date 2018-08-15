@@ -326,62 +326,6 @@ function getStops() {
         })
 };
 
-
-function realTimeInfo() {
-
-    //this function gets real time information for the stop that is selected.
-
-    var jqxhr = $.getJSON(
-        'https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?stopid=' +
-        document.getElementById("id_source").value + '&format=json',
-        function (daily) {
-            var now = new Date();
-            var temp = new Date();
-
-            var table = "";
-            table = "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped overflow-y: hidden'>";
-            table += "<tr><thead>";
-            table += "<th>Route</th>";
-            table += "<th>Destination</th>";
-            table += "<th>Arrival Time</th>";
-            table += "<th>Expected</th>";
-            table += "</tr></thead><tbody>";
-            x = daily.results;
-            for (var i = 0; i < x.length; i++) {
-
-                var ti = x[i].arrivaldatetime.slice(11, );
-
-                var array = ti.split(":");
-                temp.setHours(array[0]);
-                temp.setMinutes(array[1]);
-                temp.setSeconds(array[2]);
-                var difference = new Date();
-                difference.setTime(temp - now);
-                var m = difference.getMinutes();
-
-                if (difference.getSeconds() >= 30) {
-                    m = m + 1;
-                };
-                if (m == 0) {
-                    m = "Due"
-                } else {
-                    m = String(m) + " mins"
-                };
-
-                table += "<tr>";
-                table += "<td>" + x[i].route + "</td>";
-                table += "<td>" + x[i].destination + "</td>";
-                table += "<td>" + ti.slice(0, 5) + "</td>";
-                table += "<td>" + m + "</td>";
-                table += "</tr>";
-            }
-            table += "</tbody></table>";
-            document.getElementById("realtimeTable").innerHTML = table;
-
-        })
-};
-
-
 //Functions to display/hide the stop search and route search
 function findStop() {
     if (document.getElementById("stopSearchOptions").style.display == "none") {
@@ -815,6 +759,37 @@ function generateQuery() {
         })
 };
 
+function stopsNearMe() {
+    console.log(pos.lat);
+    console.log(pos.lng);
+    var jqxhr = $.getJSON('/nearestBus/' + pos.lat + '/' + pos.lng,
+        document.getElementById("id_source").value + '&format=json',
+        function (daily) {
+            for (var i = 0; i < daily.length; i++) {
+                var name = daily[i].name;
+                var lat = parseFloat(daily[i].lat);
+                var long = parseFloat(daily[i].long);
+                infoWindow = new google.maps.InfoWindow;
+                infoBus = new google.maps.InfoWindow;
+                //this function displays the dublin bus markers
+                myLatLng = new google.maps.LatLng(lat, long)
+                marker = new google.maps.Marker({
+                    position: myLatLng,
+                    map: map,
+                    title: name
+                });
+                marker.addListener('mouseover', function () {
+                    infoBus.open(map, this);
+                    infoBus.setContent(this.title);
+                })
+                marker.addListener('click', function () {
+                    document.getElementById("id_source").value = this.title;
+                })
+                markers.push(marker);
+            }
+        })
+}
+
 
 
 // References:
@@ -832,4 +807,3 @@ function generateQuery() {
 
 //Geolocation
  //https://developers.google.com/maps/documentation/javascript/examples/map-geolocation
- 
