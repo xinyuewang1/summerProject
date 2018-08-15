@@ -958,7 +958,7 @@ def handler511(request):
     return response
 
 def loaderIO(request):
-    f = open(os.path.join(settings.STATIC_ROOT, 'loaderio-28122c5da51ed4a3468e82360273222a.txt'), 'r', encoding='utf-8')
+    f = open(os.path.join(settings.STATIC_ROOT, 'loaderio-0f980bc8a45100d4b616d09b3ef68e68.txt'), 'r', encoding='utf-8')
     file_content = f.read()
     f.close()
     return HttpResponse(file_content, content_type="text/plain")

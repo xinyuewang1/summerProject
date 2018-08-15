@@ -77,6 +77,6 @@ urlpatterns = [
 
     #LoaderIO
 
-    url(r'^loaderio-28122c5da51ed4a3468e82360273222a', views.loaderIO, name='loaderio-28122c5da51ed4a3468e82360273222a'),
+    url(r'^loaderio-0f980bc8a45100d4b616d09b3ef68e68', views.loaderIO, name='loaderio-0f980bc8a45100d4b616d09b3ef68e68'),
 
 ]
