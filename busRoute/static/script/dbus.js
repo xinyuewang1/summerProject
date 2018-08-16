@@ -327,6 +327,7 @@ function getStops() {
 
 //Functions to display/hide the stop search and route search
 function findStop() {
+    google.maps.event.trigger(map, 'resize');
     if (document.getElementById("stopSearchOptions").style.display == "none") {
         document.getElementById("stopSearchOptions").style.display = "block";
         document.getElementById("routeSearchOptions").style.display = "none";
@@ -336,6 +337,7 @@ function findStop() {
 }
 
 function findRoute() {
+    google.maps.event.trigger(map, 'resize');
     if (document.getElementById("routeSearchOptions").style.display == "none") {
         document.getElementById("routeSearchOptions").style.display = "block";
         document.getElementById("stopSearchOptions").style.display = "none";

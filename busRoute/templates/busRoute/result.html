@@ -50,10 +50,10 @@
                                 <a class="nav-link" id="trafficButton" onclick="toggleTraffic(this)" href="#">Traffic</a>
                             </div>
                             <div class="col-4 nav2 border border-white border-top-0 border-left-0 border-bottom-0">
-                                <a class="nav-link" href="#" onclick="mapReset();displayBusMarkers()" id="markersbutton">Stops</a>
+                                <a class="nav-link" href="#" onclick="displayBusMarkers()" id="markersbutton">Stops</a>
                             </div>
                             <div class="col-4 nav2">
-                                <a class="nav-link" href="#" onclick="mapReset();displayBikeMarkers()" id="bikesbutton">Bikes</a>
+                                <a class="nav-link" href="#" onclick="displayBikeMarkers()" id="bikesbutton">Bikes</a>
                             </div>
                         </div>
 
@@ -132,12 +132,12 @@
                     <h3>Route Planner</h3>
                     <div class="row">
                         <div class="col-6 text-center text-white border border-white border-top-0 border-left-0 border-bottom-0">
-                            <a href="#" onclick="mapReset();findStop()">
+                            <a href="#" onclick="findStop()">
                                 <span style="color:white;">Find Stop</span>
                             </a>
                         </div>
                         <div class="col-6 text-center text-white">
-                            <a href="#" onclick="mapReset();findRoute()">
+                            <a href="#" onclick="findRoute()">
                                 <span style="color:white">Route Info</span>
                             </a>
                         </div>
@@ -278,7 +278,7 @@
 
                             <script>
                                 function stopsNearMe() {
-
+                                    google.maps.event.trigger(map, 'resize');
                                     navigator.permissions.query({
                                             name: 'geolocation'
                                         })
@@ -625,7 +625,7 @@
 
             //This function displays the dublin Bus Markers
             function displayBusMarkers() {
-
+                google.maps.event.trigger(map, 'resize');
                 var jqxhr = $.getJSON('/dublinBusInfo',
                     function (daily) {
 
@@ -770,9 +770,6 @@
                         }
 
                     })
-                }
-                function mapReset(){
-                    google.maps.event.trigger(map, 'resize');
                 }
         </script>
 
