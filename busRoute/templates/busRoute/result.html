@@ -717,7 +717,7 @@
 
 
                 //this function will check the current status of geolocation. 
-
+                google.maps.event.trigger(map, 'resize');
                 navigator.permissions.query({
                         name: 'geolocation'
                     })
