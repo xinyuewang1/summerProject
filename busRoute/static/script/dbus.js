@@ -411,10 +411,15 @@ function displayBusMarkers() {
 
                     var lat = daily[i].lat;
                     var long = daily[i].lng;
+                    var busicon = {
+                        url: "{% static 'images/dblogo.png' %}", // url
+                        scaledSize: new google.maps.Size(40, 40), // scaled size            
+                    };
 
                     latlng = new google.maps.LatLng(lat, long);
                     var marker = new google.maps.Marker({
                         position: latlng,
+                        icon: busicon,
                         title: daily[i].name + "(" + daily[i].num + ")"
                     });
 
