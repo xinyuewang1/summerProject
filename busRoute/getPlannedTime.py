@@ -11,11 +11,7 @@ def getStopTime(route,stop):
 
 def findNextTime(timeList,t):
     '''return the closest greater time than t in timeList. '''
-    #times = np.array(pd.to_timedelta(timeList), dtype=np.datetime64)#'<M8[ns]')
-    #print(times.dtype)
-    #print(type(t),t)
-    #print(type(timeList),timeList)
-    #timeList = sorted(set(timeList))
+
     i = bisect_right(timeList,t)
     if i != len(timeList):
         #          index, value
@@ -63,9 +59,7 @@ def nextBus(t, route, stop, weekday):
                 nextBus.append(nextTime)
 
     t = datetime.strptime(t, '%H:%M')
-    #print(nextBus)
-    # print(type(nextBus[0][1]))
-    # print(nextBus[0][1])
+
     if nextBus:
         nextBus = min(nextBus, key=lambda d: d[1] - t)
         nextBus[1] = int((nextBus[1] - datetime(1900, 1, 1, 0, 0)).total_seconds())
@@ -90,12 +84,12 @@ def bus(time, route, start, end, weekday):
     :return: two planned time seconds in a day for two stops
     '''
     startStop = nextBus(time, route, start, weekday)
-    #print(startStop)
+
     data = getStopTime(route, end)
     for result in data["results"]:
         if result["destination"] == startStop[4] and result["startdayofweek"] == startStop[2] and \
                 result["enddayofweek"] == startStop[3]:
-        #if result["startdayofweek"] == startStop[2] and result["enddayofweek"] == startStop[3]:
+
             try:
                 desPlannedTime = int((datetime.strptime(result["departures"][startStop[0]],"%H:%M:%S") -
                                   datetime(1900,1,1,0,0)).total_seconds())

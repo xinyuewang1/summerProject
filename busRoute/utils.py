@@ -155,30 +155,32 @@ class Ett39A:
                     dis1 = data[self.source]
                     dis2 = data[self.dest]
                     break
+            if dis1 and dis2:
+                plannedTime = getPlannedTime.bus(self.timeStr, self.route, self.source, self.dest, self.weekday)
 
-            plannedTime = getPlannedTime.bus(self.timeStr, self.route, self.source, self.dest, self.weekday)
+                inputList1 = [identifier[2], plannedTime[0], self.precipitation, self.weekday, dis1]
+                inputList1.extend(self.timeValue())  # timeValue return a list
+                inputList1.append(self.temp)
+                if self.weekday <= 4:
+                    inputList1.extend([1, 0])
+                elif self.weekday == 5:
+                    inputList1.extend([0, 1])
+                else:
+                    inputList1.extend([0, 0])
+                inputList1.append(self.ucdTerm())
 
-            inputList1 = [identifier[2], plannedTime[0], self.precipitation, self.weekday, dis1]
-            inputList1.extend(self.timeValue())  # timeValue return a list
-            inputList1.append(self.temp)
-            if self.weekday <= 4:
-                inputList1.extend([1, 0])
-            elif self.weekday == 5:
-                inputList1.extend([0, 1])
+                inputList2 = inputList1.copy()
+                inputList2[0] = identifier[3]
+                inputList2[1] = plannedTime[1]
+                inputList2[4] = dis2
+
+                inputArr = np.array([inputList1, inputList2])
+
+                inputArr = scaler.transform(inputArr)
+                pred = model.predict(inputArr)
+                return pred[1] - pred[0], 0
             else:
-                inputList1.extend([0, 0])
-            inputList1.append(self.ucdTerm())
-
-            inputList2 = inputList1.copy()
-            inputList2[0] = identifier[3]
-            inputList2[1] = plannedTime[1]
-            inputList2[4] = dis2
-
-            inputArr = np.array([inputList1, inputList2])
-
-            inputArr = scaler.transform(inputArr)
-            pred = model.predict(inputArr)
-            return pred[1] - pred[0], 0
+                return "Fail to find distance of stops", -6  # fail to find distance.
 
         else:
             error = "Fail to map " + str(self.source) + " and " + str(self.dest) + " on the same route."

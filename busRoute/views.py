@@ -537,6 +537,8 @@ def Est39A(route, source, dest, precipitation, temp, timeStr, weekday, dateStr):
 
     if error_code == -1:
         return result
+    elif error_code == -6:
+        return result
     else:
         result_min = float("{0:.2f}".format(result / 60))
         return result_min
