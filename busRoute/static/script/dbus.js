@@ -412,7 +412,7 @@ function displayBusMarkers() {
                     var lat = daily[i].lat;
                     var long = daily[i].lng;
                     var busicon = {
-                        url: "{% static 'images/dblogo.png' %}", // url
+                        url: "static/images/dblogo.png", // url
                         scaledSize: new google.maps.Size(40, 40), // scaled size            
                     };
 
@@ -515,7 +515,7 @@ function displayBikeMarkers() {
 
 
                     var busicon = {
-                        url: "{% static 'images/dublinBikes.png' %}", // url
+                        url: "static/images/dublinBikes.png", // url
                         scaledSize: new google.maps.Size(40, 40), // scaled size            
                     };
 
