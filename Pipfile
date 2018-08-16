@@ -14,6 +14,7 @@ rq = "*"
 scikit-learn = "*"
 scipy = "*"
 pandas = "*"
+django-heroku = "*"
 
 [requires]
 python_version = "3.5.2"

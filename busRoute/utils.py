@@ -76,26 +76,20 @@ def getFirstAndLastStops3(route, stop1, stop2):
     route = route.upper()
     path = 'pickles/stopLists/'
     for l in load_obj('pickles/sortedIdList'):
-        # print("l:", l)
+
         if l.split('_')[0] == route:
             stopList = load_obj(path + l)
-            # print("stopList:", stopList)
+
             if stop1 in stopList and stop2 in stopList:
                 progrnumber1 = stopList.index(stop1) + 1
                 progrnumber2 = stopList.index(stop2) + 1
-                # print("prog numbers", progrnumber1, progrnumber1)
 
                 # index starts with 0, progrnumber starts with 1
                 if progrnumber1 < progrnumber2:
                     return stopList[0], stopList[-1], progrnumber1, progrnumber2
 
                 else:
-                    # raise Exception("Wrong input order: The bus run from "+str(progrnumber1)+" to "+str(progrnumber2))
                     return stopList[0], stopList[-1], progrnumber2, progrnumber1
-    # print("Make here.")
-    # raise FileNotFoundError("Can't match %d and %d on %s" % (stop1, stop2, route))
-
-    # return -2
 
 
 class Ett39A:
@@ -151,44 +145,17 @@ class Ett39A:
                 # print("Cannot find model for Route", self.route, "From", str(identifier[0]), "To", str(identifier[1]))
                 return -2
 
-            '''
-            routeDict = load_obj(open(os.path.join(STATIC_ROOT, 'pickles/routeDict.pkl'), 'rb'))
-            for key, route in routeDict.items():
-                if route == int(self.source):
-                    source = key
-                if route == int(self.dest):
-                    destination = key
-            
-            now = (self.time)*60
-            inputList = [int(now), int(self.weather)]
-            inputs=[0]*(destination - source)
-            i = 0
-            while source < destination:
-                inputs[i] = inputList + self.timeValue() + self.routeFind(source) + self.monthWeek()
-                source += 1
-                i += 1
-            return model.predict(inputs).sum()
-            '''
-            # Get destination headsign and distance
-
-            #headsign, dis1, dis2 = None, None, None
             dis1, dis2 = None, None
 
             filPath = os.path.join(STATIC_ROOT, 'pickles/stopDicts')
             for d in os.listdir(filPath):
                 if d.startswith(str(self.route) + '_' + str(identifier[0]) + '_' + str(identifier[1])):
-                    # headsign = d.split('_')[-1][:-4]
                     d = d.rsplit('.', 1)[0]
                     data = load_obj('pickles/stopDicts/' + d)
                     dis1 = data[self.source]
                     dis2 = data[self.dest]
                     break
-            # print(headsign)
-            # get time list
-            # periodList = self.timeValue()
-            # print(periodList)
 
-            #plannedTime = getPlannedTime.bus(self.timeStr, self.route, self.source, self.dest, self.weekday, headsign)
             plannedTime = getPlannedTime.bus(self.timeStr, self.route, self.source, self.dest, self.weekday)
 
             inputList1 = [identifier[2], plannedTime[0], self.precipitation, self.weekday, dis1]
@@ -201,42 +168,22 @@ class Ett39A:
             else:
                 inputList1.extend([0, 0])
             inputList1.append(self.ucdTerm())
-            # print(inputList)
+
             inputList2 = inputList1.copy()
             inputList2[0] = identifier[3]
             inputList2[1] = plannedTime[1]
             inputList2[4] = dis2
-            #print(inputList1, inputList2)
+
             inputArr = np.array([inputList1, inputList2])
-            # print(inputArr)
+
             inputArr = scaler.transform(inputArr)
             pred = model.predict(inputArr)
             return pred[1] - pred[0], 0
 
         else:
             error = "Fail to map " + str(self.source) + " and " + str(self.dest) + " on the same route."
-            # raise Exception(error)
+
             return error, -1
-
-    # def monthWeek(self):
-    #     monthList = [0] * 5
-    #     dayList = [0] * 6
-    #     months = ['Feb', 'Mar', 'Apr', 'May', 'Jun']
-    #     if self.month == 'Jan':
-    #         pass
-    #     else:
-    #         monthList[months.index(self.month)]
-    #     days = ['Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-    #     if self.day == 'Monday':
-    #         pass
-    #     else:
-    #         dayList[days.index(self.day)]
-    #     return monthList + dayList
-
-    # def routeFind(self, current):
-    #     routeList = [0] * 71
-    #     routeList[current - 1] = 1
-    #     return routeList
 
 
 # -------------------------Test set---------------
@@ -245,73 +192,3 @@ class Ett39A:
 # ett = Ett39A('67', 1444, 3913, 0, 18, "16:45", 3, "7/26/2018")
 # print(ett.estimatedTime())
 # print("Time:",time.time()-tic)
-
-# class Ann39A:
-
-#     def __init__(self, source, dest, plannedTime, rain, day, distanceTravelled, temp, timeSec, month, date):
-#         self.source = source
-#         self.dest = dest
-#         self.plannedTime = plannedTime
-#         self.time = timeSec
-#         self.rain = rain
-#         self.temp = temp
-#         self.distanceTravelled = distanceTravelled
-#         self.day = day
-#         self.month = month
-#         self.date = date
-#         routeDict = pickle.load(open('pickles/routeDict.pkl', 'rb'))
-#         for key, route in routeDict.items():
-#             if route == int(self.source):
-#                 self.sourceK = key
-#             if route == int(self.dest):
-#                 self.destK = key
-#         distanceDict = pickle.load(open('','rb'))
-#         for key, distance in distanceDict.items():
-#             if key == int(self.source):
-#                 self.sourceDist = distance
-#             if key == int(self.dest):
-#                 self.destDist = distance
-
-#     def checkDirection(self):
-#         if self.sourceK <= self.destK:
-#             return True
-#         elif self.sourceK > self.destK:
-#             return False
-
-#     def peakTimes(self):
-#         peakList = [0]*7
-#         for i in range(0, 7):
-#             if int(self.time) > 14400+(i*10800) && int(self.time) <= 25200+(i*10800):
-#                 peakList[i] = 1
-#         return peakList
-
-#     def isWeekendOrTerm(self):
-#         weekOrTermList = [0]*3
-#         weekday = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
-#         if self.day in weekday:
-#             weekOrTermList[0] = 1
-#         else:
-#             weekOrTermList[1] = 1
-#         if self.date >= '2016-01-25' && self.date <= '2016-04-29' 
-#             || self.date >= '2016-05-09' && self.date <= '2016-05-21'
-#             || self.date >= '2017-01-23' && self.date <= '2016-04-28'
-#             || self.date >= '2016-05-08' && self.date <= '2016-05-19':
-#             weekOrTermList[3] = 1
-#         return weekOrTermList
-
-
-#     def estimatedTime(self):
-#         if self.checkDirection() == True:
-#             with open('ann.pkl', 'rb') as f:
-#                 model = pickle.load(f)
-#         else:
-#             with open('ann.pkl', 'rb') as f:
-#                 model = pickle.load(f)
-#         if self.sourceK == 1:
-#             modelIn = [self.destK, float(self.rain), int(self.day), self.distanceTravelled] + self.peakTimes() + [self.temp] + self.isWeekendOrTerm()
-#             return model.predict(modelIn)
-#         else:
-#             modelInS = [self.sourceK, float(self.rain), int(self.day), self.distanceTravelled] + self.peakTimes() + [self.temp] + self.isWeekendOrTerm()
-#             modelInD = [self.destK, float(self.rain), int(self.day), self.distanceTravelled] + self.peakTimes() + [self.temp] + self.isWeekendOrTerm()
-
-#             return model.predict(modelInS) - model.predict(modelInD)
