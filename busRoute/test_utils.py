@@ -62,5 +62,3 @@ class TestUtils(unittest.TestCase):
 
         # test for env
         print(os.environ.get('googleapi'))
-
-

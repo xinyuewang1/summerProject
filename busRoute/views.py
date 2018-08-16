@@ -15,6 +15,7 @@ import csv
 import time
 from django.conf import settings
 import pandas as pd
+from django.views.decorators.http import require_POST
     
 def problemRend(message):
     form = routeForm()
@@ -24,29 +25,6 @@ def problemRend(message):
 
     return context
     
-class homeView(generic.TemplateView):
-
-    '''Class to render index.html. Includes functions:
-        get: Loads the page
-        post: Renders the results page for a route plan
-    '''
-
-    template_name = "busRoute/index.html" 
-
-    def get(self,request):
-        form = routeForm()
-        weather = query_weather()
-        context = {'weather': weather,'form': form}
-        return render(request, self.template_name, context)
-
-    
-    def post(self, request):
-        form = routeForm(request.POST)
-        args = postFunc(request, form)
-
-        return render(request, "busRoute/result.html", args)
-
-
 class plannerView(generic.TemplateView):
     '''Class to render planner.html page. This is the main page of the web applications with the following functions:
         get: Loads the page
@@ -95,6 +73,11 @@ class resultView(generic.TemplateView):
         form = routeForm(request.POST)
         args = postFunc(request, form)
 
+        if 'problem' in args:
+            prob = args['problem']
+            b = problemRend(prob)
+            return render(request, "busRoute/problem.html", b)
+
         return render(request, self.template_name, args)
 
 class problemView(generic.TemplateView):
@@ -134,6 +117,11 @@ class tourismView(generic.TemplateView):
         form = routeForm(request.POST)
         args = postFunc(request, form)
 
+        if 'problem' in args:
+            prob = args['problem']
+            b = problemRend(prob)
+            return render(request, "busRoute/problem.html", b)
+
         return render(request,"busRoute/result.html" , args)
     
 def postFunc(request, form):
@@ -143,6 +131,14 @@ def postFunc(request, form):
         destination_address = form.cleaned_data['destination']
         depart_time = form.cleaned_data['departTime']
         depart_date = form.cleaned_data['departDate']
+
+        if dateTimeCheck(depart_date,depart_time) == -1:
+            problem = {'problem': "Error please enter a valid date/time format e.g. 10:30 and 08/15/2018"}
+            return problem
+
+        if timeConstraints(depart_time) != 1:
+            problem = {'problem': "Unfortunately there are no buses available at the time you have selected. Buses will resume at approximately 06:30"}
+            return problem
 
 
         #Check for valid time inputs for times that have not already passed and are within a week of current time
@@ -298,27 +294,36 @@ def bikes_query(request):
     """ 
     Connects to the JCDecaux API and returns the dublin bikes information 
     """
+    
+    if request.is_ajax():
+        url = 'https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey='+os.environ.get('jcdecauxi') # the website containing the data
+    
+        web_data = requests.get(url)
+
+        if web_data.status_code == 200:
+            data = json.loads(web_data.text)
+            results = []
+            for i in range(104):
+            
+                Info= {'lat': data[i]['position']['lat'],
+                        'lng': data[i]['position']['lng'], 
+                        'name': data[i]['name']
+
+                    }
         
-    url = 'https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey='+os.environ.get('jcdecauxi') # the website containing the data
-   
-    web_data = requests.get(url)
+                dbInfo = json.dumps(Info)    
+                loadedBikes = json.loads(dbInfo)
+                results.append(loadedBikes)
 
-    if web_data.status_code == 200:
-        data = json.loads(web_data.text)
-        results = []
-        for i in range(104):
-           
-            Info= {'lat': data[i]['position']['lat'],
-                     'lng': data[i]['position']['lng'], 
-                     'name': data[i]['name']
+        return JsonResponse(results, safe=False)
+    
+    else: 
+                results = 'fail'
+                return HttpResponse(results)
 
-                }
-     
-            dbInfo = json.dumps(Info)    
-            loadedBikes = json.loads(dbInfo)
-            results.append(loadedBikes)
 
-    return JsonResponse(results, safe=False)
+
+        
 
 def DublinBusInfo(request):
     
@@ -326,31 +331,36 @@ def DublinBusInfo(request):
     This function creates a dictionary from the dublin bus data located inside Routes.csv to be accessed on the page for the markers
     '''
 
-    results = []
+    if request.is_ajax():
 
-    with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r', encoding='utf-8') as f:
+        results = []
 
-        reader = csv.reader(f)
+        with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r', encoding='utf-8') as f:
 
-        for i in reader:
-               
+            reader = csv.reader(f)
+
+            for i in reader:
+                
+                
+                    Info= {'lat': i[2],
+                            'lng':i[3],
+                            'name': i[1],
+                            'num': i[0]
+                        }
+
+                    dbInfo = json.dumps(Info) 
+                    loadedBus = json.loads(dbInfo)
+                    results.append(loadedBus)
             
-                Info= {'lat': i[2],
-                        'lng':i[3],
-                        'name': i[1],
-                        'num': i[0]
-                    }
+        return JsonResponse(results, safe=False)
 
-            
-                dbInfo = json.dumps(Info) 
-                loadedBus = json.loads(dbInfo)
-                results.append(loadedBus)
-        
-    return JsonResponse(results, safe=False)
+    else: 
+            results = 'fail'
+            return HttpResponse(results)
           
 def DublinBus():
     '''
-    This function creates a dictionary from the dublin bus data located inside Routes.csv to be accessed on the page for the markers
+    This function creates a dictionary from the dublin bus data to be called for model functionality
     '''
 
     results = []
@@ -381,52 +391,63 @@ def Db(request, stopid):
     This accesses the lattitude and longtitude of the chosen source stop for the walk me function
     '''
 
-    results = []
-    
+    if request.is_ajax():
 
-    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r', encoding='utf-8') as f:
+        results = []
+        
 
-        reader = pd.read_csv(f)
-        lat = reader.loc[reader['stopid'] == stopid, 'stop_lat'].values[0]
-        lon = reader.loc[reader['stopid'] == stopid, 'stop_lon'].values[0]
-    
+        with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r', encoding='utf-8') as f:
 
-        Info= {'lat': lat,
-                        'lng':lon
-                       
-                    }
-        dbInfo = json.dumps(Info) 
-        loadedBus = json.loads(dbInfo)
-        results.append(loadedBus)
+            reader = pd.read_csv(f)
+            lat = reader.loc[reader['stopid'] == stopid, 'stop_lat'].values[0]
+            lon = reader.loc[reader['stopid'] == stopid, 'stop_lon'].values[0]
+        
+
+            Info= {'lat': lat,
+                            'lng':lon
+                        
+                        }
+            dbInfo = json.dumps(Info) 
+            loadedBus = json.loads(dbInfo)
+            results.append(loadedBus)
 
        
-    return JsonResponse(results, safe=False)
+        return JsonResponse(results, safe=False)
+
+    else: 
+            results = 'fail'
+            return HttpResponse(results)
 
                     
 def GenBusData(request): 
     '''
     This renders the data to a URL that is used with the AJAX autocomplete function
     '''
+    if request.is_ajax():
 
-    results = []
+        results = []
 
-    with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r', encoding='utf-8') as f:
+        with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r', encoding='utf-8') as f:
 
-        reader = csv.reader(f)
+            reader = csv.reader(f)
 
-        for i in reader:
-               
-                Info= {'lat': i[2],
-                        'lng':i[3],
-                        'name': i[1],
-                        'num': i[0]
-                    }
+            for i in reader:
+                
+                    Info= {'lat': i[2],
+                            'lng':i[3],
+                            'name': i[1],
+                            'num': i[0]
+                        }
 
-                dbInfo = json.dumps(Info) 
-                loadedBus = json.loads(dbInfo)
-                results.append(loadedBus)
-      
-    return JsonResponse(results, safe=False) 
+                    dbInfo = json.dumps(Info) 
+                    loadedBus = json.loads(dbInfo)
+                    results.append(loadedBus)
+        
+        return JsonResponse(results, safe=False) 
+     
+    else: 
+            results = 'fail'
+            return HttpResponse(results)
 
 
 def stopNearMe(request,lat, lng):
@@ -435,25 +456,31 @@ def stopNearMe(request,lat, lng):
     '''this function is linked to a jQuery which takes the users current lat and long from the geolocation
     This passes this into the google nearby search which returns a list of bus stops near the user. '''
 
-    url = requests.get(f"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={lat},{lng}&radius=500&type=bus_station&key="+os.environ.get('googleapi'))
-    url = url.json()
+    if request.is_ajax():
 
-    x = url['results']
-    results = []
-    for i in x:
+        url = requests.get(f"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={lat},{lng}&radius=500&type=bus_station&key="+os.environ.get('googleapi'))
+        url = url.json()
 
-        Info= {'name': i['name'],
-                'lat': i['geometry']['location']['lat'],
-                'long': i['geometry']['location']['lng']
-                    
-                }
+        x = url['results']
+        results = []
+        for i in x:
 
-        dbInfo = json.dumps(Info) 
-        stopInfo = json.loads(dbInfo)
-        results.append(stopInfo)
-      
+            Info= {'name': i['name'],
+                    'lat': i['geometry']['location']['lat'],
+                    'long': i['geometry']['location']['lng']
+                        
+                    }
 
-    return JsonResponse(results, safe=False)
+            dbInfo = json.dumps(Info) 
+            stopInfo = json.loads(dbInfo)
+            results.append(stopInfo)
+        
+
+        return JsonResponse(results, safe=False)
+
+    else: 
+            results = 'fail'
+            return HttpResponse(results)
 
 
 def routeDirectionServices(request):
@@ -461,25 +488,31 @@ def routeDirectionServices(request):
 
     '''This accesses the routes and directions from a CSV and passs it to a URL that is connected to an AJAX autocomplete function for the Route Search'''
 
-    results = []
-  
-    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r', encoding='utf-8') as f:
+    if request.is_ajax():
 
-        reader = csv.reader(f)
-        
+        results = []
+    
+        with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r', encoding='utf-8') as f:
 
-        for i in reader:
-            Info= {
-                        'route': i[5]
-                    }
-            if Info in results:
-                pass
-            else:
-                dbInfo = json.dumps(Info) 
-                routeInfo = json.loads(dbInfo)
-                results.append(routeInfo)
-        
-    return JsonResponse(results, safe=False) 
+            reader = csv.reader(f)
+            
+
+            for i in reader:
+                Info= {
+                            'route': i[5]
+                        }
+                if Info in results:
+                    pass
+                else:
+                    dbInfo = json.dumps(Info) 
+                    routeInfo = json.loads(dbInfo)
+                    results.append(routeInfo)
+            
+        return JsonResponse(results, safe=False) 
+
+    else: 
+            results = 'fail'
+            return HttpResponse(results)
 
 
 def get_route_data(request, route):
@@ -487,37 +520,39 @@ def get_route_data(request, route):
 
     ''''This backend function takes an argument from a url (a route entered in the route info search option) and uses it to access the stops on that route using pandas'''
 
+    if request.is_ajax():
 
-    results = []
-    
 
-    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r', encoding='utf-8') as f:
-
-        reader = pd.read_csv(f)
-        x = reader.loc[reader['direction'] == route ]
+        results = []
         
-        if not x.empty: 
-            for index, row in x.iterrows(): 
-                stop = row['stopid']
-                lat = row['stop_lat']
-                lng = row['stop_lon']
-                name = row['stop_name']
 
-                Info= {'lat': lat,
-                                'lng': lng,
-                                'name': name,
-                                'id': stop
-                    }
+        with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r', encoding='utf-8') as f:
 
-                dbInfo = json.dumps(Info) 
-                routeData = json.loads(dbInfo)
-                results.append(routeData)
-        else: 
+            reader = pd.read_csv(f)
+            x = reader.loc[reader['direction'] == route ]
+            
+            if not x.empty: 
+                for index, row in x.iterrows(): 
+                    stop = row['stopid']
+                    lat = row['stop_lat']
+                    lng = row['stop_lon']
+                    name = row['stop_name']
 
+                    Info= {'lat': lat,
+                                    'lng': lng,
+                                    'name': name,
+                                    'id': stop
+                        }
+
+                    dbInfo = json.dumps(Info) 
+                    routeData = json.loads(dbInfo)
+                    results.append(routeData)
+    
+            return JsonResponse(results, safe=False)
+
+    else: 
             results = 'fail'
-            print(results)
-
-        return JsonResponse(results, safe=False)
+            return HttpResponse(results)
 
 
 def Est39A(route, source, dest, precipitation, temp, timeStr, weekday, dateStr):
@@ -692,10 +727,33 @@ def query_rain_weather(time, date):
             return rain, temp
 
     raise Exception("Rain and temperature cannot be set for past time")
+
+
+def dateTimeCheck(date,time):
+    #date = "mm/dd/yyyy"
+    #time = "10:30"
+
+    try:
+
+        month, day, year = (int(x) for x in date.split('/'))
+        hour, minute = (int(y) for y in time.split(':'))
+        
+        if month > 0 and month <=12 and day > 0 and day <=31 and len(str(year)) == 4 and hour >= 0 and hour < 24 and minute >= 0 and minute < 60:
+            return 1
+        else:
+            return -1
+    except:
+        return -1
     
 
 def getRoute(request, bus):
-    return JsonResponse(bus, safe=False)
+
+    if request.is_ajax():
+        return JsonResponse(bus, safe=False)
+    
+    else: 
+            results = 'fail'
+            return HttpResponse(results)
 
 
 
@@ -846,7 +904,6 @@ def findLatLong(location):
     except:
         address = location
     
-
     buses = DublinBus()
     if 'stop_id' in locals():
         for b in buses:
@@ -862,7 +919,6 @@ def findLatLong(location):
     raise Exception("Unable to find this stop number")
 
 #####Error Pages########
-
 def handler400(request):
     response = render(request, '400.html', context={})
     response.status_code = 400
@@ -965,9 +1021,14 @@ def loaderIO(request):
     f.close()
     return HttpResponse(file_content, content_type="text/plain")
 
-
-
-                
+def timeConstraints(time):
+    #Function to check the input isn't before 6am
+    
+    hour, minute = (int(y) for y in time.split(':'))
+    if hour >= 6:
+        return 1
+    else:
+        return -1  
 
 
 

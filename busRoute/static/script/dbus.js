@@ -10,9 +10,9 @@ function myMap() {
     infoWindow = new google.maps.InfoWindow;
 
     //this code is reponsible for finding and displaing the users current location. 
-
+    //This essenially casuses the user to be prompted for their current location
     if (navigator.geolocation) {
-
+        //the getCurrentLocation function is repsonsible for accessing the users current location. 
         navigator.geolocation.getCurrentPosition(function (position) {
             pos = {
                 lat: position.coords.latitude,
@@ -148,11 +148,11 @@ $(document).ready(function () {
 //Function to swap the autocomplete in the form between the stop numbers and the stop addresses.
 function swapSearch() {
 
-    //Checks which option is selected between searching by stops or addresses
+    //Checks which option is selected between searching by stops or addresses by which background is black. 
     var c = document.getElementById("stopSearch").style.backgroundColor;
 
     if (c != "black") {
-        //Changes the colour of the tab and placeholder of the search form
+        //Changes the colour of the tab and placeholder of the search form to search by address. 
         document.getElementById("stopSearch").style.backgroundColor = "black";
 
         document.getElementById("addSearch").style.backgroundColor = "#00743F";
@@ -160,16 +160,15 @@ function swapSearch() {
 
         //This code turns off the autocomplete function to make sure they results from the stop autocomplete do not appear under the general address search. 
 
-        $( "#id_source" ).autocomplete({
-            disabled: true})
+        $("#id_source").autocomplete({
+            disabled: true
+        })
 
-            $( "#id_destination" ).autocomplete({
-                disabled: true})
-        //Changes the autocomplete in the source to address based on name
-        //     $('input[name=source]').autocomplete({
+        $("#id_destination").autocomplete({
+            disabled: true
+        })
 
-        //Autocomplete for general Address Input from Google in the Destination Input
-
+        //Autocomplete for general Address Input from Google in the Source and Destination Input
 
         sourceAutocomplete = new google.maps.places.Autocomplete(document.getElementById(
             'id_source'))
@@ -198,31 +197,34 @@ function swapSearch() {
 
 
     } else {
-        //Changes the colour of the tab and placeholder of the search form
+        //Changes the colour of the tab and placeholder of the search form to search by stops. 
         document.getElementById("addSearch").style.backgroundColor = "black";
 
         document.getElementById("stopSearch").style.backgroundColor = "#00743F";
         document.getElementById('id_source').placeholder = 'Source Stop..';
 
+        //This enables the autocomplete function once when the user choses to search by address
+        //This is important as the stops autocomplete needs to be disabled when the user chosen to search by address. 
+        $("#id_source").autocomplete({
+            disabled: false
+        })
 
-        $( "#id_source" ).autocomplete({
-            disabled: false})
+        $("#id_destination").autocomplete({
+            disabled: false
+        })
 
-            $( "#id_destination" ).autocomplete({
-                disabled: false})
-
-        //This is needed to remove the google maps api before changing it to search by roots. 
+        //This is needed to disable the google maps api before changing it to search by roots. 
         if (sourceAutocomplete !== undefined && destinationAutocomplete != undefined) {
             google.maps.event.clearInstanceListeners(sourceAutocomplete);
             google.maps.event.clearInstanceListeners(destinationAutocomplete);
             $(".pac-container").remove();
 
 
-            //Autocomplete for Stop Addresses in the Destination Input
-
+            //Autocomplete for Stop numbers 
+            //This ajax function accesses the data passed to the url provided by the backend. 
             $.ajax({
                 type: "GET",
-                url: "RouteInfo",
+                url: "dublinBusInfo",
                 dataType: "json",
 
                 success: function (data) {
@@ -230,14 +232,15 @@ function swapSearch() {
                 }
             });
 
-
-
+            //this creates the array of information from the url. 
             function createArray(Data) {
 
                 results = [];
                 for (var i = 0; i < Data.length; i++) {
                     results.push(Data[i].num);
                 }
+
+                //This initiates the autocomplete and returns that information that matches the user input.  
                 $("#id_destination, #id_source").autocomplete({
                     source: results,
                     minLength: 2,
@@ -249,17 +252,16 @@ function swapSearch() {
 
 };
 
-
-//This piece of code allows the getStops function to be called when the user hits the enter key. s
 var markers = [];
 
 function getStops() {
 
     //this function is responsible for displaying the route information
-    //It uses jQuery to intitialise and pass the value to the url and to grab the data that is returned by get_route_info
+    //It uses jQuery to intitialise and pass the value to the url and to grab the data that is returned by get_route_info views function. 
     if (markers)
 
-        //this checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
+        //This checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
+
         for (var i = 0; i < markers.length; i++) {
 
             markers[i].setMap(null);
@@ -316,9 +318,6 @@ function getStops() {
 
                 markers.push(marker);
 
-                // <!-- 
-                //                             var path = poly.getPath();
-                //                             path.push(myLatLng); -->
             }
 
             table += "</tbody></table>";
@@ -328,6 +327,7 @@ function getStops() {
 
 //Functions to display/hide the stop search and route search
 function findStop() {
+    google.maps.event.trigger(map, 'resize');
     if (document.getElementById("stopSearchOptions").style.display == "none") {
         document.getElementById("stopSearchOptions").style.display = "block";
         document.getElementById("routeSearchOptions").style.display = "none";
@@ -337,6 +337,7 @@ function findStop() {
 }
 
 function findRoute() {
+    google.maps.event.trigger(map, 'resize');
     if (document.getElementById("routeSearchOptions").style.display == "none") {
         document.getElementById("routeSearchOptions").style.display = "block";
         document.getElementById("stopSearchOptions").style.display = "none";
@@ -345,23 +346,20 @@ function findRoute() {
     }
 }
 
+//Autocomplete for stop search on page load
 
+$("#id_souce, #id_destination").ready(function () {
+    $.ajax({
+        type: "GET",
+        url: "dublinBusInfo",
+        dataType: "json",
 
-//autocomplete for stop search on page load
-
-$("#id_souce, #id_destination").ready(function (){
-$.ajax({
-    type: "GET",
-    url: "RouteInfo",
-    dataType: "json",
-
-    success: function (data) {
-        createArray(data);
-    }
-});
+        success: function (data) {
+            createArray(data);
+        }
+    });
 
 })
-
 
 function createArray(Data) {
 
@@ -378,20 +376,21 @@ function createArray(Data) {
 
 
 //Shows the loading gif when the submit button is initally pressed
-function showLoadGif(){
+function showLoadGif() {
     var x = document.forms["routes"]["source"].value;
     var y = document.forms["routes"]["destination"].value;
     var z = document.forms["routes"]["departTime"].value;
-    
+
     if (x != "" && y != "" && z != "") {
         document.getElementById("load_screen").style.display = "block"
     }
 }
-
+//This is used as a semaphore to help the onclick button functionality to add/remove markers. 
 var busMarkers = 0;
-
+//The google markers are added to this array. 
 var markBus = []
 
+//This function displays the dublin Bus Markers
 function displayBusMarkers() {
 
     var jqxhr = $.getJSON('/dublinBusInfo',
@@ -399,22 +398,28 @@ function displayBusMarkers() {
             var infoWindow = new google.maps.InfoWindow;
             var infoBikes = new google.maps.InfoWindow;
 
-
+            //checks the value of the bus Markers. Initially the value will be zero. 
             if (busMarkers == 0) {
 
+                //this variable is the markers clustering images. 
                 var imageMarker = markerImages;
 
-                //this function displays the dublin bikes markers
+                //this function displays the dublin bus markers by iterating over the data returned in the jQuery. 
 
                 for (var i = 0; i < daily.length; i++) {
 
 
                     var lat = daily[i].lat;
                     var long = daily[i].lng;
+                    var busicon = {
+                        url: "static/images/dblogo.png", // url
+                        scaledSize: new google.maps.Size(40, 40), // scaled size            
+                    };
 
                     latlng = new google.maps.LatLng(lat, long);
                     var marker = new google.maps.Marker({
                         position: latlng,
+                        icon: busicon,
                         title: daily[i].name + "(" + daily[i].num + ")"
                     });
 
@@ -426,36 +431,45 @@ function displayBusMarkers() {
                         infoBikes.setContent(this.title);
                     })
 
-
-
                     google.maps.event.addListener(marker, 'click', (function (marker, i) {
                         return function () {
-                         
-                        markerName = daily[i].name
-                        markerNum = daily[i].num
-                        $(".modal-body #markerName").text(markerName + " " + markerNum);
-                        $modal = $('#MarkersModal');
-                        $modal.modal('show');
-                        
+
+                            markerName = daily[i].name
+                            markerNum = daily[i].num
+                            $(".modal-body #markerName").text(markerName + " " + markerNum);
+                            $modal = $('#MarkersModal');
+                            $modal.modal('show');
+
                         }
                     })(marker, i));
 
                 }
 
+                //this function clusters the markers. 
+
                 markerCluster = new MarkerClusterer(map, markBus, {
                     imagePath: imageMarker
                 });
 
+                //onclick the markers will now be displayed so the button name is changed. 
+
                 document.getElementById("markersbutton").innerHTML = "Hide Stops";
+                //The bus markers variable is incremented so on the next click, the if statement above is no longer satisfied. 
+
                 busMarkers++;
-                
+
 
             } else {
 
-                //this checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
+                // The else statement occurs when the button is clicked to "Hide Stops" after the above functionality has been implemented. 
+
+                //This checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
                 markerCluster.clearMarkers();
+                //the array is set to null. 
                 markBus = []
+                //the button name is changed back. 
                 document.getElementById("markersbutton").innerHTML = "Stops";
+                //The variable is decremented so the if statement will be satisfied during another click to then show the stops. 
                 busMarkers--;
 
             }
@@ -464,9 +478,16 @@ function displayBusMarkers() {
         });
 
 };
-                                               
+
+//This is used as a semaphore to help the onclick button functionality to add/remove markers. 
+
 var bikeMarkers = 0;
+
+//The google markers are added to this array. 
+
 var markBikes = []
+
+//This function displays the dublin Bike Markers
 
 function displayBikeMarkers() {
 
@@ -475,7 +496,11 @@ function displayBikeMarkers() {
             var infoWindow = new google.maps.InfoWindow;
             var infoBikes = new google.maps.InfoWindow;
 
+            //checks the value of the bike Markers. Initially the value will be zero. 
+
             if (bikeMarkers == 0) {
+
+                //this variable is the markers clustering images. 
 
                 var imageMarker = markerImages;
 
@@ -490,7 +515,7 @@ function displayBikeMarkers() {
 
 
                     var busicon = {
-                        url: "{% static 'images/dublinBikes.png' %}", // url
+                        url: "static/images/dublinBikes.png", // url
                         scaledSize: new google.maps.Size(40, 40), // scaled size            
                     };
 
@@ -512,106 +537,50 @@ function displayBikeMarkers() {
                     markBikes.push(marker);
                 }
 
+                //this function clusters the markers. 
+
                 markerCluster1 = new MarkerClusterer(map, markBikes, {
                     imagePath: imageMarker
                 });
 
+                //onclick the markers will now be displayed so the button name is changed to a hide them option. 
+
                 document.getElementById("bikesbutton").innerHTML = "Hide Bikes";
+
+                //The bus markers variable is incremented so on the next click, the if statement above is no longer satisfied. 
                 bikeMarkers++;
 
             } else {
 
+                // The else statement occurs when the button is clicked to "Hide Stops" after the above functionality has been implemented. 
+
+
                 //this checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
                 markerCluster1.clearMarkers();
+
+                //the array is set to null. 
                 markBikes = []
 
+                //the button name is changed back to provide an option to show the bikes. 
+
                 document.getElementById("bikesbutton").innerHTML = "Bikes";
+                //The variable is decremented so the if statement will be satisfied during another click to then show the stops. 
                 bikeMarkers--;
 
             }
 
 
         });
-
 };
 
 markers = [];
-
-function getStops() {
-
-
-    //this function is responsible for displaying the route information
-    //It uses jQuery to intitialise and pass the value to the url and to grab the data that is returned by get_route_info
-
-    if (markers)
-        //this checks to see if there are markers on the map, if there are markers it removes them before the function happens to add the new ones. 
-        for (var i = 0; i < markers.length; i++) {
-
-            markers[i].setMap(null);
-
-        }
-
-    var jqxhr = $.getJSON('/details/' + document.getElementById("routeSearch").value +
-        '/',
-        function (daily) {
-
-            if (daily == "fail") {
-                $modal = $('#routeModal');
-                $modal.modal('show');
-                $("#routeSearch").css('background-color', 'red');
-            } else {
-                var table = "";
-                table =
-                    "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped overflow-y: hidden'>";
-                table += "<tr><thead>";
-                table += "<th>Stop</th>";
-                table += "</tr></thead><tbody>";
-
-                for (var i = 0; i < daily.length; i++) {
-
-                    table += "<tr>";
-                    table += "<td>" + daily[i].name + "(" + daily[i].id +
-                        ")" + "</td>";
-                    table += "</tr>";
-
-
-                    infoWindow = new google.maps.InfoWindow;
-                    infoBus = new google.maps.InfoWindow;
-
-                    //this function displays the dublin bus markers
-                    myLatLng = new google.maps.LatLng(parseFloat(daily[i].lat),
-                        parseFloat(daily[i].lng))
-                    marker = new google.maps.Marker({
-                        position: myLatLng,
-                        map: map,
-                        title: daily[i].name + " " + "(" + daily[i].id +
-                            ")"
-                    });
-
-                    marker.addListener('mouseover', function () {
-                        infoBus.open(map, this);
-                        infoBus.setContent(this.title);
-                    })
-
-                    markers.push(marker);
-                }
-
-
-
-                table += "</tbody></table>";
-                document.getElementById("RouteDiv").innerHTML = table;
-
-            }
-        })
-};
 
 
 function placeSearch() {
 
     //the below function used a combination of the above two efforts. 
 
-
-    //This function is responsible for allowing the user to search for a general address
+    //This function is responsible for allowing the user to search for a general address in the stop info search option. 
     //the map will then zoom in on that place
     //they can then chose to view the markers in that area.
 
@@ -645,8 +614,9 @@ function placeSearch() {
     });
 };
 
- //Autocomplete for Route Search this is paired with an onfocus function to watch for a user click into the box. 
- function routeSearch() {
+//Autocomplete for Route Search this is paired with an onfocus function to watch for a user click into the box. 
+//Gets the data. 
+function routeSearch() {
     $(document).ready(function () {
         $.ajax({
             type: "GET",
@@ -659,7 +629,7 @@ function placeSearch() {
         });
     });
 
-
+    //turms the data into an array to be passed into the autocomplete. 
     function createArray(Data) {
 
         var results = [];
@@ -671,6 +641,8 @@ function placeSearch() {
 
 
         }
+
+        //the array of data is passed in to the autocomplete to provide matches to user input. 
         $("#routeSearch").autocomplete({
             source: results,
             minLength: 1,
@@ -706,91 +678,6 @@ function HandleResponse(name, num) {
 
 }
 
-function generateQuery() {
-    //this function gets real time information for the stop that is selected.
-    var jqxhr = $.getJSON(
-        'https://data.smartdublin.ie/cgi-bin/rtpi/realtimebusinformation?stopid=' +
-        "{{ source}}" + '&format=json',
-        function (daily) {
-            var now = new Date();
-            var temp = new Date();
-
-            var table = "";
-            table =
-                "<table class = 'table table-hover table-condensed table-sm table-bordered table-striped' style = 'overflow-x:scroll;'>";
-            table += "<tr><thead>";
-            table += "<th>Route</th>";
-            table += "<th>Destination</th>";
-            table += "<th>Arrival Time</th>";
-            table += "<th>Expected</th>";
-            table += "</tr></thead><tbody>";
-            x = daily.results;
-            for (var i = 0; i < x.length; i++) {
-
-                var ti = x[i].arrivaldatetime.slice(11, );
-
-                var array = ti.split(":");
-                temp.setHours(array[0]);
-                temp.setMinutes(array[1]);
-                temp.setSeconds(array[2]);
-                var difference = new Date();
-                difference.setTime(temp - now);
-                var m = difference.getMinutes();
-
-                if (difference.getSeconds() >= 30) {
-                    m = m + 1;
-                };
-                if (m == 0) {
-                    m = "Due"
-                } else {
-                    m = String(m) + " mins"
-                };
-
-                table += "<tr>";
-                table += "<td>" + x[i].route + "</td>";
-                table += "<td>" + x[i].destination + "</td>";
-                table += "<td>" + ti.slice(0, 5) + "</td>";
-                table += "<td>" + m + "</td>";
-                table += "</tr>";
-            }
-            table += "</tbody></table><br>";
-            document.getElementById("realtimeTable").innerHTML = table;
-
-        })
-};
-
-function stopsNearMe() {
-    console.log(pos.lat);
-    console.log(pos.lng);
-    var jqxhr = $.getJSON('/nearestBus/' + pos.lat + '/' + pos.lng,
-        document.getElementById("id_source").value + '&format=json',
-        function (daily) {
-            for (var i = 0; i < daily.length; i++) {
-                var name = daily[i].name;
-                var lat = parseFloat(daily[i].lat);
-                var long = parseFloat(daily[i].long);
-                infoWindow = new google.maps.InfoWindow;
-                infoBus = new google.maps.InfoWindow;
-                //this function displays the dublin bus markers
-                myLatLng = new google.maps.LatLng(lat, long)
-                marker = new google.maps.Marker({
-                    position: myLatLng,
-                    map: map,
-                    title: name
-                });
-                marker.addListener('mouseover', function () {
-                    infoBus.open(map, this);
-                    infoBus.setContent(this.title);
-                })
-                marker.addListener('click', function () {
-                    document.getElementById("id_source").value = this.title;
-                })
-                markers.push(marker);
-            }
-        })
-}
-
-
 
 // References:
 //https://github.com/jonthornton/jquery-timepicker 
@@ -802,8 +689,8 @@ function stopsNearMe() {
 //https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-multiple-countries
 
 //toggling the autocomplete on and off
- // https://stackoverflow.com/questions/9828856/how-to-toggle-the-google-maps-autocomplete-on-and-off
+// https://stackoverflow.com/questions/9828856/how-to-toggle-the-google-maps-autocomplete-on-and-off
 
 
 //Geolocation
- //https://developers.google.com/maps/documentation/javascript/examples/map-geolocation
+//https://developers.google.com/maps/documentation/javascript/examples/map-geolocation

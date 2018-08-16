@@ -1,177 +1,260 @@
+{% extends 'base.html' %} {% load staticfiles %} {% block body %}
+<script src="{% static 'script/dbus.js' %}"></script>
+<script src="{% static 'script/jquery.timepicker.min.js' %}">
+</script>
 
-{% extends 'base.html' %}
-{% load staticfiles %}
-
-{% block body %}
-<script src = "{% static 'script/dbus.js' %}"></script>
-<script src = "{% static 'script/jquery.timepicker.min.js' %}"> </script>
+<script>
+    var markerImages = "{% static 'images/m' %}"
+</script>
 
 <div id="homeCenter" class="container">
-    <div id = "load_screen" style = "display: none;">
-        <div id = "loading">
+    <div id="load_screen" style="display: none;">
+        <div id="loading">
             <h3>Loading Result..</h3>
         </div>
     </div>
     <div class="row">
-        <div class = "col-sm-12">
-            <div class="planner-toggle col-sm-12 shadow text-center text-white mt-2" style = "background-color:rgb(255, 113, 19);">
-                    <a href = "#" id = "planner-toggle">Expand Route Planner</a>
-                </div>
+        <div class="col-sm-12">
+            <div class="planner-toggle col-sm-12 shadow text-center text-white mt-2" style="background-color:rgb(255, 113, 19);">
+                <a href="#" id="planner-toggle">Expand Route Planner</a>
+            </div>
 
-                <div id = "planner" class="col-sm-12 text-center text-white" style = "display:none;background-color:#00743F;">
-                    <form id = "routePlanner" role = "form" method="POST">
-                        {% csrf_token %}
-                        <div class = "row">
-                            
-                            <div class = "col-sm-5 mt-2 address">
-                                <div class = "j btn-block">From: {{ form.source }}
-                                <a onclick = "swapDirection()">&#8645</a></div>
-                                <div class = "j btn-block">To: &nbsp &nbsp &nbsp {{ form.destination }}</div>
-                            </div>  
+            <div id="planner" class="col-sm-12 text-center text-white" style="display:none;background-color:#00743F;">
+                <form id="routePlanner" role="form" method="POST">
+                    {% csrf_token %}
+                    <div class="row">
 
-                            <div class = "col-sm-3 mt-2 time">  
-                                <div class = "j btn-block"><input id = "single" type= "radio" name="trip" value="single" checked> Single {{ form.departTime }}</div>
-                                <div class = "j btn-block"><input id = "return" type= "radio" name="trip" value="return"> Return {{ form.returnTime }}</div>
+                        <div class="col-sm-5 mt-2 address">
+                            <div class="j btn-block">From: {{ form.source }}
+                                <a onclick="swapDirection()">&#8645</a>
                             </div>
-                            <div class = "col-sm-4 mt-2"> 
-                                <div id = "dDate" class = "j btn-block">Date: {{ form.departDate }}</div>
-                                <div class = "j btn-block">Date: {{ form.returnDate }}</div>
-                            </div>
-                        </div>   
-                        <div class = "row">
-                            <button type ="submit" class = "btn btn-block btn-primary m-2" type = "button" name = "go" onclick="showLoadGif()">GO!</button>
+                            <div class="j btn-block">To: &nbsp &nbsp &nbsp {{ form.destination }}</div>
                         </div>
-                    </form>
+
+                        <div class="col-sm-3 mt-2 time">
+                            <div class="j btn-block">
+                                <input id="single" type="radio" name="trip" value="single" checked> Single {{ form.departTime }}</div>
+                            <div class="j btn-block">
+                                <input id="return" type="radio" name="trip" value="return"> Return {{ form.returnTime }}</div>
+                        </div>
+                        <div class="col-sm-4 mt-2">
+                            <div id="dDate" class="j btn-block">Date: {{ form.departDate }}</div>
+                            <div class="j btn-block">Date: {{ form.returnDate }}</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button type="submit" class="btn btn-block btn-primary m-2" type="button" name="go" onclick="showLoadGif()">GO!</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+    <!-- Time Error Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Time Selection Error</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Unfortuntaley there are no buses available at the time you have selected
+                        <p>
+                            <p>Buses will resume at approximately 06:30.</p>
+                            <p>However, timetables are subject to change depending on routes</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
-
-        <br>
-
-        
-        <div class "col-sm-12 mt-2" style = "background-color: rgb(216, 240, 232);">
-            <table class="table table-hover table-sm table-bordered table-striped">
-                <thead class = "thead-dark">
-                    <tr>
-                        <th colspan="4" class = "text-center"><h1>Leap Card Fares</h1></th>
-                    </tr>
-                </thead>
-                <thead class = "thead-dark">
-                    <tr>
-                        <th>Driver Validator</th>
-                        <th>Adult/Student</th>
-                        <th>Child</th>
-                        <th>(School Hours)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Stages 1-3</td>
-                        <td>€1.50</td>
-                        <td>€0.95</td>
-                        <td>€0.80</td>
-                    </tr>
-                    <tr>
-                        <td>Stages 4-7</td>
-                        <td>€2.15</td>
-                        <td>€0.95</td>
-                        <td>€0.80</td>
-                    </tr>
-                    <tr>
-                        <td>Stages 8-13</td>
-                        <td>€2.15</td>
-                        <td>€1.05</td>
-                        <td>€0.80</td>
-                    </tr>
-                </tbody>
-                
-                <thead class = "thead-light">
-                    <tr>
-                        <th>Machine Validator</th>
-                        <th>Adult/Student</th>
-                        <th>Child</th>
-                        <th>(School Hours)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Over 13 Stages</td>
-                        <td>€2.60</td>
-                        <td>€1.05</td>
-                        <td>€0.80</td>
-                    </tr>
-                    <tr>
-                        <td>Xpresso</td>
-                        <td>€2.90</td>
-                        <td>€1.22</td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <br>
-
-
-        <div class "col-sm-12" style = "background-color: rgb(216, 240, 232);">
-            <table class="table table-hover table-sm table-bordered table-striped">
-                <thead class = "thead-dark">
-                    <tr>
-                        <th colspan="4" class = "text-center"><h1>Cash Fares</h1></th>
-                    </tr>
-                </thead>
-                <thead class = "thead-dark">
-                    <tr>
-                        <th>Driver Validator</th>
-                        <th>Adult/Student</th>
-                        <th>Driver Validator</th>
-                        <th>Child</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Stages 1-3</td>
-                        <td>€2.10</td>
-                        <td>Schools Hours</td>
-                        <td>€1.00</td>
-                    </tr>
-                    <tr>
-                        <td>Stages 4-13</td>
-                        <td>€2.85</td>
-                        <td>Stages 1-7</td>
-                        <td>€1.20</td>
-                    </tr>
-                    <tr>
-                        <td>Over 13 Stages</td>
-                        <td>€3.30</td>
-                        <td>OVer 7 Stages</td>
-                        <td>€1.35</td>
-                    </tr>
-                    <tr>
-                        <td>Xpresso</td>
-                        <td>€3.65</td>
-                        <td>Xpresso</td>
-                        <td>€1.55</td>
-                    </tr>
-                </tbody>
-                
-            </table>
-        </div>
-
-<script>
-            var d = new Date();
-            var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
-            document.getElementById("id_departDate").value = fullDate;
-            $('#id_departTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now', timeFormat: "H:i" });
-            $( function() {
-            $( "#id_departDate" ).datepicker();
-            });
-            $('#id_returnTime').timepicker({ 'forceRoundTime': true, 'scrollDefault': 'now',timeFormat: "H:i" });
-            $( function() {
-            $( "#id_returnDate" ).datepicker({});
-            });
-        </script>
-       
     </div>
+
+
+    <div class "col-sm-12 mt-2" style="background-color: rgb(216, 240, 232);">
+        <table class="table table-hover table-sm table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th colspan="4" class="text-center">
+                        <h1>Leap Card Fares</h1>
+                    </th>
+                </tr>
+            </thead>
+            <thead class="thead-dark">
+                <tr>
+                    <th>Driver Validator</th>
+                    <th>Adult/Student</th>
+                    <th>Child</th>
+                    <th>(School Hours)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Stages 1-3</td>
+                    <td>€1.50</td>
+                    <td>€0.95</td>
+                    <td>€0.80</td>
+                </tr>
+                <tr>
+                    <td>Stages 4-7</td>
+                    <td>€2.15</td>
+                    <td>€0.95</td>
+                    <td>€0.80</td>
+                </tr>
+                <tr>
+                    <td>Stages 8-13</td>
+                    <td>€2.15</td>
+                    <td>€1.05</td>
+                    <td>€0.80</td>
+                </tr>
+            </tbody>
+
+            <thead class="thead-light">
+                <tr>
+                    <th>Machine Validator</th>
+                    <th>Adult/Student</th>
+                    <th>Child</th>
+                    <th>(School Hours)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Over 13 Stages</td>
+                    <td>€2.60</td>
+                    <td>€1.05</td>
+                    <td>€0.80</td>
+                </tr>
+                <tr>
+                    <td>Xpresso</td>
+                    <td>€2.90</td>
+                    <td>€1.22</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <br>
+
+
+    <div class "col-sm-12" style="background-color: rgb(216, 240, 232);">
+        <table class="table table-hover table-sm table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th colspan="4" class="text-center">
+                        <h1>Cash Fares</h1>
+                    </th>
+                </tr>
+            </thead>
+            <thead class="thead-dark">
+                <tr>
+                    <th>Driver Validator</th>
+                    <th>Adult/Student</th>
+                    <th>Driver Validator</th>
+                    <th>Child</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Stages 1-3</td>
+                    <td>€2.10</td>
+                    <td>Schools Hours</td>
+                    <td>€1.00</td>
+                </tr>
+                <tr>
+                    <td>Stages 4-13</td>
+                    <td>€2.85</td>
+                    <td>Stages 1-7</td>
+                    <td>€1.20</td>
+                </tr>
+                <tr>
+                    <td>Over 13 Stages</td>
+                    <td>€3.30</td>
+                    <td>OVer 7 Stages</td>
+                    <td>€1.35</td>
+                </tr>
+                <tr>
+                    <td>Xpresso</td>
+                    <td>€3.65</td>
+                    <td>Xpresso</td>
+                    <td>€1.55</td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+    <script>
+        function changeBackGroundColor() {
+
+            $("#routeSearch").css('background-color', 'white');
+        }
+
+        $(document).on("change", "#id_departTime", function () {
+            $("#id_departTime").css('background-color', 'white');
+            var startTime = "06:30"
+            var endTime = "23:30"
+            var time1 = new Date("HH:MM")
+            var time2 = new Date("HH:MM")
+            var time1 = "06:30"
+            var time2 = "23:55"
+
+            var x = new Date(("HH:MM"))
+            var x = document.getElementById("id_departTime").value;
+
+            if (x < time1 || x > time2) {
+
+                $modal = $('#exampleModalCenter');
+                $modal.modal('show');
+                $("#id_departTime").css('background-color', 'red');
+            }
+        })
+
+        $(document).on("change", "#id_returnTime", function () {
+            $("#id_returnTime").css('background-color', 'white');
+            var startTime = "06:30"
+            var endTime = "23:30"
+            var time1 = new Date("HH:MM")
+            var time2 = new Date("HH:MM")
+            var time1 = "06:30"
+            var time2 = "23:55"
+
+            var x = new Date(("HH:MM"))
+            var x = document.getElementById("id_returnTime").value;
+
+            if (x < time1 || x > time2) {
+
+                $modal = $('#exampleModalCenter');
+                $modal.modal('show');
+                $("#id_returnTime").css('background-color', 'red');
+            }
+        })
+        var d = new Date();
+        var fullDate = String(d.getMonth() + 1) + "/" + String(d.getDate()) + "/" + String(d.getFullYear());
+        document.getElementById("id_departDate").value = fullDate;
+        $('#id_departTime').timepicker({
+            'forceRoundTime': true,
+            'scrollDefault': 'now',
+            timeFormat: "H:i"
+        });
+        $(function () {
+            $("#id_departDate").datepicker();
+        });
+        $('#id_returnTime').timepicker({
+            'forceRoundTime': true,
+            'scrollDefault': 'now',
+            timeFormat: "H:i"
+        });
+        $(function () {
+            $("#id_returnDate").datepicker({});
+        });
+    </script>
+
+</div>
 </div>
 
 {% endblock %}

@@ -55,11 +55,24 @@
 
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html">News</a>
-                    </li>
+
+                            <a href="#" data-html = "true" data-toggle="popover" data-placement = "bottom" class="nav-link" title="<p style = 'text-shadow: 0 0px 0px #000000;'>Current Weather</p>"
+                                data-content="<div id = 'icon'><img src = {{weather.icon}}></div>
+                                <b>Main: </b>{{weather.main}} <br>
+                                <b>Temp: </b>{{weather.temp}} °C<br>
+                                <b>Wind: </b>{{weather.wind}} km/h<br>">Weather</a>
+     
+                            <script>
+                                $(document).ready(function(){
+                                    $('[data-toggle="popover"]').popover();
+                                });
+                            </script>
+     
+                        </li>
+                
                     <li class="nav-item">
 
-                        <a class="nav-link" href="tourism.html">Fares/Tourism</a>
+                        <a class="nav-link" href="tourism.html">Fares</a>
 
                     </li>
                 </ul>
@@ -70,7 +83,11 @@
                 <img src= "{% static 'images/logoscaled.png' %}" alt = "Innovation Station Logo" style="width:40px;padding-left:10px;">
             </a>
         </nav>
-
+        <div id="load_screen" style="display: none;">
+            <div id="loading">
+                <h3>Loading Result..</h3>
+            </div>
+        </div>
         {% block body %}
         {% endblock %}
     </body>
