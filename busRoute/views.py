@@ -72,6 +72,11 @@ class resultView(generic.TemplateView):
         form = routeForm(request.POST)
         args = postFunc(request, form)
 
+        if 'problem' in args:
+            prob = args['problem']
+            b = problemRend(prob)
+            return render(request, "busRoute/problem.html", b)
+
         return render(request, self.template_name, args)
 
 class problemView(generic.TemplateView):
@@ -110,6 +115,11 @@ class tourismView(generic.TemplateView):
 
         form = routeForm(request.POST)
         args = postFunc(request, form)
+
+        if 'problem' in args:
+            prob = args['problem']
+            b = problemRend(prob)
+            return render(request, "busRoute/problem.html", b)
 
         return render(request,"busRoute/result.html" , args)
     

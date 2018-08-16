@@ -71,9 +71,9 @@
                     </div>
                     <div id="stopSearchOptions" style="display:none;border-top:1px solid white;">
 
-                            <div class="text-center">
-                            <button type="button"onclick="stopsNearMe()" class="btn btn-success" style="background:rgb(241, 229, 57); color: black" >Stops Near Me</button>
-                            </div>
+                        <div class="text-center">
+                            <button type="button" onclick="stopsNearMe()" class="btn btn-success" style="background:rgb(241, 229, 57); color: black">Stops Near Me</button>
+                        </div>
                         <p class="text-white">Enter a location below to view the it's local stops</p>
                         <div>
                             <input id='genSearch' placeholder='Search Area' type='text' onclick="placeSearch()">
@@ -81,7 +81,7 @@
                         </div>
                     </div>
                     <div id="stopSearchOptions" style="display:none;border-top:1px solid white;">
-                        <p class="text-white">Enter a location below to view the it's local stops</p>
+                        <p class="text-white">Enter a location below to view it's local stops</p>
                         <div>
                             <input id='genSearch' placeholder='Search Area' type='text' onclick="placeSearch()"></input>
                         </div>
@@ -151,6 +151,29 @@
                                         $("#id_departTime").css('background-color', 'red');
                                     }
                                 })
+
+
+                                $(document).on("change", "#id_returnTime", function () {
+                                    $("#id_departTime").css('background-color', 'white');
+                                    var startTime = "06:30"
+                                    var endTime = "23:30"
+                                    var time1 = new Date("HH:MM")
+                                    var time2 = new Date("HH:MM")
+                                    var time1 = "06:30"
+                                    var time2 = "23:55"
+
+                                    var x = new Date(("HH:MM"))
+                                    var x = document.getElementById("id_returnTime").value;
+
+                                    if (x < time1 || x > time2) {
+
+                                        $modal = $('#exampleModalCenter');
+                                        $modal.modal('show');
+                                        $("#id_departTime").css('background-color', 'red');
+                                    }
+                                })
+
+
 
 
                                 //This piece of code allows the getStops function to be called when the user hits the enter key. 
@@ -333,8 +356,8 @@
             </div>
         </div>
 
-         <!-- Walk Me Modal -->
-         <div class="modal fade" id="StopsNearMeMeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <!-- Walk Me Modal -->
+        <div class="modal fade" id="StopsNearMeMeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -344,102 +367,103 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                            <p>
-                                    <!-- <script>
+                        <p>
+                            <!-- <script>
                                         permissiontate
                                     </script> -->
-                                </p>
-    
-                                <p>If you would like to use this function, you will need to allow access to your current location.</p>
-    
-                                <p>You can do this by updating your browser location settings. </p>
-    
-    
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
+                        </p>
+
+                        <p>If you would like to use this function, you will need to allow access to your current location.</p>
+
+                        <p>You can do this by updating your browser location settings. </p>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
                     </div>
                 </div>
+            </div>
+        </div>
 
-        <script>var placeSearch, autocomplete;
+        <script>
+            var placeSearch, autocomplete;
 
-                function initialize() {
-                    //https://www.w3docs.com/learn-javascript/places-autocomplete.html
-                    //https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-multiple-countries
-                    //the below function used a combination of the above two efforts. 
-                    //This function is responsible for allowing the user to search for a general address
-                    //the map will then zoom in on that place
-                    //they can then chose to view the markers in that area.
-                    autocomplete = new google.maps.places.Autocomplete(document.getElementById('genSearch'));
-                    autocomplete.setComponentRestrictions({
-                        'country': 'ie'
-                    });
-                    google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                        var place = autocomplete.getPlace();
-                        if (!place.geometry) {
-                            // User entered the name of a Place that was not suggested and
-                            // pressed the Enter key, or the Place Details request failed.
-                            window.alert("No details available for input: '" + place.name + "'");
-                            return;
-                        }
-                        // If the place has a geometry, then present it on a map.
-                        if (place.geometry.viewport) {
-                            map.fitBounds(place.geometry.viewport);
-                        } else {
-                            map.setCenter(place.geometry.location);
-                            map.setZoom(17); // Why 17? Because it looks good.
-                        }
-                        marker.setPosition(place.geometry.location);
-                        marker.setVisible(true);
-                    });
-                };
-                initialize();
-
-                function stopsNearMe() {
-    
-    navigator.permissions.query({
-        name: 'geolocation'
-    })
-    .then(function (permissionStatus) {
-  
-        if (permissionStatus.state == "denied" || permissionStatus.state == "prompt") {
-
-            $modal = $('#StopsNearMeMeModal');
-            $modal.modal('show');
-
-        } else if (permissionStatus.state == "granted") {
-    var jqxhr = $.getJSON('/nearestBus/' + pos.lat + '/' + pos.lng,
-        document.getElementById("id_source").value + '&format=json',
-        function (daily) {
-            for (var i = 0; i < daily.length; i++) {
-                var name = daily[i].name;
-                var lat = parseFloat(daily[i].lat);
-                var long = parseFloat(daily[i].long);
-                infoWindow = new google.maps.InfoWindow;
-                infoBus = new google.maps.InfoWindow;
-                //this function displays the dublin bus markers
-                myLatLng = new google.maps.LatLng(lat, long)
-                marker = new google.maps.Marker({
-                    position: myLatLng,
-                    map: map,
-                    title: name
+            function initialize() {
+                //https://www.w3docs.com/learn-javascript/places-autocomplete.html
+                //https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-multiple-countries
+                //the below function used a combination of the above two efforts. 
+                //This function is responsible for allowing the user to search for a general address
+                //the map will then zoom in on that place
+                //they can then chose to view the markers in that area.
+                autocomplete = new google.maps.places.Autocomplete(document.getElementById('genSearch'));
+                autocomplete.setComponentRestrictions({
+                    'country': 'ie'
                 });
-                marker.addListener('mouseover', function () {
-                    infoBus.open(map, this);
-                    infoBus.setContent(this.title);
-                })
-                marker.addListener('click', function () {
-                    document.getElementById("id_source").value = this.title;
-                })
-                markers.push(marker);
-            }
-        })
-}
+                google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                    var place = autocomplete.getPlace();
+                    if (!place.geometry) {
+                        // User entered the name of a Place that was not suggested and
+                        // pressed the Enter key, or the Place Details request failed.
+                        window.alert("No details available for input: '" + place.name + "'");
+                        return;
+                    }
+                    // If the place has a geometry, then present it on a map.
+                    if (place.geometry.viewport) {
+                        map.fitBounds(place.geometry.viewport);
+                    } else {
+                        map.setCenter(place.geometry.location);
+                        map.setZoom(17); // Why 17? Because it looks good.
+                    }
+                    marker.setPosition(place.geometry.location);
+                    marker.setVisible(true);
+                });
+            };
+            initialize();
 
-})
-}
-                </script>
+            function stopsNearMe() {
+
+                navigator.permissions.query({
+                        name: 'geolocation'
+                    })
+                    .then(function (permissionStatus) {
+
+                        if (permissionStatus.state == "denied" || permissionStatus.state == "prompt") {
+
+                            $modal = $('#StopsNearMeMeModal');
+                            $modal.modal('show');
+
+                        } else if (permissionStatus.state == "granted") {
+                            var jqxhr = $.getJSON('/nearestBus/' + pos.lat + '/' + pos.lng,
+                                document.getElementById("id_source").value + '&format=json',
+                                function (daily) {
+                                    for (var i = 0; i < daily.length; i++) {
+                                        var name = daily[i].name;
+                                        var lat = parseFloat(daily[i].lat);
+                                        var long = parseFloat(daily[i].long);
+                                        infoWindow = new google.maps.InfoWindow;
+                                        infoBus = new google.maps.InfoWindow;
+                                        //this function displays the dublin bus markers
+                                        myLatLng = new google.maps.LatLng(lat, long)
+                                        marker = new google.maps.Marker({
+                                            position: myLatLng,
+                                            map: map,
+                                            title: name
+                                        });
+                                        marker.addListener('mouseover', function () {
+                                            infoBus.open(map, this);
+                                            infoBus.setContent(this.title);
+                                        })
+                                        marker.addListener('click', function () {
+                                            document.getElementById("id_source").value = this.title;
+                                        })
+                                        markers.push(marker);
+                                    }
+                                })
+                        }
+
+                    })
+            }
+        </script>
 </body>
 {% endblock %}
