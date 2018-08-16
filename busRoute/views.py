@@ -15,6 +15,7 @@ import csv
 import time
 from django.conf import settings
 import pandas as pd
+from django.views.decorators.http import require_POST
     
 def problemRend(message):
     form = routeForm()
@@ -293,27 +294,36 @@ def bikes_query(request):
     """ 
     Connects to the JCDecaux API and returns the dublin bikes information 
     """
+    
+    if request.is_ajax():
+        url = 'https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey='+os.environ.get('jcdecauxi') # the website containing the data
+    
+        web_data = requests.get(url)
+
+        if web_data.status_code == 200:
+            data = json.loads(web_data.text)
+            results = []
+            for i in range(104):
+            
+                Info= {'lat': data[i]['position']['lat'],
+                        'lng': data[i]['position']['lng'], 
+                        'name': data[i]['name']
+
+                    }
         
-    url = 'https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey='+os.environ.get('jcdecauxi') # the website containing the data
-   
-    web_data = requests.get(url)
+                dbInfo = json.dumps(Info)    
+                loadedBikes = json.loads(dbInfo)
+                results.append(loadedBikes)
 
-    if web_data.status_code == 200:
-        data = json.loads(web_data.text)
-        results = []
-        for i in range(104):
-           
-            Info= {'lat': data[i]['position']['lat'],
-                     'lng': data[i]['position']['lng'], 
-                     'name': data[i]['name']
+        return JsonResponse(results, safe=False)
+    
+    else: 
+                results = 'fail'
+                return HttpResponse(results)
 
-                }
-     
-            dbInfo = json.dumps(Info)    
-            loadedBikes = json.loads(dbInfo)
-            results.append(loadedBikes)
 
-    return JsonResponse(results, safe=False)
+
+        
 
 def DublinBusInfo(request):
     
@@ -321,26 +331,32 @@ def DublinBusInfo(request):
     This function creates a dictionary from the dublin bus data located inside Routes.csv to be accessed on the page for the markers
     '''
 
-    results = []
+    if request.is_ajax():
 
-    with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r', encoding='utf-8') as f:
+        results = []
 
-        reader = csv.reader(f)
+        with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r', encoding='utf-8') as f:
 
-        for i in reader:
-               
+            reader = csv.reader(f)
+
+            for i in reader:
+                
+                
+                    Info= {'lat': i[2],
+                            'lng':i[3],
+                            'name': i[1],
+                            'num': i[0]
+                        }
+
+                    dbInfo = json.dumps(Info) 
+                    loadedBus = json.loads(dbInfo)
+                    results.append(loadedBus)
             
-                Info= {'lat': i[2],
-                        'lng':i[3],
-                        'name': i[1],
-                        'num': i[0]
-                    }
+        return JsonResponse(results, safe=False)
 
-                dbInfo = json.dumps(Info) 
-                loadedBus = json.loads(dbInfo)
-                results.append(loadedBus)
-        
-    return JsonResponse(results, safe=False)
+    else: 
+            results = 'fail'
+            return HttpResponse(results)
           
 def DublinBus():
     '''
@@ -375,52 +391,63 @@ def Db(request, stopid):
     This accesses the lattitude and longtitude of the chosen source stop for the walk me function
     '''
 
-    results = []
-    
+    if request.is_ajax():
 
-    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r', encoding='utf-8') as f:
+        results = []
+        
 
-        reader = pd.read_csv(f)
-        lat = reader.loc[reader['stopid'] == stopid, 'stop_lat'].values[0]
-        lon = reader.loc[reader['stopid'] == stopid, 'stop_lon'].values[0]
-    
+        with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r', encoding='utf-8') as f:
 
-        Info= {'lat': lat,
-                        'lng':lon
-                       
-                    }
-        dbInfo = json.dumps(Info) 
-        loadedBus = json.loads(dbInfo)
-        results.append(loadedBus)
+            reader = pd.read_csv(f)
+            lat = reader.loc[reader['stopid'] == stopid, 'stop_lat'].values[0]
+            lon = reader.loc[reader['stopid'] == stopid, 'stop_lon'].values[0]
+        
+
+            Info= {'lat': lat,
+                            'lng':lon
+                        
+                        }
+            dbInfo = json.dumps(Info) 
+            loadedBus = json.loads(dbInfo)
+            results.append(loadedBus)
 
        
-    return JsonResponse(results, safe=False)
+        return JsonResponse(results, safe=False)
+
+    else: 
+            results = 'fail'
+            return HttpResponse(results)
 
                     
 def GenBusData(request): 
     '''
     This renders the data to a URL that is used with the AJAX autocomplete function
     '''
+    if request.is_ajax():
 
-    results = []
+        results = []
 
-    with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r', encoding='utf-8') as f:
+        with open(os.path.join(settings.STATIC_ROOT, 'pickles/Routes.csv'), 'r', encoding='utf-8') as f:
 
-        reader = csv.reader(f)
+            reader = csv.reader(f)
 
-        for i in reader:
-               
-                Info= {'lat': i[2],
-                        'lng':i[3],
-                        'name': i[1],
-                        'num': i[0]
-                    }
+            for i in reader:
+                
+                    Info= {'lat': i[2],
+                            'lng':i[3],
+                            'name': i[1],
+                            'num': i[0]
+                        }
 
-                dbInfo = json.dumps(Info) 
-                loadedBus = json.loads(dbInfo)
-                results.append(loadedBus)
-      
-    return JsonResponse(results, safe=False) 
+                    dbInfo = json.dumps(Info) 
+                    loadedBus = json.loads(dbInfo)
+                    results.append(loadedBus)
+        
+        return JsonResponse(results, safe=False) 
+     
+    else: 
+            results = 'fail'
+            return HttpResponse(results)
 
 
 def stopNearMe(request,lat, lng):
@@ -429,25 +456,31 @@ def stopNearMe(request,lat, lng):
     '''this function is linked to a jQuery which takes the users current lat and long from the geolocation
     This passes this into the google nearby search which returns a list of bus stops near the user. '''
 
-    url = requests.get(f"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={lat},{lng}&radius=500&type=bus_station&key="+os.environ.get('googleapi'))
-    url = url.json()
+    if request.is_ajax():
 
-    x = url['results']
-    results = []
-    for i in x:
+        url = requests.get(f"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={lat},{lng}&radius=500&type=bus_station&key="+os.environ.get('googleapi'))
+        url = url.json()
 
-        Info= {'name': i['name'],
-                'lat': i['geometry']['location']['lat'],
-                'long': i['geometry']['location']['lng']
-                    
-                }
+        x = url['results']
+        results = []
+        for i in x:
 
-        dbInfo = json.dumps(Info) 
-        stopInfo = json.loads(dbInfo)
-        results.append(stopInfo)
-      
+            Info= {'name': i['name'],
+                    'lat': i['geometry']['location']['lat'],
+                    'long': i['geometry']['location']['lng']
+                        
+                    }
 
-    return JsonResponse(results, safe=False)
+            dbInfo = json.dumps(Info) 
+            stopInfo = json.loads(dbInfo)
+            results.append(stopInfo)
+        
+
+        return JsonResponse(results, safe=False)
+
+    else: 
+            results = 'fail'
+            return HttpResponse(results)
 
 
 def routeDirectionServices(request):
@@ -455,25 +488,31 @@ def routeDirectionServices(request):
 
     '''This accesses the routes and directions from a CSV and passs it to a URL that is connected to an AJAX autocomplete function for the Route Search'''
 
-    results = []
-  
-    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r', encoding='utf-8') as f:
+    if request.is_ajax():
 
-        reader = csv.reader(f)
-        
+        results = []
+    
+        with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r', encoding='utf-8') as f:
 
-        for i in reader:
-            Info= {
-                        'route': i[5]
-                    }
-            if Info in results:
-                pass
-            else:
-                dbInfo = json.dumps(Info) 
-                routeInfo = json.loads(dbInfo)
-                results.append(routeInfo)
-        
-    return JsonResponse(results, safe=False) 
+            reader = csv.reader(f)
+            
+
+            for i in reader:
+                Info= {
+                            'route': i[5]
+                        }
+                if Info in results:
+                    pass
+                else:
+                    dbInfo = json.dumps(Info) 
+                    routeInfo = json.loads(dbInfo)
+                    results.append(routeInfo)
+            
+        return JsonResponse(results, safe=False) 
+
+    else: 
+            results = 'fail'
+            return HttpResponse(results)
 
 
 def get_route_data(request, route):
@@ -481,37 +520,39 @@ def get_route_data(request, route):
 
     ''''This backend function takes an argument from a url (a route entered in the route info search option) and uses it to access the stops on that route using pandas'''
 
+    if request.is_ajax():
 
-    results = []
-    
 
-    with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r', encoding='utf-8') as f:
-
-        reader = pd.read_csv(f)
-        x = reader.loc[reader['direction'] == route ]
+        results = []
         
-        if not x.empty: 
-            for index, row in x.iterrows(): 
-                stop = row['stopid']
-                lat = row['stop_lat']
-                lng = row['stop_lon']
-                name = row['stop_name']
 
-                Info= {'lat': lat,
-                                'lng': lng,
-                                'name': name,
-                                'id': stop
-                    }
+        with open(os.path.join(settings.STATIC_ROOT, 'pickles/RouteAdresses.csv'), 'r', encoding='utf-8') as f:
 
-                dbInfo = json.dumps(Info) 
-                routeData = json.loads(dbInfo)
-                results.append(routeData)
-        else: 
+            reader = pd.read_csv(f)
+            x = reader.loc[reader['direction'] == route ]
+            
+            if not x.empty: 
+                for index, row in x.iterrows(): 
+                    stop = row['stopid']
+                    lat = row['stop_lat']
+                    lng = row['stop_lon']
+                    name = row['stop_name']
 
+                    Info= {'lat': lat,
+                                    'lng': lng,
+                                    'name': name,
+                                    'id': stop
+                        }
+
+                    dbInfo = json.dumps(Info) 
+                    routeData = json.loads(dbInfo)
+                    results.append(routeData)
+    
+            return JsonResponse(results, safe=False)
+
+    else: 
             results = 'fail'
-            print(results)
-
-        return JsonResponse(results, safe=False)
+            return HttpResponse(results)
 
 
 def Est39A(route, source, dest, precipitation, temp, timeStr, weekday, dateStr):
@@ -704,7 +745,13 @@ def dateTimeCheck(date,time):
     
 
 def getRoute(request, bus):
-    return JsonResponse(bus, safe=False)
+
+    if request.is_ajax():
+        return JsonResponse(bus, safe=False)
+    
+    else: 
+            results = 'fail'
+            return HttpResponse(results)
 
 
 
