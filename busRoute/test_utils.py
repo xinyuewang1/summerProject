@@ -62,3 +62,18 @@ class TestUtils(unittest.TestCase):
 
         # test for env
         print(os.environ.get('googleapi'))
+
+        # what's in 41C_288_4957_Swords Manor
+        disDict = load_obj('pickles/stopDicts/41C_288_4957_Swords Manor.pkl')
+        self.assertIsNotNone(disDict[288])
+        self.assertIsNotNone(disDict[1626])
+
+        # 31A 716 289
+        # for d in os.listdir('static/pickles/stopDicts'):
+        #     if d.startswith('31A'):
+        #         if d[716] and d[289]:
+        #             self.assertIsNotNone(d[716])
+        #             self.assertIsNotNone(d[289])
+
+        #  768 7161
+        self.assertIsNotNone(getFirstAndLastStops3('39A', 768, 7161))
